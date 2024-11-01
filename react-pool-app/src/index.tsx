@@ -1,15 +1,19 @@
+
+
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { UserfrontProvider } from '@userfront/react'
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+const tenantId = process.env.REACT_APP_USERFRONT_TENANT_ID || ''
 root.render(
   <React.StrictMode>
-    <App />
+    <UserfrontProvider tenantId = {tenantId}>
+      <App />
+    </UserfrontProvider>
   </React.StrictMode>
 );
 
