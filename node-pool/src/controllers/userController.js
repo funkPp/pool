@@ -4,8 +4,18 @@ const bcrypt = require("bcryptjs");
 
 exports.getUsers = async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM users");
+    const result = await pool.query("SELECT id, firstName, lastName, username FROM users");
     res.status(200).json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.getUser = async (req, res) => {
+  try {
+    const {id} = req.params
+    const result = await pool.query("SELECT id, firstName, lastName, username FROM users WHERE id = $1", [id]);
+    res.status(200).json(result.rows[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -17,20 +27,18 @@ const checkExistUser = async (username) => {
     [username]
   );
   if (existUser.rowCount) {
-    console.log(existUser);
     throw new Error(`Пользователь ${username} уже зарегистрирован!`);
   }
 }
 
 exports.createUser = async (req, res) => {
   const { firstName, lastName, username, password } = req.body;
-  console.log(firstName, lastName, username, password);
   let userHash = await bcrypt.hash(password, 16);
   try {
     await checkExistUser(username)
 
     const result = await pool.query(
-      "INSERT INTO users (firstName, lastName, username, password) VALUES ($1, $2, $3, $4) RETURNING username",
+      "INSERT INTO users (firstName, lastName, username, password) VALUES ($1, $2, $3, $4) RETURNING id, firstName, lastName, username, ",
       [firstName, lastName, username, userHash]
     );
     res.status(201).json(result.rows);
@@ -41,11 +49,12 @@ exports.createUser = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   const { id } = req.params;
-  const { name, email } = req.body;
+  const { firstName, lastName, username, password } = req.body;
+  let userHash = await bcrypt.hash(password, 16);
   try {
     const result = await pool.query(
-      "UPDATE users SET name = $1, email = $2 WHERE id = $3 RETURNING *",
-      [name, email, id]
+      "UPDATE users SET firstName = $1, lastName = $2, username = $3 WHERE id = $4 RETURNING id, firstName, lastName, lastName",
+      [firstName, lastName, username, id]
     );
     res.status(200).json(result.rows[0]);
   } catch (err) {

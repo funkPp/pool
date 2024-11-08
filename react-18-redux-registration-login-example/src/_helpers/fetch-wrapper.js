@@ -52,11 +52,11 @@ async function handleResponse(response) {
       const logout = () => store.dispatch(authActions.logout());
       logout();
     }
-    console.log(data);
+
     // get error message from body or default to response status
     const error = (data && data.error) || response.status;
     return Promise.reject(error);
   }
-
+  console.log(data);
   return data;
 }

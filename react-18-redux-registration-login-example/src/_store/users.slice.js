@@ -26,7 +26,8 @@ function createInitialState() {
 }
 
 function createExtraActions() {
-    const baseUrl = `${process.env.REACT_APP_API_URL}/users`;
+    const API_URL = process.env.REACT_APP_API_URL;
+    const baseUrl = `${API_URL}/users`;
 
     return {
         register: register(),

@@ -78,13 +78,13 @@ function AddEdit() {
               <input
                 name="firstName"
                 type="text"
-                {...register("firstName")}
+                {...register("firstname")}
                 className={`form-control ${
-                  errors.firstName ? "is-invalid" : ""
+                  errors.firstname ? "is-invalid" : ""
                 }`}
               />
               <div className="invalid-feedback">
-                {errors.firstName?.message}
+                {errors.firstname?.message}
               </div>
             </div>
             <div className="mb-1 col">
@@ -92,9 +92,9 @@ function AddEdit() {
               <input
                 name="lastName"
                 type="text"
-                {...register("lastName")}
+                {...register("lastname")}
                 className={`form-control ${
-                  errors.lastName ? "is-invalid" : ""
+                  errors.lastname ? "is-invalid" : ""
                 }`}
               />
               <div className="invalid-feedback">{errors.lastName?.message}</div>

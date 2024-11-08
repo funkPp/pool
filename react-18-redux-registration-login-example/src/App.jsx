@@ -13,7 +13,7 @@ function App() {
     // anywhere in the react app (inside or outside components)
     history.navigate = useNavigate();
     history.location = useLocation();
-
+    console.log(process.env.REACT_APP_API_URL)
     return (
         <div className="app-container bg-light">
             <Nav />

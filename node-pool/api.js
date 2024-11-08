@@ -11,10 +11,10 @@ require("dotenv").config({ path: path.resolve(__dirname, "../.env") });
 
 app.use(express.json());
 app.use(cors());
-
+ 
 app.post(
   "/users",
-  body("email").isEmail(),
+  body("email").isEmail(), //!!!
   body("name").notEmpty(),
   (req, res, next) => {
     const errors = validationResult(req);
@@ -33,7 +33,7 @@ app.use((err, req, res, next) => {
   res.status(500).send("Something broke!");
 });
 
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.API_PORT || 3002;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
