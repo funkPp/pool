@@ -57,6 +57,6 @@ async function handleResponse(response) {
     const error = (data && data.error) || response.status;
     return Promise.reject(error);
   }
-  console.log(data);
+
   return data;
 }

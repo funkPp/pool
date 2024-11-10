@@ -20,9 +20,8 @@ exports.authenticate = async (req, res) => {
     }
 
     const user = result.rows[0];
-
     const token = jwt.sign({ sub: user.id }, secret, { expiresIn: expiresIn });
-
+    console.log(token);
     res.status(200).json({ ...omitPassword(user), token });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -44,7 +43,6 @@ exports.authorize = () => {
         return res.sendStatus(401).json({ error: "Доступ запрещен" }); //!!!
       }
       jwt.verify(token, secret, (err, user) => {
-        console.log("22222", token, user, err);
         if (err) return res.sendStatus(403).json({ error: "Неавторизован" }); //!!!
         req.user = user;
         next();

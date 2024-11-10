@@ -47,7 +47,7 @@ function AddEdit() {
   }, []);
 
   async function onSubmit(data) {
-    console.log("save..");
+
     dispatch(alertActions.clear());
     try {
       // create or update user based on id param
