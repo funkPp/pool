@@ -18,8 +18,8 @@ function AddEdit() {
 
   // form validation rules
   const validationSchema = Yup.object().shape({
-    firstName: Yup.string().required("First Name is required"),
-    lastName: Yup.string().required("Last Name is required"),
+    firstname: Yup.string().required("First Name is required"),
+    lastname: Yup.string().required("Last Name is required"),
     username: Yup.string().required("Username is required"),
     password: Yup.string()
       .transform((x) => (x === "" ? undefined : x))
@@ -47,9 +47,11 @@ function AddEdit() {
   }, []);
 
   async function onSubmit(data) {
+    console.log("save..");
     dispatch(alertActions.clear());
     try {
       // create or update user based on id param
+
       let message;
       if (id) {
         await dispatch(userActions.update({ id, data })).unwrap();

@@ -7,8 +7,8 @@ function Home() {
     const auth = useSelector(x => x.auth.value);
     return (
         <div>
-            <h1>Hi {auth?.firstName}!</h1>
-            <p>You're logged in with React 18 + Redux & JWT!!</p>
+            <h1>Привет, {auth?.firstName}!</h1>
+            <p>Вы на домашней страницу!</p>
             <p><Link to="/users">Manage Users</Link></p>
         </div>
     );
