@@ -16,9 +16,9 @@ function Nav() {
     return (
         <nav className="navbar navbar-expand navbar-dark bg-dark px-3">
             <div className="navbar-nav">
-                <NavLink to="/" className="nav-item nav-link">Home</NavLink>
-                <NavLink to="/users" className="nav-item nav-link">Users</NavLink>
-                <button onClick={logout} className="btn btn-link nav-item nav-link">Logout</button>
+                <NavLink to="/" className="nav-item nav-link">Главная страница</NavLink>
+                {auth.role === 'admin' || auth.role === 'owner' ? <NavLink to="/admin" className="nav-item nav-link">Админка</NavLink> : null}
+                <button onClick={logout} className="btn btn-link nav-item nav-link">Выход</button>
             </div>
         </nav>
     );

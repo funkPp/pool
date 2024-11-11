@@ -7,9 +7,9 @@ function Home() {
     const auth = useSelector(x => x.auth.value);
     return (
         <div>
-            <h1>Привет, {auth?.firstName}!</h1>
-            <p>Вы на домашней страницу!</p>
-            <p><Link to="/users">Manage Users</Link></p>
+            <h1>Привет, {auth?.firstname}!</h1>
+            <p>Вы на домашней странице!</p>
+            {auth.role === 'admin' || auth.role === 'owner' ? <p><Link to="/admin">Manage Users</Link></p> : null}
         </div>
     );
 }

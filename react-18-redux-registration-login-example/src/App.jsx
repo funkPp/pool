@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 
 import { history } from "_helpers";
-import { Nav, Alert, PrivateRoute } from "_components";
+import { Nav, Alert, PrivateRoute, PrivateAdminRoute } from "_components";
 import { Home } from "home";
 import { AccountLayout } from "account";
 import { UsersLayout } from "users";
@@ -29,8 +29,12 @@ function App() {
           {/* private */}
           <Route element={<PrivateRoute />}>
             <Route path="/" element={<Home />} />
-            <Route path="users/*" element={<UsersLayout />} />
+            {/* Админка */}
+            <Route element={<PrivateAdminRoute />}>
+              <Route path="admin/*" element={<UsersLayout />} />
+            </Route>
           </Route>
+
           {/* public */}
           <Route path="account/*" element={<AccountLayout />} />
           <Route path="*" element={<Navigate to="/" />} />
