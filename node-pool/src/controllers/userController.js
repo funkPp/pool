@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 exports.getUsers = async (req, res) => {
   try {
     const result = await pool.query(
-      "SELECT id, firstName, lastName, username FROM users ORDER BY id"
+      "SELECT id, firstName, lastName, username, role FROM users ORDER BY id"
     );
     res.status(200).json(result.rows);
   } catch (err) {
@@ -17,7 +17,7 @@ exports.getUser = async (req, res) => {
   try {
     const { id } = req.params;
     const result = await pool.query(
-      "SELECT id, firstName, lastName, username FROM users WHERE id = $1",
+      "SELECT id, firstName, lastName, username, role FROM users WHERE id = $1",
       [id]
     );
     res.status(200).json(result.rows[0]);
@@ -42,15 +42,16 @@ exports.createUser = async (req, res) => {
     lastname: lastName,
     username,
     password,
+    role
   } = req.body;
   let userHash = await bcrypt.hash(password, 16);
-  console.log(firstName, lastName, username, password);
+  // console.log(firstName, lastName, username, password);
   try {
     await checkExistUser(username);
 
     const result = await pool.query(
-      "INSERT INTO users (firstName, lastName, username, password) VALUES ($1, $2, $3, $4) RETURNING id, firstName, lastName, username",
-      [firstName, lastName, username, userHash]
+      "INSERT INTO users (firstName, lastName, username, role, password) VALUES ($1, $2, $3, $4, $5) RETURNING id, firstName, lastName, username, role",
+      [firstName, lastName, username, role, userHash]
     );
 
     res.status(201).json(result.rows);
@@ -66,6 +67,7 @@ exports.updateUser = async (req, res) => {
     firstname: firstName,
     lastname: lastName,
     username: userName,
+    role,
     password,
   } = req.body;
 
@@ -74,15 +76,15 @@ exports.updateUser = async (req, res) => {
     let result;
     if (password) {
       userHash = await bcrypt.hash(password, 16);
-      console.log(password, userHash);
+      // console.log(password, userHash);
       result = await pool.query(
-        "UPDATE users SET firstname = $1, lastname = $2, username = $3, password = $4 WHERE id = $5 RETURNING id, firstname, lastname, username, role",
-        [firstName, lastName, userName, userHash, id]
+        "UPDATE users SET firstname = $2, lastname = $3, username = $4, password = $5, role = $6 WHERE id = $1 RETURNING id, firstname, lastname, username, role",
+        [id, firstName, lastName, userName, userHash, role]
       );
     } else {
       result = await pool.query(
-        "UPDATE users SET firstname = $1, lastname = $2, username = $3 WHERE id = $4 RETURNING id, firstname, lastname, username, role",
-        [firstName, lastName, userName, id]
+        "UPDATE users SET firstname = $2, lastname = $3, username = $4, role = $5 WHERE id = $1 RETURNING id, firstname, lastname, username, role",
+        [id, firstName, lastName, userName, role]
       );
     }
     res.status(200).json(result.rows[0]);

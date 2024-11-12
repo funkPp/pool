@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { useForm, Controller  } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useSelector, useDispatch } from "react-redux";
+import Select from 'react-select';
 
 import { history } from "_helpers";
 import { userActions, alertActions } from "_store";
@@ -21,6 +22,7 @@ function AddEdit() {
     firstname: Yup.string().required("First Name is required"),
     lastname: Yup.string().required("Last Name is required"),
     username: Yup.string().required("Username is required"),
+    // role: Yup.string().required("Заполните поле"),
     password: Yup.string()
       .transform((x) => (x === "" ? undefined : x))
       // password optional in edit mode
@@ -29,9 +31,20 @@ function AddEdit() {
   });
   const formOptions = { mode: 'onChange', resolver: yupResolver(validationSchema) };
 
+
+
   // get functions to build form with useForm() hook
-  const { register, handleSubmit, reset, formState } = useForm(formOptions);
+  const { register, handleSubmit, reset, formState, control } = useForm(formOptions);
   const { errors, isSubmitting } = formState;
+
+  const options = [
+     { value: 'user', label: 'Пользователь'},
+     { value: 'admin', label: 'Администратор'},
+     { value: 'owner', label: 'Владелец'},
+    ];
+
+  const getValue = (value) => value ? options.find(o => o.value === value) : ''
+    
 
   useEffect(() => {
     if (id) {
@@ -62,7 +75,7 @@ function AddEdit() {
       }
 
       // redirect to user list with success message
-      history.navigate("/users");
+      history.navigate("/admin");
       dispatch(alertActions.success({ message, showAfterRedirect: true }));
     } catch (error) {
       dispatch(alertActions.error(error));
@@ -73,8 +86,8 @@ function AddEdit() {
     <>
       <h1>{title}</h1>
       {!(user?.loading || user?.error) && (
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="111">
+        <form onSubmit={handleSubmit(onSubmit)} style={{ maxWidth: '400px', margin: '0 auto'}} >
+          <div>
             <div className="mb-3 col">
               <label className="form-label">First Name1</label>
               <input
@@ -89,7 +102,7 @@ function AddEdit() {
                 {errors.firstname?.message}
               </div>
             </div>
-            <div className="mb-1 col">
+            <div className="mb-3 col">
               <label className="form-label">Last Name</label>
               <input
                 name="lastName"
@@ -102,8 +115,8 @@ function AddEdit() {
               <div className="invalid-feedback">{errors.lastName?.message}</div>
             </div>
           </div>
-          <div className="222">
-            <div className="mb-1 col">
+          <div>
+            <div className="mb-3 col">
               <label className="form-label">Username</label>
               <input
                 name="username"
@@ -116,6 +129,24 @@ function AddEdit() {
               <div className="invalid-feedback">{errors.username?.message}</div>
             </div>
             <div className="mb-3 col">
+              <label className="form-label">Роль</label>
+              <Controller
+                control={control}
+                defaultValue={'user'}
+                name="role"
+                render={({ field: {onChange, value, ref} }) => (
+                    <Select
+                      placeholder = 'Выберите роль'
+                      inputRef={ref}
+                      options={options}
+                      value={getValue(value)}
+                      onChange={ newValue => onChange(newValue.value)}
+                    />
+                )}
+              /> 
+              <div className="invalid-feedback">{errors.role?.message}</div>
+            </div>
+            <div className="mb-1 col">
               <label className="form-label">
                 Password
                 {id && (
@@ -135,7 +166,7 @@ function AddEdit() {
               <div className="invalid-feedback">{errors.password?.message}</div>
             </div>
           </div>
-          <div className="mb-3">
+          <div className="mt-3">
             <button
               type="submit"
               disabled={isSubmitting}
@@ -144,7 +175,7 @@ function AddEdit() {
               {isSubmitting && (
                 <span className="spinner-border spinner-border-sm me-1"></span>
               )}
-              Save
+              Сохранить
             </button>
             <button
               onClick={() => reset()}
@@ -152,10 +183,10 @@ function AddEdit() {
               disabled={isSubmitting}
               className="btn btn-secondary"
             >
-              Reset
+              Сброс
             </button>
-            <Link to="/users" className="btn btn-link">
-              Cancel
+            <Link to="/admin" className="btn btn-link">
+              Отмена
             </Link>
           </div>
         </form>
