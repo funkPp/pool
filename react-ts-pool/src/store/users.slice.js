@@ -1,11 +1,9 @@
-import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
-import { authActions } from '../store';
+import { authActions } from '_store';
+import { fetchWrapper } from '_helpers';
 
-// import { fetchWrapper } from '_helpers';
-const fetchWrapper = {
-    post: ()=> {},
-}
+// create slice
 
 const name = 'users';
 const initialState = createInitialState();
@@ -13,9 +11,12 @@ const extraActions = createExtraActions();
 const extraReducers = createExtraReducers();
 const slice = createSlice({ name, initialState, extraReducers });
 
+// exports
+
 export const userActions = { ...slice.actions, ...extraActions };
 export const usersReducer = slice.reducer;
 
+// implementation
 
 function createInitialState() {
     return {
@@ -105,10 +106,10 @@ function createExtraReducers() {
                 .addCase(pending, (state) => {
                     state.list = { loading: true };
                 })
-                .addCase(fulfilled, (state, action: PayloadAction<string>) => {
+                .addCase(fulfilled, (state, action) => {
                     state.list = { value: action.payload };
                 })
-                .addCase(rejected, (state, action: PayloadAction<string>) => {
+                .addCase(rejected, (state, action) => {
                     state.list = { error: action.error };
                 });
         }
@@ -116,13 +117,13 @@ function createExtraReducers() {
         function getById() {
             var { pending, fulfilled, rejected } = extraActions.getById;
             builder
-                .addCase(pending, (state: PayloadAction<string>) => {
+                .addCase(pending, (state) => {
                     state.item = { loading: true };
                 })
-                .addCase(fulfilled, (state, action: PayloadAction<string>) => {
+                .addCase(fulfilled, (state, action) => {
                     state.item = { value: action.payload };
                 })
-                .addCase(rejected, (state, action: PayloadAction<string>) => {
+                .addCase(rejected, (state, action) => {
                     state.item = { error: action.error };
                 });
         }
@@ -130,14 +131,14 @@ function createExtraReducers() {
         function _delete() {
             var { pending, fulfilled, rejected } = extraActions.delete;
             builder
-                .addCase(pending, (state, action: PayloadAction<string>) => {
+                .addCase(pending, (state, action) => {
                     const user = state.list.value.find(x => x.id === action.meta.arg);
                     user.isDeleting = true;
                 })
-                .addCase(fulfilled, (state, action: PayloadAction<string>) => {
+                .addCase(fulfilled, (state, action) => {
                     state.list.value = state.list.value.filter(x => x.id !== action.meta.arg);
                 })
-                .addCase(rejected, (state, actio: PayloadAction<string>n) => {
+                .addCase(rejected, (state, action) => {
                     const user = state.list.value.find(x => x.id === action.meta.arg);
                     user.isDeleting = false;
                 });
