@@ -4,6 +4,7 @@ import { Nav } from "./components/ui-kit/Nav";
 import { Home } from "./components/home";
 import { UsersLayout } from "./components/admin";
 import { AccountLayout } from "./components/account";
+import { PrivateRoute, PrivateAdminRoute } from "./components/private";
 
 function App() {
   return (
@@ -12,11 +13,14 @@ function App() {
         <Nav auth={{ role: "admin" }} logout={() => {}} />
         <div className="">
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="*" element={<Navigate to="/" />} />
-            <Route path="admin/*" element={<UsersLayout />} />
             <Route path="account/*" element={<AccountLayout />} />
             <Route path="*" element={<Navigate to="/" />} />
+            <Route element={<PrivateRoute />}>
+              <Route path="/" element={<Home />} />
+              <Route element={<PrivateAdminRoute />}>
+                <Route path="admin/*" element={<UsersLayout />} />
+              </Route>
+            </Route>
           </Routes>
         </div>
       </div>

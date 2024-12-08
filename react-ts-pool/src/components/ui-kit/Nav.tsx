@@ -25,9 +25,9 @@ export function Nav({ auth, logout }: INavProps) {
           </NavLink>
         ) : null}
       </div>
-      <div className="p-2 ml-auto  hover:text-cyan-800">
-        <button onClick={logout} className="p-2 ">
-          Выход
+      <div className="p-2  ml-auto  hover:text-cyan-800">
+        <button onClick={logout} className="p-2 mr-3">
+          Выйти
         </button>
       </div>
     </nav>

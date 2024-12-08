@@ -3,20 +3,21 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useDispatch } from "react-redux";
+import { Card } from "../ui-kit/Card";
+import { Button } from "../ui-kit/Button";
+import clsx from "clsx";
 
 // import { authActions } from '_store';
 
 export function Login() {
   // const dispatch = useDispatch();
 
-  // form validation rules
   const validationSchema = Yup.object().shape({
     username: Yup.string().required("Имя пользователя обязательное поле"),
     password: Yup.string().required("Пароль обязательное поле"),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
 
-  // get functions to build form with useForm() hook
   const { register, handleSubmit, formState } = useForm(formOptions);
   const { errors, isSubmitting } = formState;
 
@@ -30,42 +31,51 @@ export function Login() {
     return; //dispatch(authActions.login({ username, password }));
   }
 
+  const styleInput = `
+  bg-gray-50 border border-gray-300 text-sm rounded-lg 
+  hover:border-cyan-600 focus:outline-cyan-700 block w-full p-2`;
+  const styleLabel = "block mb-2 text-sm font-medium";
+
   return (
-    <div className="card m-3">
-      <h4 className="card-header">Login</h4>
-      <div className="card-body">
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="mb-3">
-            <label className="form-label">Username</label>
-            <input
-              //   name="username"
-              type="text"
-              {...register("username")}
-              className={`form-control ${errors.username ? "is-invalid" : ""}`}
-            />
-            <div className="invalid-feedback">{errors.username?.message}</div>
+    <Card typeClass="main">
+      <h4 className="pb-4 text-center font-medium text-lg">Вход</h4>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="mb-3">
+          <label className={clsx(styleLabel)}>Логин</label>
+          <input
+            type="text"
+            {...register("username")}
+            className={clsx(styleInput)}
+          />
+          <div className="mt-1 text-sm text-red-600">
+            {errors.username?.message}
           </div>
-          <div className="mb-3">
-            <label className="form-label">Password</label>
-            <input
-              //   name="password"
-              type="password"
-              {...register("password")}
-              className={`form-control ${errors.password ? "is-invalid" : ""}`}
-            />
-            <div className="invalid-feedback">{errors.password?.message}</div>
+        </div>
+        <div className="mb-3">
+          <label className={clsx(styleLabel)}>Пароль</label>
+          <input
+            type="password"
+            {...register("password")}
+            className={clsx(styleInput)}
+          />
+          <div className="mt-1 text-sm text-red-600">
+            {errors.password?.message}
           </div>
-          <button disabled={isSubmitting} className="btn btn-primary">
-            {isSubmitting && (
-              <span className="spinner-border spinner-border-sm me-1"></span>
-            )}
-            Login
-          </button>
-          <Link to="../register" className="btn btn-link">
-            Register
-          </Link>
-        </form>
-      </div>
-    </div>
+        </div>
+        <div className="flex flex-col md:flex-row md:justify-between mt-5">
+          <Button typeClass="main">
+            {" "}
+            <button disabled={isSubmitting}>
+              {isSubmitting && <span className=""></span>}
+              Войти
+            </button>
+          </Button>
+          <Button typeClass="main">
+            {" "}
+            <Link to="../register">Регистрация</Link>
+          </Button>
+        </div>
+      </form>
+    </Card>
   );
 }
