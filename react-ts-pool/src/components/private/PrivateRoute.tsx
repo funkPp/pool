@@ -9,6 +9,5 @@ export function PrivateRoute() {
   if (true) {
     return <Navigate to="/account/login" />;
   }
-
   return <Outlet />;
 }
