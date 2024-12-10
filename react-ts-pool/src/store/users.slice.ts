@@ -145,28 +145,23 @@ function createExtraActions() {
       ) {
         await apiService.put(`${baseUrl}/${id}`, data);
 
-        // update stored user if the logged in user updated their own record
         const auth = (getState() as RootState).auth.value;
         if (id === auth?.id.toString()) {
-          // update local storage
           const user = { ...auth, ...data };
           localStorage.setItem("auth", JSON.stringify(user));
 
-          // update auth user in redux state
           dispatch(authActions.setAuth(user));
         }
       },
     );
   }
 
-  // prefixed with underscore because delete is a reserved word in javascript
   function _delete() {
     return createAsyncThunk(
       `${name}/delete`,
       async function (id, { getState, dispatch }) {
         await apiService.delete(`${baseUrl}/${id}`, null);
 
-        // auto logout if the logged in user deleted their own record
         if (id === (getState() as RootState).auth.value?.id) {
           dispatch(authActions.logout());
         }
@@ -174,7 +169,3 @@ function createExtraActions() {
     );
   }
 }
-
-// function createExtraReducers() {
-//   return
-// }
