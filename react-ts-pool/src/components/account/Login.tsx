@@ -7,14 +7,14 @@ import { Card } from "../ui-kit/Card";
 import { Button } from "../ui-kit/Button";
 import clsx from "clsx";
 
-// import { authActions } from '_store';
+import { authActions, useAppDispatch } from "../../store";
 
 export function Login() {
-  // const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const validationSchema = Yup.object().shape({
-    username: Yup.string().required("Имя пользователя обязательное поле"),
-    password: Yup.string().required("Пароль обязательное поле"),
+    username: Yup.string().required("Имя пользователя - обязательное поле"),
+    password: Yup.string().required("Пароль - обязательное поле"),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
 
@@ -28,7 +28,7 @@ export function Login() {
     username: string;
     password: string;
   }) {
-    return; //dispatch(authActions.login({ username, password }));
+    return dispatch(authActions.login({ username, password }));
   }
 
   const styleInput = `
@@ -64,14 +64,12 @@ export function Login() {
         </div>
         <div className="flex flex-col md:flex-row md:justify-between mt-5">
           <Button typeClass="main">
-            {" "}
             <button disabled={isSubmitting}>
               {isSubmitting && <span className=""></span>}
               Войти
             </button>
           </Button>
           <Button typeClass="main">
-            {" "}
             <Link to="../register">Регистрация</Link>
           </Button>
         </div>

@@ -36,6 +36,7 @@ function createReducers() {
   };
 
   function setAuth(state: IAuthState, action: PayloadAction<IAuthUser | null>) {
+    // console.log(action.payload)
     state.value = action.payload;
   }
 }
@@ -68,7 +69,7 @@ function createExtraActions() {
           const { from } = history.location?.state || {
             from: { pathname: "/" },
           };
-
+          console.log(from)
           history.navigate!(from);
         } catch (error) {
           if (error instanceof Error) {
