@@ -1,5 +1,4 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { useAppSelector } from "../../store";
 import { history } from "../../services";
 

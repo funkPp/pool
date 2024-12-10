@@ -14,7 +14,7 @@ interface IAuthUser {
 interface IAuthState {
   value: IAuthUser | null;
 }
-
+const URL_API = process.env.REACT_APP_API_URL ?? "http://localhost:5555";
 const name = "auth";
 const initialState = createInitialState();
 const reducers = createReducers();
@@ -42,7 +42,7 @@ function createReducers() {
 }
 
 function createExtraActions() {
-  const baseUrl = `${process.env.REACT_APP_API_URL}/users`;
+  const baseUrl = `${URL_API}/users`;
 
   return {
     login: login(),
@@ -69,7 +69,7 @@ function createExtraActions() {
           const { from } = history.location?.state || {
             from: { pathname: "/" },
           };
-          console.log(from)
+          console.log(from);
           history.navigate!(from);
         } catch (error) {
           if (error instanceof Error) {

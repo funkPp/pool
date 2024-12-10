@@ -1,36 +1,51 @@
-import { ActionCreatorWithPreparedPayload, createAsyncThunk, createSlice, SerializedError } from "@reduxjs/toolkit";
+import {
+  ActionCreatorWithPreparedPayload,
+  createAsyncThunk,
+  createSlice,
+  SerializedError,
+} from "@reduxjs/toolkit";
 import { authActions, RootState } from ".";
 import { apiService, IUser } from "../services";
 
-export interface IUsersState {
+interface IUsersState {
   list: {
-   value: IUser[] | null,
-   error: null | Error,
-   loading: null | boolean
-  }
+    value: IUser[] | null;
+    error: null | Error;
+    loading: null | boolean;
+  };
   item: {
-   value: IUser | null,
-   error: null | Error,
-   loading: null | boolean
-  }
+    value: IUser | null;
+    error: null | Error;
+    loading: null | boolean;
+  };
+}
+
+interface IUresRegister {
+  firstName: string;
+  lastName: string;
+  userName: string;
+  password: string;
 }
 
 const name = "users";
-const initialState : IUsersState = {
-    list: {
-      value: null,
-      error: null,
-      loading: null
-    },
-    item: {
-      value: null,
-      error: null,
-      loading: null
-    },
-  } 
+const initialState: IUsersState = {
+  list: {
+    value: null,
+    error: null,
+    loading: null,
+  },
+  item: {
+    value: null,
+    error: null,
+    loading: null,
+  },
+};
 const extraActions = createExtraActions();
 // const extraReducers = createExtraReducers();
-const slice = createSlice({ name, initialState , reducers: {}, 
+const slice = createSlice({
+  name,
+  initialState,
+  reducers: {},
   extraReducers: (builder) => {
     getAll();
     getById();
@@ -40,13 +55,13 @@ const slice = createSlice({ name, initialState , reducers: {},
       var { pending, fulfilled, rejected } = extraActions.getAll;
       builder
         .addCase(pending, (state, action) => {
-          state.list.loading = true ;
+          state.list.loading = true;
         })
         .addCase(fulfilled, (state, action) => {
-          state.list.value = action.payload  ;
+          state.list.value = action.payload;
         })
         .addCase(rejected, (state, action) => {
-          state.list.error = action.error as Error ;
+          state.list.error = action.error as Error;
         });
     }
 
@@ -54,10 +69,10 @@ const slice = createSlice({ name, initialState , reducers: {},
       var { pending, fulfilled, rejected } = extraActions.getById;
       builder
         .addCase(pending, (state, action) => {
-          state.item.loading = true ;
+          state.item.loading = true;
         })
         .addCase(fulfilled, (state, action) => {
-          state.item.value = action.payload ;
+          state.item.value = action.payload;
         })
         .addCase(rejected, (state, action) => {
           state.item.error = action.error as Error;
@@ -81,16 +96,15 @@ const slice = createSlice({ name, initialState , reducers: {},
     //       user.isDeleting = false;
     //     });
     // }
-  }
- });
+  },
+});
 
 export const userActions = { ...slice.actions, ...extraActions };
 export const usersReducer = slice.reducer;
 
-
 function createExtraActions() {
-  const API_URL = process.env.REACT_APP_API_URL;
-  const baseUrl = `${API_URL}/users`;
+  const URL_API = process.env.REACT_APP_API_URL ?? "http://localhost:5555";
+  const baseUrl = `${URL_API}/users`;
 
   return {
     register: register(),
@@ -103,7 +117,8 @@ function createExtraActions() {
   function register() {
     return createAsyncThunk(
       `${name}/register`,
-      async (user) => await apiService.post(`${baseUrl}/register`, user),
+      async (user: IUresRegister) =>
+        await apiService.post(`${baseUrl}/register`, user),
     );
   }
 
@@ -161,5 +176,5 @@ function createExtraActions() {
 }
 
 // function createExtraReducers() {
-//   return 
+//   return
 // }

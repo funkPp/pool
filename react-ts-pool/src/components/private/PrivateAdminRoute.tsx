@@ -1,14 +1,12 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useSelector } from "react-redux";
-
-// import { history } from '_helpers';
+import { useAppSelector } from "../../store";
+import { history } from "../../services";
 
 export function PrivateAdminRoute() {
-  // const auth = useSelector(x => x.auth.value);
+  const auth = useAppSelector((x) => x.auth.value);
 
-  // if (!(auth.role === 'admin') && !(auth.role === 'owner')) {
-  if (true) {
-    return <Navigate to="/account/login" />;
+  if (!(auth.role === "admin") && !(auth.role === "owner")) {
+    return <Navigate to="/account/login" state={{ from: history.location }} />;
   }
   return (
     <>

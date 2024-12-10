@@ -2,22 +2,23 @@ import { Link } from "react-router-dom";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
 import clsx from "clsx";
 import { Button } from "../ui-kit/Button";
 import { Card } from "../ui-kit/Card";
-
-// import { history } from "_helpers";
-//import { userActions, alertActions } from "_store";
-
+import { history } from "../../services";
+import {
+  authActions,
+  useAppDispatch,
+  userActions,
+  alertActions,
+} from "../../store";
 export function Register() {
-  // const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
-  // form validation rules
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required("First Name is required"),
     lastName: Yup.string().required("Last Name is required"),
-    username: Yup.string().required("Username is required"),
+    userName: Yup.string().required("Username is required"),
     password: Yup.string()
       .required("Password is required")
       .min(6, "Password must be at least 6 characters"),
@@ -29,27 +30,28 @@ export function Register() {
 
   type FormSchema = Yup.InferType<typeof validationSchema>;
 
+  const onSubmit: SubmitHandler<FormSchema> = async (data) => {
+    dispatch(alertActions.clear());
+    try {
+      await dispatch(userActions.register(data)).unwrap();
+      history.navigate!("/account/login");
+      dispatch(
+        alertActions.success({
+          message: "Registration successful",
+          showAfterRedirect: true,
+        }),
+      );
+    } catch (error) {
+      if (error instanceof Error) {
+        dispatch(alertActions.error(error));
+      }
+    }
+  };
+
   const styleInput = `
     bg-gray-50 border border-gray-300 text-sm rounded-lg 
     hover:border-cyan-600 focus:outline-cyan-700 block w-full p-2`;
   const styleLabel = "block mb-2 text-sm font-medium";
-
-  const onSubmit: SubmitHandler<FormSchema> = async (data) => {
-    // dispatch(alertActions.clear());
-    // try {
-    //   await dispatch(userActions.register(data)).unwrap();
-    //   // redirect to login page and display success alert
-    //   history.navigate("/account/login");
-    //   dispatch(
-    //     alertActions.success({
-    //       message: "Registration successful",
-    //       showAfterRedirect: true,
-    //     })
-    //   );
-    // } catch (error) {
-    //   dispatch(alertActions.error(error));
-    // }
-  };
 
   return (
     <Card typeClass="main">
@@ -81,11 +83,11 @@ export function Register() {
           <label className={clsx(styleLabel)}>Логин</label>
           <input
             type="text"
-            {...register("username")}
+            {...register("userName")}
             className={clsx(styleInput)}
           />
           <div className="mt-1 text-sm text-red-600">
-            {errors.username?.message}
+            {errors.userName?.message}
           </div>
         </div>
         <div className="mb-3">

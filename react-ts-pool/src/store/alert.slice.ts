@@ -31,7 +31,7 @@ function createReducers() {
     clear,
   };
 
-  function success(state: IAlertState, action: PayloadAction<IAlert>) {
+  function success(state: IAlertState, action: PayloadAction<Omit<IAlert, 'type'>>) {
     state.value = {
       type: "alert-success",
       message: action.payload.message,

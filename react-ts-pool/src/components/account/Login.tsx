@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { useDispatch } from "react-redux";
 import { Card } from "../ui-kit/Card";
 import { Button } from "../ui-kit/Button";
 import clsx from "clsx";
