@@ -34,6 +34,7 @@ export function Register() {
     dispatch(alertActions.clear());
     try {
       await dispatch(userActions.register(data)).unwrap();
+      console.log("TTTTTT");
       history.navigate!("/account/login");
       dispatch(
         alertActions.success({
@@ -43,6 +44,7 @@ export function Register() {
       );
     } catch (error) {
       if (error instanceof Error) {
+        console.log("Error Register");
         dispatch(alertActions.error(error));
       }
     }

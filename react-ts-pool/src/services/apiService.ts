@@ -10,12 +10,12 @@ export const apiService = {
 function request<Ibody>(method: string) {
   return (url: string, body: Ibody) => {
     const requestOptions: {
-        method: string,
-        headers: {
-            Authorization?: string,
-            "Content-Type"?: string,
-        },
-        body?: string,
+      method: string;
+      headers: {
+        Authorization?: string;
+        "Content-Type"?: string;
+      };
+      body?: string;
     } = {
       method,
       headers: authHeader(url),
@@ -28,11 +28,12 @@ function request<Ibody>(method: string) {
   };
 }
 
-
 function authHeader(url: string) {
   const token = authToken();
   const isLoggedIn = !!token;
-  const isApiUrl = url.startsWith(process.env.REACT_APP_API_URL ?? "http://localhost:5555");
+  const isApiUrl = url.startsWith(
+    process.env.REACT_APP_API_URL ?? "http://localhost:5555",
+  );
   if (isLoggedIn && isApiUrl) {
     return { Authorization: `Bearer ${token}` };
   } else {
@@ -41,10 +42,10 @@ function authHeader(url: string) {
 }
 
 function authToken() {
-    const localJson = localStorage.getItem('auth')
-    if (!localJson) return
-    const user = JSON.parse(localJson)
-    console.log(user)
+  const localJson = localStorage.getItem("auth");
+  if (!localJson) return;
+  const user = JSON.parse(localJson);
+  console.log(user);
   return user?.token;
 }
 
@@ -53,21 +54,21 @@ async function handleResponse(response: Response) {
     ?.get("content-type")
     ?.includes("application/json");
   const data = isJson ? await response.json() : null;
-  
-  console.log(response, response.ok)
+
+  //console.log(response, response.ok);
   if (!response.ok) {
     if ([401, 403].includes(response.status) && authToken()) {
-       const logout = () => store.dispatch(authActions.logout());
-       logout();
+      const logout = () => store.dispatch(authActions.logout());
+      logout();
     }
 
-    console.log(data.error, data)
-    if (response.status === 500) {
-      throw new Error(data.error)
-    }
-
+    console.log("data", data);
+    console.log("data.error", data.error);
+    // if (response.status === 500) {
+    //   throw new Error(data.error)
+    // }
     const error = (data && data.error) || response.status;
-    return Promise.reject(error);
+    return Promise.reject(new Error(error));
   }
 
   return data;
