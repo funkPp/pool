@@ -33,7 +33,7 @@ function createReducers() {
 
   function success(state: IAlertState, action: PayloadAction<Omit<IAlert, 'type'>>) {
     state.value = {
-      type: "alert-success",
+      type: "success",
       message: action.payload.message,
       showAfterRedirect: action.payload.showAfterRedirect,
     };
@@ -41,7 +41,7 @@ function createReducers() {
 
   function error(state: IAlertState, action: PayloadAction<Error>) {
     state.value = {
-      type: "alert-danger",
+      type: "alert",
       message: action.payload.message,
       showAfterRedirect: true,
     };

@@ -37,7 +37,7 @@ export function Register() {
       history.navigate!("/account/login");
       dispatch(
         alertActions.success({
-          message: "Registration successful",
+          message: "Регистрация прошла успешно!", //fix
           showAfterRedirect: true,
         }),
       );

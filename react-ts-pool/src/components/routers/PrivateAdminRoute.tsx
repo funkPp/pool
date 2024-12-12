@@ -8,9 +8,5 @@ export function PrivateAdminRoute() {
   if (!(auth.role === "admin") && !(auth.role === "owner")) {
     return <Navigate to="/account/login" state={{ from: history.location }} />;
   }
-  return (
-    <>
-      <Outlet />
-    </>
-  );
+  return <Outlet />;
 }

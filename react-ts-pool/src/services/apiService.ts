@@ -53,11 +53,17 @@ async function handleResponse(response: Response) {
     ?.get("content-type")
     ?.includes("application/json");
   const data = isJson ? await response.json() : null;
-
+  
+  console.log(response, response.ok)
   if (!response.ok) {
     if ([401, 403].includes(response.status) && authToken()) {
        const logout = () => store.dispatch(authActions.logout());
        logout();
+    }
+
+    console.log(data.error, data)
+    if (response.status === 500) {
+      throw new Error(data.error)
     }
 
     const error = (data && data.error) || response.status;

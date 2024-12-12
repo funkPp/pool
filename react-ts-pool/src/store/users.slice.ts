@@ -4,7 +4,7 @@ import {
   createSlice,
   SerializedError,
 } from "@reduxjs/toolkit";
-import { authActions, RootState } from ".";
+import { alertActions, authActions, RootState } from ".";
 import { apiService, IUser } from "../services";
 
 interface IUsersState {
@@ -20,7 +20,7 @@ interface IUsersState {
   };
 }
 
-interface IUresRegister {
+interface IUserRegister {
   firstName: string;
   lastName: string;
   userName: string;
@@ -117,8 +117,17 @@ function createExtraActions() {
   function register() {
     return createAsyncThunk(
       `${name}/register`,
-      async (user: IUresRegister) =>
-        await apiService.post(`${baseUrl}/register`, user),
+      async (user: IUserRegister, {dispatch}) => {
+        try {
+          const res = await apiService.post(`${baseUrl}/register`, user)
+          console.log('!!!!!!!',res)
+        } catch (error) {
+          if (error instanceof Error) {
+            dispatch(alertActions.error(error));
+          }
+        }
+
+      }
     );
   }
 

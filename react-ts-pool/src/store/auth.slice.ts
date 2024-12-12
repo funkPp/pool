@@ -62,6 +62,8 @@ function createExtraActions() {
             username,
             password,
           });
+
+          console.log('user:',user)
           dispatch(authActions.setAuth(user));
 
           localStorage.setItem("auth", JSON.stringify(user));
@@ -72,6 +74,7 @@ function createExtraActions() {
           console.log(from);
           history.navigate!(from);
         } catch (error) {
+          // console.log('error', error)
           if (error instanceof Error) {
             dispatch(alertActions.error(error));
           }

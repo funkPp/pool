@@ -31,6 +31,7 @@ const checkExistUser = async (username) => {
     "select * from users where username = $1",
     [username]
   );
+  console.log(username)
   if (existUser.rowCount) {
     throw new Error(`Пользователь ${username} уже зарегистрирован!`);
   }
@@ -40,18 +41,18 @@ exports.createUser = async (req, res) => {
   const {
     firstname: firstName,
     lastname: lastName,
-    username,
+    userName,
     password,
     role
   } = req.body;
   let userHash = await bcrypt.hash(password, 16);
-  // console.log(firstName, lastName, username, password);
+  console.log(firstName, lastName, userName, password);
   try {
-    await checkExistUser(username);
+    await checkExistUser(userName);
 
     const result = await pool.query(
       "INSERT INTO users (firstName, lastName, username, role, password) VALUES ($1, $2, $3, $4, $5) RETURNING id, firstName, lastName, username, role",
-      [firstName, lastName, username, role, userHash]
+      [firstName, lastName, userName, role, userHash]
     );
 
     res.status(201).json(result.rows);
@@ -66,7 +67,7 @@ exports.updateUser = async (req, res) => {
   const {
     firstname: firstName,
     lastname: lastName,
-    username: userName,
+    userName: userName,
     role,
     password,
   } = req.body;

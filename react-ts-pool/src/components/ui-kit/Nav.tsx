@@ -8,11 +8,7 @@ interface INavProps {
 }
 
 export function Nav({ auth, logout }: INavProps) {
-  // const auth = useAppSelector((x) => x.auth.value);
-  // const dispatch = useAppDispatch();
-  // const logout = () => dispatch(authActions.logout());
-  // if (!auth) return null;
-
+  if (!auth) return <></>;
   return (
     <nav className="bg-white rounded-xl shadow-md flex flex-col text-center sm:flex-row sm:text-left sm:justify-between font-semibold text-cyan-600">
       <div className="p-2 m-2 font-semibold text-cyan-600">
