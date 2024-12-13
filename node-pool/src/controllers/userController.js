@@ -39,14 +39,14 @@ const checkExistUser = async (username) => {
 
 exports.createUser = async (req, res) => {
   const {
-    firstname: firstName,
-    lastname: lastName,
+    firstName,
+    lastName ,
     userName,
     password,
     role
   } = req.body;
   let userHash = await bcrypt.hash(password, 16);
-  console.log(firstName, lastName, userName, password);
+  console.log(req.body,firstName, lastName, userName, password);
   try {
     await checkExistUser(userName);
 

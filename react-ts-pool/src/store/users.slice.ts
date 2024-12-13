@@ -83,7 +83,7 @@ const slice = createSlice({
     //   var { pending, fulfilled, rejected } = extraActions.delete;
     //   builder
     //     .addCase(pending, (state, action) => {
-    //       const user = state.list.value.find((x: IUser) => x.id === action.meta.arg);
+    //       const user = state.list.value!.find((x: IUser) => x.id === action.meta.arg );
     //       user.isDeleting = true;
     //     })
     //     .addCase(fulfilled, (state, action) => {

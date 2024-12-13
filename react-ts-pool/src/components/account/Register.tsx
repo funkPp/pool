@@ -109,16 +109,21 @@ export function Register() {
             {errors.password?.message}
           </div>
         </div>
-        <div className="flex flex-col md:flex-row md:justify-between mt-5">
-          <Button typeClass="main">
-            <button disabled={isSubmitting}>
-              {isSubmitting && <span className=""></span>}
-              Зарегистрировать
-            </button>
-          </Button>
-          <Button typeClass="main">
-            <Link to="../login">Отмена</Link>
-          </Button>
+        <div className="flex flex-col md:flex-row md:justify-between mt-8">
+          <Button
+            typeClass="main"
+            disabled={isSubmitting}
+            value={"Зарегистрироваться"}
+          />
+          <div
+            className="py-2 px-5 focus:outline-none bg-gray-50 rounded-lg 
+                        border border-gray-300 hover:bg-gray-100 hover:text-cyan-700
+                        focus:z-10 focus:ring-3 focus:ring-cyan-100 align-middle"
+          >
+            <Link className="" to="../login">
+              Отмена
+            </Link>
+          </div>
         </div>
       </form>
     </Card>
