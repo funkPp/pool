@@ -33,12 +33,12 @@ export function Register() {
   const onSubmit: SubmitHandler<FormSchema> = async (data) => {
     dispatch(alertActions.clear());
     try {
-      await dispatch(userActions.register(data)).unwrap();
+      await dispatch(userActions.register(data)).unwrap(); //При повторной регистрации должно в catch улетать
       console.log("Reg success??? какого хя!!");
       history.navigate!("/account/login");
       dispatch(
         alertActions.success({
-          message: "Регистрация прошла успешно!", //fix
+          message: "Регистрация прошла успешно!", //fixme
           showAfterRedirect: true,
         }),
       );
