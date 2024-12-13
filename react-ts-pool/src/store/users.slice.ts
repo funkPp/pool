@@ -122,8 +122,12 @@ function createExtraActions() {
           const res = await apiService.post(`${baseUrl}/register`, user)
           console.log('!!!!!!!',res)
         } catch (error) {
-          if (error instanceof Error) {
+          if (typeof error === 'string') {
+            console.log('error Reg', error)
             dispatch(alertActions.error(error));
+            //Promise.reject(error)
+          } else {
+            throw error
           }
         }
 

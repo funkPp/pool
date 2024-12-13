@@ -75,8 +75,10 @@ function createExtraActions() {
           history.navigate!(from);
         } catch (error) {
           // console.log('error', error)
-          if (error instanceof Error) {
+          if (typeof error === 'string') {
             dispatch(alertActions.error(error));
+          } else {
+            throw error
           }
         }
       },

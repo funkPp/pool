@@ -64,11 +64,9 @@ async function handleResponse(response: Response) {
 
     console.log("data", data);
     console.log("data.error", data.error);
-    // if (response.status === 500) {
-    //   throw new Error(data.error)
-    // }
-    const error = (data && data.error) || response.status;
-    return Promise.reject(new Error(error));
+
+    const error = (data && data.error) || `Error, status: ${response.status}`;
+    return Promise.reject(error);
   }
 
   return data;

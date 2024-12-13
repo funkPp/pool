@@ -39,10 +39,11 @@ function createReducers() {
     };
   }
 
-  function error(state: IAlertState, action: PayloadAction<Error>) {
+  function error(state: IAlertState, action: PayloadAction<string>) {
+    console.log('AlertErr', action)
     state.value = {
       type: "alert",
-      message: action.payload.message,
+      message: action.payload,
       showAfterRedirect: true,
     };
   }
