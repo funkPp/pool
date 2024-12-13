@@ -12,6 +12,11 @@ import {
   userActions,
   alertActions,
 } from "../../store";
+
+interface IError {
+  message?: string;
+}
+
 export function Register() {
   const dispatch = useAppDispatch();
 
@@ -33,8 +38,8 @@ export function Register() {
   const onSubmit: SubmitHandler<FormSchema> = async (data) => {
     dispatch(alertActions.clear());
     try {
-      await dispatch(userActions.register(data)).unwrap(); //При повторной регистрации должно в catch улетать
-      console.log("Reg success??? какого хя!!");
+      await dispatch(userActions.register(data)).unwrap();
+
       history.navigate!("/account/login");
       dispatch(
         alertActions.success({
@@ -42,12 +47,12 @@ export function Register() {
           showAfterRedirect: true,
         }),
       );
-    } catch (error) {
-      console.log("Error Register00000");
-      if (typeof error === "string") {
-        console.log("Error Register");
-        dispatch(alertActions.error(error));
+    } catch (err) {
+      const error = err as IError;
+      if (!error.message) {
+        throw err;
       }
+      dispatch(alertActions.error(error.message));
     }
   };
 

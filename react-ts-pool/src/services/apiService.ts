@@ -55,15 +55,11 @@ async function handleResponse(response: Response) {
     ?.includes("application/json");
   const data = isJson ? await response.json() : null;
 
-  //console.log(response, response.ok);
   if (!response.ok) {
     if ([401, 403].includes(response.status) && authToken()) {
       const logout = () => store.dispatch(authActions.logout());
       logout();
     }
-
-    console.log("data", data);
-    console.log("data.error", data.error);
 
     const error = (data && data.error) || `Error, status: ${response.status}`;
     return Promise.reject(error);

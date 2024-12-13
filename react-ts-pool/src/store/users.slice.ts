@@ -118,19 +118,7 @@ function createExtraActions() {
     return createAsyncThunk(
       `${name}/register`,
       async (user: IUserRegister, {dispatch}) => {
-        try {
-          const res = await apiService.post(`${baseUrl}/register`, user)
-          console.log('!!!!!!!',res)
-        } catch (error) {
-          if (typeof error === 'string') {
-            console.log('error Reg', error)
-            dispatch(alertActions.error(error));
-            //Promise.reject(error)
-          } else {
-            throw error
-          }
-        }
-
+        await apiService.post(`${baseUrl}/register`, user)
       }
     );
   }
