@@ -63,14 +63,14 @@ export function Login() {
         </div>
         <div className="flex flex-col md:flex-row md:justify-between mt-5">
           <Button typeClass="main" disabled={isSubmitting} value={"Войти"} />
-
-          <div
+          <Link
             className="py-2 px-5 mb-1 focus:outline-none bg-gray-50 rounded-lg 
                         border border-gray-300 hover:bg-gray-100 hover:text-cyan-700
-                        focus:z-10 focus:ring-3 focus:ring-cyan-100 align-middle"
+                        focus:z-10 focus:ring-3 focus:ring-cyan-100 text-center"
+            to="../register"
           >
-            <Link to="../register">Регистрация</Link>
-          </div>
+            Регистрация
+          </Link>
         </div>
       </form>
     </Card>

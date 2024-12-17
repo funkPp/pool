@@ -6,7 +6,7 @@ export function PrivateAdminRoute() {
   const auth = useAppSelector((x) => x.auth.value);
 
   if (!(auth.role === "admin") && !(auth.role === "owner")) {
-    return <Navigate to="/account/login" state={{ from: history.location }} />;
+    return <Navigate to="/" state={{ from: history.location }} />;
   }
   return <Outlet />;
 }

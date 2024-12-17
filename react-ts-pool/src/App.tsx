@@ -7,7 +7,7 @@ import {
 } from "react-router-dom";
 import { Nav } from "./components/ui-kit/Nav";
 import { Home } from "./components/student";
-import { UsersLayout } from "./components/coach";
+import { UsersLayout } from "./components/users";
 import { AccountLayout } from "./components/account";
 import { PrivateRoute, PrivateAdminRoute } from "./components/routers";
 import { history } from "./services/history";

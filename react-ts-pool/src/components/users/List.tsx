@@ -38,7 +38,6 @@ function List() {
       <Link to="/user/add" className="">
         Add User
       </Link>
-
       <Table typeClass="users" head={head} body={users1} />
     </div>
   );
