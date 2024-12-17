@@ -1,12 +1,16 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { alertActions, useAppSelector, useAppDispatch } from "../../store";
+import {
+  alertActions,
+  useAppSelector,
+  useAppDispatch,
+  IAlert,
+} from "../../store";
 import { clsx } from "clsx";
-export { Alert };
 
-function Alert() {
+export function Alert() {
   const location = useLocation();
-  const alert = useAppSelector((x) => x.alert.value);
+  const alert = useAppSelector((x) => x.alert.value) as IAlert | null;
   const dispatch = useAppDispatch();
 
   useEffect(() => {

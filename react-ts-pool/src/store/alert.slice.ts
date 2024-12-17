@@ -4,7 +4,7 @@ interface IAlertState {
   value: IAlert | null;
 }
 
-interface IAlert {
+export interface IAlert {
   type: string;
   message: string;
   showAfterRedirect?: boolean;
