@@ -29,7 +29,7 @@ function List() {
       firstName: "Roman222",
       lastName: "Каримов222",
       userName: "krr222",
-      role: "ouner",
+      role: "owner",
     },
   ];
   return (
