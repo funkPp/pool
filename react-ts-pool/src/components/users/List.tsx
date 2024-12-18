@@ -18,7 +18,7 @@ export function List() {
 
   const head = ["id", "Имя", "Фамилия", "login", "роль"];
   const { data: users, error, isLoading } = useGetUsers();
-  console.log({ error });
+  // console.log({ error });
   return (
     <div>
       <h1 className="p-2 m-2 font-semibold text-cyan-600 text-center">
@@ -26,10 +26,19 @@ export function List() {
       </h1>
       {!error ? (
         <div className="flex flex-col justify-start">
-          <LinkButton to="/user/add" typeClass="flexRight" disabled={isLoading}>
+          <LinkButton
+            to="/admin/user/add"
+            typeClass="flexRight"
+            disabled={isLoading}
+          >
             Добавить пользователя
           </LinkButton>
-          <Table typeClass="users" head={head} body={users} />
+          <Table
+            typeClass="users"
+            head={head}
+            body={users}
+            editById="/admin/users/edit/"
+          />
         </div>
       ) : (
         <div>Ошибка загрузки пользователей</div>

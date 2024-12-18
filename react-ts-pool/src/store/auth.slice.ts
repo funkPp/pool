@@ -36,7 +36,6 @@ function createReducers() {
   };
 
   function setAuth(state: IAuthState, action: PayloadAction<IAuthUser | null>) {
-    // console.log(action.payload)
     state.value = action.payload;
   }
 }
@@ -63,7 +62,7 @@ function createExtraActions() {
             password,
           });
 
-          console.log('user:',user)
+          // console.log("user:", user);
           dispatch(authActions.setAuth(user));
 
           localStorage.setItem("auth", JSON.stringify(user));
@@ -71,16 +70,16 @@ function createExtraActions() {
           const { from } = history.location?.state || {
             from: { pathname: "/" },
           };
-          console.log(from);
+          // console.log(from);
           history.navigate!(from);
         } catch (error) {
-          console.log({error})
-          if (typeof error === 'string') {
+          // console.log({ error });
+          if (typeof error === "string") {
             dispatch(alertActions.error(error));
           } else if (error instanceof Error) {
             dispatch(alertActions.error(error.message));
           } else {
-            throw error
+            throw error;
           }
         }
       },

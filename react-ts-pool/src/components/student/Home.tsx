@@ -8,7 +8,7 @@ export function Home() {
       {/* <h3>Добрый день, {auth?.firstname +' '+ auth?.lastname+'!'}</h3> */}
       <p>Вы на главной странице!</p>
       <p>
-        <Link to="/admin">Управление пользователями</Link>
+        <Link to="/admin/users">Управление пользователями</Link>
       </p>
     </div>
   );

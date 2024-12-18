@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { useForm, Controller  } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Card } from "../ui-kit";
 import * as Yup from "yup";
-import { useAppSelector, useAppDispatch, alertActions, history } from "../../store";
-import Select from 'react-select';
+import {
+  useAppSelector,
+  useAppDispatch,
+  alertActions,
+  history,
+} from "../../store";
+import Select from "react-select";
+import { useGetUserById } from "./api";
 
 export { AddEdit };
 
@@ -12,7 +19,9 @@ function AddEdit() {
   const { id } = useParams();
   const [title, setTitle] = useState();
   const dispatch = useAppDispatch();
-  // const user = useSelector((x) => x.users?.item);
+
+  const user = useGetUserById(id);
+  // console.log({ user });
 
   const validationSchema = Yup.object().shape({
     firstname: Yup.string().required("First Name is required"),
@@ -24,21 +33,23 @@ function AddEdit() {
       .concat(id ? null : Yup.string().required("Password is required"))
       .min(6, "Password must be at least 6 characters"),
   });
-  const formOptions = { mode: 'onChange', resolver: yupResolver(validationSchema) };
-
-
+  const formOptions = {
+    mode: "onChange",
+    resolver: yupResolver(validationSchema),
+  };
 
   // get functions to build form with useForm() hook
-  const { register, handleSubmit, reset, formState, control } = useForm(formOptions);
+  const { register, handleSubmit, reset, formState, control } =
+    useForm(formOptions);
   const { errors, isSubmitting } = formState;
 
   const options = [
-     { value: 'user', label: 'Пользователь'},
-     { value: 'admin', label: 'Администратор'},
-     { value: 'owner', label: 'Владелец'},
-    ];
-  const getValue = (value) => value ? options.find(o => o.value === value) : ''
-    
+    { value: "user", label: "Пользователь" },
+    { value: "admin", label: "Администратор" },
+    { value: "owner", label: "Владелец" },
+  ];
+  const getValue = (value) =>
+    value ? options.find((o) => o.value === value) : "";
 
   // useEffect(() => {
   //   if (id) {
@@ -54,7 +65,6 @@ function AddEdit() {
   // }, []);
 
   async function onSubmit(data) {
-
     dispatch(alertActions.clear());
     // try {
     //   // create or update user based on id param
@@ -80,12 +90,15 @@ function AddEdit() {
     <Card typeClass="main">
       <h1>{title}</h1>
       {!(user?.loading || user?.error) && (
-        <form onSubmit={handleSubmit(onSubmit)} style={{ maxWidth: '400px', margin: '0 auto'}} >
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          style={{ maxWidth: "400px", margin: "0 auto" }}
+        >
           <div>
             <div className="mb-3 col">
               <label className="form-label">First Name1</label>
               <input
-                name="firstName"
+                name="firstname"
                 type="text"
                 {...register("firstname")}
                 className={`form-control ${
@@ -126,18 +139,18 @@ function AddEdit() {
               <label className="form-label">Роль</label>
               <Controller
                 control={control}
-                defaultValue={'user'}
+                defaultValue={"user"}
                 name="role"
-                render={({ field: {onChange, value, ref} }) => (
-                    <Select
-                      placeholder = 'Выберите роль'
-                      inputRef={ref}
-                      options={options}
-                      value={getValue(value)}
-                      onChange={ newValue => onChange(newValue.value)}
-                    />
+                render={({ field: { onChange, value, ref } }) => (
+                  <Select
+                    placeholder="Выберите роль"
+                    inputRef={ref}
+                    options={options}
+                    value={getValue(value)}
+                    onChange={(newValue) => onChange(newValue.value)}
+                  />
                 )}
-              /> 
+              />
               <div className="invalid-feedback">{errors.role?.message}</div>
             </div>
             <div className="mb-1 col">
@@ -179,7 +192,7 @@ function AddEdit() {
             >
               Сброс
             </button>
-            <Link to="/admin" className="btn btn-link">
+            <Link to="/admin/users" className="btn btn-link">
               Отмена
             </Link>
           </div>

@@ -45,7 +45,7 @@ function authToken() {
   const localJson = localStorage.getItem("auth");
   if (!localJson) return;
   const user = JSON.parse(localJson);
-  console.log(user);
+  // console.log(user);
   return user?.token;
 }
 

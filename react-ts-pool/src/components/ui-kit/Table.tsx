@@ -5,18 +5,22 @@ import { ReactNode } from "react";
 import { IUser } from "../../services";
 import LinkButton from "./LinkButton";
 
-export function Table<T extends { id: string | number }>({
+export function Table<T extends { id: string }>({
   typeClass,
   disabled,
   onDelete,
   head,
   body,
+  editById,
+  deleteById,
 }: {
   typeClass: string;
   disabled?: boolean;
   onDelete?: () => void;
   head?: string[];
   body?: T[];
+  editById?: string;
+  deleteById?: string;
 }) {
   const selectClass: { [index: string]: string } = {
     users: `text-cyan-900`,
@@ -47,16 +51,22 @@ export function Table<T extends { id: string | number }>({
             {String(row[field])}
           </td>
         ))}
-        <td className="px-5 py-1 flex flex-wrap flex-row gap-1 justify-end">
-          <LinkButton to="/user/edit" typeClass="main">
-            Изменить
-          </LinkButton>
-          <Button typeClass="delete" onClick={() => {}} value="Удалить" />
-        </td>
+        {editById && (
+          <td className="px-5 py-1 flex flex-wrap flex-row gap-1 justify-end">
+            <LinkButton to={`${editById}${row.id}`} typeClass="main">
+              Изменить1
+            </LinkButton>
+          </td>
+        )}
+        {deleteById && (
+          <td>
+            <Button typeClass="delete" onClick={() => {}} value="Удалить" />
+          </td>
+        )}
       </tr>
     ));
 
-    console.log(bodyRender);
+    // console.log(bodyRender);
   }
   return (
     <div className="mt-3 relative overflow-x-auto shadow-md sm:rounded-lg box-border ">
