@@ -3,29 +3,24 @@ import { Link, useParams } from "react-router-dom";
 import { useForm, Controller  } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { useSelector, useDispatch } from "react-redux";
+import { useAppSelector, useAppDispatch, alertActions, history } from "../../store";
 import Select from 'react-select';
-
-import { history } from "_helpers";
-import { userActions, alertActions } from "_store";
 
 export { AddEdit };
 
 function AddEdit() {
   const { id } = useParams();
   const [title, setTitle] = useState();
-  const dispatch = useDispatch();
-  const user = useSelector((x) => x.users?.item);
+  const dispatch = useAppDispatch();
+  // const user = useSelector((x) => x.users?.item);
 
-  // form validation rules
   const validationSchema = Yup.object().shape({
     firstname: Yup.string().required("First Name is required"),
     lastname: Yup.string().required("Last Name is required"),
     username: Yup.string().required("Username is required"),
-    // role: Yup.string().required("Заполните поле"),
+    role: Yup.string().required("Заполните поле"),
     password: Yup.string()
       .transform((x) => (x === "" ? undefined : x))
-      // password optional in edit mode
       .concat(id ? null : Yup.string().required("Password is required"))
       .min(6, "Password must be at least 6 characters"),
   });
@@ -42,48 +37,47 @@ function AddEdit() {
      { value: 'admin', label: 'Администратор'},
      { value: 'owner', label: 'Владелец'},
     ];
-
   const getValue = (value) => value ? options.find(o => o.value === value) : ''
     
 
-  useEffect(() => {
-    if (id) {
-      setTitle("Edit User");
-      // fetch user details into redux state and
-      // populate form fields with reset()
-      dispatch(userActions.getById(id))
-        .unwrap()
-        .then((user) => reset(user));
-    } else {
-      setTitle("Add User");
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (id) {
+  //     setTitle("Edit User");
+  //    // fetch user details into redux state and
+  //    // populate form fields with reset()
+  //     dispatch(userActions.getById(id))
+  //       .unwrap()
+  //       .then((user) => reset(user));
+  //   } else {
+  //     setTitle("Add User");
+  //   }
+  // }, []);
 
   async function onSubmit(data) {
 
     dispatch(alertActions.clear());
-    try {
-      // create or update user based on id param
+    // try {
+    //   // create or update user based on id param
 
-      let message;
-      if (id) {
-        await dispatch(userActions.update({ id, data })).unwrap();
-        message = "User updated";
-      } else {
-        await dispatch(userActions.register(data)).unwrap();
-        message = "User added";
-      }
+    //   let message;
+    //   if (id) {
+    //     await dispatch(userActions.update({ id, data })).unwrap();
+    //     message = "User updated";
+    //   } else {
+    //     await dispatch(userActions.register(data)).unwrap();
+    //     message = "User added";
+    //   }
 
-      // redirect to user list with success message
-      history.navigate("/admin");
-      dispatch(alertActions.success({ message, showAfterRedirect: true }));
-    } catch (error) {
-      dispatch(alertActions.error(error));
-    }
+    //   // redirect to user list with success message
+    //   history.navigate("/admin");
+    //   dispatch(alertActions.success({ message, showAfterRedirect: true }));
+    // } catch (error) {
+    //   dispatch(alertActions.error(error));
+    // }
   }
 
   return (
-    <>
+    <Card typeClass="main">
       <h1>{title}</h1>
       {!(user?.loading || user?.error) && (
         <form onSubmit={handleSubmit(onSubmit)} style={{ maxWidth: '400px', margin: '0 auto'}} >
@@ -201,6 +195,6 @@ function AddEdit() {
           <div class="text-danger">Error loading user: {user.error}</div>
         </div>
       )}
-    </>
+    </Card>
   );
 }

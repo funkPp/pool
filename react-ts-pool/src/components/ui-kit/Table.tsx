@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "./Button";
 import { ReactNode } from "react";
 import { IUser } from "../../services";
+import LinkButton from "./LinkButton";
 
 export function Table<T extends { id: string | number }>({
   typeClass,
@@ -18,7 +19,7 @@ export function Table<T extends { id: string | number }>({
   body?: T[];
 }) {
   const selectClass: { [index: string]: string } = {
-    users: ``,
+    users: `text-cyan-900`,
   };
   const disabledStyle = disabled ? "cursor-wait" : "";
 
@@ -47,14 +48,9 @@ export function Table<T extends { id: string | number }>({
           </td>
         ))}
         <td className="px-5 py-1 flex flex-wrap flex-row gap-1 justify-end">
-          <Link
-            className="py-1 px-2 focus:outline-none bg-gray-50 rounded-lg 
-                        border border-gray-300 hover:bg-gray-100 hover:text-cyan-700
-                        focus:z-10 focus:ring-3 focus:ring-cyan-100 content-center "
-            to={"/user/edit"}
-          >
+          <LinkButton to="/user/edit" typeClass="main">
             Изменить
-          </Link>
+          </LinkButton>
           <Button typeClass="delete" onClick={() => {}} value="Удалить" />
         </td>
       </tr>
@@ -63,7 +59,7 @@ export function Table<T extends { id: string | number }>({
     console.log(bodyRender);
   }
   return (
-    <div className="relative overflow-x-auto shadow-md sm:rounded-lg box-border">
+    <div className="mt-3 relative overflow-x-auto shadow-md sm:rounded-lg box-border ">
       <table className="w-full text-sm text-left rtl:text-right text-gray-500">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
@@ -73,7 +69,9 @@ export function Table<T extends { id: string | number }>({
             </th>
           </tr>
         </thead>
-        <tbody>{bodyRender as ReactNode}</tbody>
+        <tbody className={clsx(selectClass[typeClass], disabledStyle)}>
+          {bodyRender as ReactNode}
+        </tbody>
       </table>
     </div>
   );

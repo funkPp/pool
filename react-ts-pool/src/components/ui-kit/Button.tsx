@@ -20,7 +20,7 @@ export function Button({
     border border-red-200 hover:bg-red-100 hover:text-grey-800
     focus:z-10 focus:ring-3 focus:ring-red-300 align-middle`,
   };
-  const disabledStyle = disabled ? "cursor-wait" : "";
+  const disabledStyle = disabled ? "cursor-wait " : "";
 
   return (
     <button
