@@ -12,15 +12,13 @@ import {
 } from "../../store";
 import Select from "react-select";
 import { useGetUserById } from "./api";
+import { clsx } from "clsx";
 
-export { AddEdit };
-
-function AddEdit() {
+export function AddEdit() {
   const { id } = useParams();
   const [title, setTitle] = useState();
   const dispatch = useAppDispatch();
 
-  const user = useGetUserById(id);
   // console.log({ user });
 
   const validationSchema = Yup.object().shape({
@@ -43,13 +41,11 @@ function AddEdit() {
     useForm(formOptions);
   const { errors, isSubmitting } = formState;
 
-  const options = [
-    { value: "user", label: "Пользователь" },
-    { value: "admin", label: "Администратор" },
-    { value: "owner", label: "Владелец" },
-  ];
-  const getValue = (value) =>
-    value ? options.find((o) => o.value === value) : "";
+  const user = useGetUserById(id);
+
+  useEffect(() => {
+    reset(user);
+  }, [reset, user]);
 
   // useEffect(() => {
   //   if (id) {
@@ -59,6 +55,7 @@ function AddEdit() {
   //     dispatch(userActions.getById(id))
   //       .unwrap()
   //       .then((user) => reset(user));
+
   //   } else {
   //     setTitle("Add User");
   //   }
@@ -85,6 +82,18 @@ function AddEdit() {
     //   dispatch(alertActions.error(error));
     // }
   }
+  const styleInput = `
+  bg-gray-50 border border-gray-300 text-sm rounded-lg 
+  hover:border-cyan-600 focus:outline-cyan-700 block w-full p-2`;
+  const styleLabel = "block mb-2 text-sm font-medium";
+
+  const options = [
+    { value: "user", label: "Пользователь" },
+    { value: "admin", label: "Администратор" },
+    { value: "owner", label: "Владелец" },
+  ];
+  const getValue = (value) =>
+    value ? options.find((o) => o.value === value) : "";
 
   return (
     <Card typeClass="main">
@@ -96,69 +105,68 @@ function AddEdit() {
         >
           <div>
             <div className="mb-3 col">
-              <label className="form-label">First Name1</label>
+              <label className={clsx(styleLabel)}>Имя</label>
               <input
                 name="firstname"
                 type="text"
                 {...register("firstname")}
-                className={`form-control ${
-                  errors.firstname ? "is-invalid" : ""
-                }`}
+                className={clsx(styleInput)}
               />
               <div className="invalid-feedback">
                 {errors.firstname?.message}
               </div>
             </div>
             <div className="mb-3 col">
-              <label className="form-label">Last Name</label>
+              <label className={clsx(styleLabel)}>Фамилия</label>
               <input
                 name="lastName"
                 type="text"
                 {...register("lastname")}
-                className={`form-control ${
-                  errors.lastname ? "is-invalid" : ""
-                }`}
+                className={clsx(styleInput)}
               />
               <div className="invalid-feedback">{errors.lastName?.message}</div>
             </div>
           </div>
           <div>
             <div className="mb-3 col">
-              <label className="form-label">Username</label>
+              <label className={clsx(styleLabel)}>Login</label>
               <input
                 name="username"
                 type="text"
                 {...register("username")}
-                className={`form-control ${
-                  errors.username ? "is-invalid" : ""
-                }`}
+                className={clsx(styleInput)}
               />
               <div className="invalid-feedback">{errors.username?.message}</div>
             </div>
-            <div className="mb-3 col">
-              <label className="form-label">Роль</label>
-              <Controller
-                control={control}
-                defaultValue={"user"}
-                name="role"
-                render={({ field: { onChange, value, ref } }) => (
-                  <Select
-                    placeholder="Выберите роль"
-                    inputRef={ref}
-                    options={options}
-                    value={getValue(value)}
-                    onChange={(newValue) => onChange(newValue.value)}
-                  />
-                )}
-              />
+            <div>
+              <label className={clsx(styleLabel)}>Роль</label>
+              <div className=''>
+                <Controller
+                  control={control}
+                  defaultValue={"user"}
+                  name="role"
+                  // className={clsx(styleInput)}
+                  render={({ field: { onChange, value, ref } }) => (
+                    <Select
+                      placeholder="Выберите роль"
+                      inputRef={ref}
+                      options={options}
+                      value={getValue(value)}
+                      className={clsx(styleInput)}
+                      onChange={(newValue) => onChange(newValue.value)}
+                    />
+                  )}
+                />
+              </div>
+
               <div className="invalid-feedback">{errors.role?.message}</div>
             </div>
             <div className="mb-1 col">
-              <label className="form-label">
-                Password
+              <label className={clsx(styleLabel)}>
+                Пароль
                 {id && (
-                  <em className="ml-1">
-                    (Leave blank to keep the same password)
+                  <em className="ml-1 font-light">
+                    (Оставьте поле пустым, чтобы не менять пароль)
                   </em>
                 )}
               </label>
@@ -166,9 +174,7 @@ function AddEdit() {
                 name="password"
                 type="password"
                 {...register("password")}
-                className={`form-control ${
-                  errors.password ? "is-invalid" : ""
-                }`}
+                className={clsx(styleInput)}
               />
               <div className="invalid-feedback">{errors.password?.message}</div>
             </div>

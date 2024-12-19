@@ -54,7 +54,7 @@ export function Table<T extends { id: string }>({
         {editById && (
           <td className="px-5 py-1 flex flex-wrap flex-row gap-1 justify-end">
             <LinkButton to={`${editById}${row.id}`} typeClass="main">
-              Изменить1
+              Изменить
             </LinkButton>
           </td>
         )}
