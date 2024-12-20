@@ -27,7 +27,7 @@ export function List() {
       {!error ? (
         <div className="flex flex-col justify-start">
           <LinkButton
-            to="/admin/user/add"
+            to="/admin/users/add"
             typeClass="flexRight"
             disabled={isLoading}
           >

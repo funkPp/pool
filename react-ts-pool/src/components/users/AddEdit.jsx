@@ -2,17 +2,17 @@ import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Card } from "../ui-kit";
+import { Button, Card, LinkButton } from "../ui-kit";
 import * as Yup from "yup";
 import {
   useAppSelector,
   useAppDispatch,
   alertActions,
-  history,
 } from "../../store";
 import Select from "react-select";
 import { useGetUserById } from "./api";
 import { clsx } from "clsx";
+import { history } from "../../services";
 
 export function AddEdit() {
   const { id } = useParams();
@@ -63,28 +63,28 @@ export function AddEdit() {
 
   async function onSubmit(data) {
     dispatch(alertActions.clear());
-    // try {
-    //   // create or update user based on id param
-
-    //   let message;
-    //   if (id) {
-    //     await dispatch(userActions.update({ id, data })).unwrap();
-    //     message = "User updated";
-    //   } else {
-    //     await dispatch(userActions.register(data)).unwrap();
-    //     message = "User added";
-    //   }
-
-    //   // redirect to user list with success message
-    //   history.navigate("/admin");
-    //   dispatch(alertActions.success({ message, showAfterRedirect: true }));
-    // } catch (error) {
-    //   dispatch(alertActions.error(error));
-    // }
+    try {
+      let message;
+      if (id) {
+        // await dispatch(userActions.update({ id, data })).unwrap();
+        message = "Пользователь обновлен";
+      } else {
+        // await dispatch(userActions.register(data)).unwrap();
+        message = "Пользователь добален";
+      }
+      history.navigate("admin/users");
+      dispatch(alertActions.success({ message, showAfterRedirect: true }));
+    } catch (error) {
+       dispatch(alertActions.error(error));
+     }
   }
   const styleInput = `
   bg-gray-50 border border-gray-300 text-sm rounded-lg 
   hover:border-cyan-600 focus:outline-cyan-700 block w-full p-2`;
+
+  const styleSelect = `
+  bg-gray-50 border border-gray-300 text-sm rounded-lg 
+  hover:border-cyan-600 focus:outline-cyan-700 block w-full`;
   const styleLabel = "block mb-2 text-sm font-medium";
 
   const options = [
@@ -112,9 +112,9 @@ export function AddEdit() {
                 {...register("firstname")}
                 className={clsx(styleInput)}
               />
-              <div className="invalid-feedback">
-                {errors.firstname?.message}
-              </div>
+          <div className="mt-1 text-sm text-red-600">
+            {errors.firstname?.message}
+          </div>
             </div>
             <div className="mb-3 col">
               <label className={clsx(styleLabel)}>Фамилия</label>
@@ -124,7 +124,9 @@ export function AddEdit() {
                 {...register("lastname")}
                 className={clsx(styleInput)}
               />
-              <div className="invalid-feedback">{errors.lastName?.message}</div>
+             <div className="mt-1 text-sm text-red-600">
+               {errors.lastname?.message}
+             </div>
             </div>
           </div>
           <div>
@@ -136,7 +138,9 @@ export function AddEdit() {
                 {...register("username")}
                 className={clsx(styleInput)}
               />
-              <div className="invalid-feedback">{errors.username?.message}</div>
+              <div className="mt-1 text-sm text-red-600">
+                {errors.username?.message}
+              </div>
             </div>
             <div>
               <label className={clsx(styleLabel)}>Роль</label>
@@ -145,21 +149,43 @@ export function AddEdit() {
                   control={control}
                   defaultValue={"user"}
                   name="role"
-                  // className={clsx(styleInput)}
                   render={({ field: { onChange, value, ref } }) => (
                     <Select
                       placeholder="Выберите роль"
                       inputRef={ref}
                       options={options}
                       value={getValue(value)}
-                      className={clsx(styleInput)}
                       onChange={(newValue) => onChange(newValue.value)}
+                      classNamePrefix="react-select" // Добавьте префикс для кастомизации
+                      className={styleSelect} // Применение стилей Tailwind
+                      styles={{
+                        control: (provided) => ({
+                          ...provided,
+                          borderColor: 'none', // Скрыть стандартные границы
+                          boxShadow: 'none', // Убрать тень
+                          borderRadius: '5px',
+                          background: '#FAFAFA'
+                        }),
+                        menu: (provided) => ({
+                          ...provided,
+                          zIndex: 9999, // Убедитесь, что меню отображается поверх других элементов
+                        }),
+                        // placeholder: (provided) => ({
+                        //   ...provided,
+                        //   color: 'rgb(14 116 144 / var(--tw-text-opacity, 1))' // Цвет плейсхолдера
+                        // }),
+                        singleValue: (provided) => ({
+                          ...provided,
+                          color: '#0097A7 ', // Цвет выбранного значения
+                        }),
+                      }}
                     />
                   )}
                 />
               </div>
-
-              <div className="invalid-feedback">{errors.role?.message}</div>
+              <div className="mt-1 text-sm text-red-600">
+                {errors.role?.message}
+              </div>
             </div>
             <div className="mb-1 col">
               <label className={clsx(styleLabel)}>
@@ -176,35 +202,34 @@ export function AddEdit() {
                 {...register("password")}
                 className={clsx(styleInput)}
               />
-              <div className="invalid-feedback">{errors.password?.message}</div>
+              <div className="mt-1 text-sm text-red-600">
+                {errors.password?.message}
+              </div>
             </div>
           </div>
-          <div className="mt-3">
-            <button
+          <div className="mt-3 flex flex-wrap justify-between">
+            <Button
+              typeClass="main"
               type="submit"
               disabled={isSubmitting}
-              className="btn btn-primary me-2"
-            >
-              {isSubmitting && (
-                <span className="spinner-border spinner-border-sm me-1"></span>
-              )}
-              Сохранить
-            </button>
-            <button
+              value="Сохранить"
+            />
+
+            <Button
+              typeClass="main"
               onClick={() => reset()}
               type="button"
               disabled={isSubmitting}
-              className="btn btn-secondary"
-            >
-              Сброс
-            </button>
-            <Link to="/admin/users" className="btn btn-link">
+              value="Сброс"
+            />
+            
+            <LinkButton typeClass="main" to="/admin/users">
               Отмена
-            </Link>
+            </LinkButton>
           </div>
         </form>
       )}
-      {user?.loading && (
+      {/* {user?.loading && (
         <div className="text-center m-5">
           <span className="spinner-border spinner-border-lg align-center"></span>
         </div>
@@ -213,7 +238,7 @@ export function AddEdit() {
         <div class="text-center m-5">
           <div class="text-danger">Error loading user: {user.error}</div>
         </div>
-      )}
+      )} */}
     </Card>
   );
 }
