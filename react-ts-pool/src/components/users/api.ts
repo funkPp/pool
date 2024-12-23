@@ -1,6 +1,7 @@
 import {
   infiniteQueryOptions,
   queryOptions,
+  useMutation,
   useQuery,
 } from "@tanstack/react-query";
 import { apiService, IUser } from "../../services/";
@@ -39,3 +40,24 @@ export function useGetUserById(id: string) {
   const user = usersList?.find((u: IUser) => u.id === +id);
   return user;
 }
+
+
+
+const useAddUser = () => {
+  return useMutation(apiService.put, user), {
+    onSuccess: () => {
+      queryClient.invalidateQueries('users');
+    },
+  });
+};
+
+
+export function useUserMutation(isEdit: boolean, user: IUser){
+  return useMutation(apiService.put(`${baseUrl}`, user) , user), {
+    onSuccess: () => {
+      queryClient.invalidateQueries('users');
+      reset(); 
+    },
+  })
+}
+
