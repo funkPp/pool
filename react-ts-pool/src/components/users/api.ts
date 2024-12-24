@@ -26,6 +26,25 @@ const usersListApi = {
   // },
 };
 
+const userByIdApi = {
+  baseKey: "users",
+  getUserByIdQueryOptions: (id: string) => {
+    return queryOptions({
+      queryKey: [usersListApi.baseKey, "list", id],
+      queryFn: () => apiService.get(`${baseUrl}/${id}`, null),
+      initialData: () =>  {
+        const usersList = queryClient.getQueryData(usersListApi.getUsersListQueryOptions().queryKey,);
+        const userCach = usersList?.find((u: IUser) => u.id === +id);
+        return userCach
+      },
+      initialDataUpdatedAt: () => {
+        const state = queryClient.getQueryState(usersListApi.getUsersListQueryOptions().queryKey)   
+        return state?.dataUpdatedAt
+      },
+    });
+  },
+};
+
 export function useGetUsers() {
   return useQuery({
     ...usersListApi.getUsersListQueryOptions(),
@@ -33,31 +52,40 @@ export function useGetUsers() {
   });
 }
 
+
+// export function useGetUserById(id: string) {
+//   const usersList = queryClient.getQueryData(
+//     usersListApi.getUsersListQueryOptions().queryKey,
+//   );
+//   const user = usersList?.find((u: IUser) => u.id === +id);
+//   return user;
+// }
+
+
+
 export function useGetUserById(id: string) {
-  const usersList = queryClient.getQueryData(
-    usersListApi.getUsersListQueryOptions().queryKey,
-  );
-  const user = usersList?.find((u: IUser) => u.id === +id);
-  return user;
-}
-
-
-
-const useAddUser = () => {
-  return useMutation(apiService.put, user), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('users');
-    },
+  return useQuery({
+    ...userByIdApi.getUserByIdQueryOptions(id),
+    enabled: !!localStorage.getItem("auth"),
   });
-};
-
-
-export function useUserMutation(isEdit: boolean, user: IUser){
-  return useMutation(apiService.put(`${baseUrl}`, user) , user), {
-    onSuccess: () => {
-      queryClient.invalidateQueries('users');
-      reset(); 
-    },
-  })
 }
+
+
+// const useAddUser = () => {
+//   return useMutation(apiService.put, user), {
+//     onSuccess: () => {
+//       queryClient.invalidateQueries('users');
+//     },
+//   });
+// };
+
+
+// export function useUserMutation(isEdit: boolean, user: IUser){
+//   return useMutation(apiService.put(`${baseUrl}`, user) , user), {
+//     onSuccess: () => {
+//       queryClient.invalidateQueries('users');
+//       reset(); 
+//     },
+//   })
+// }
 

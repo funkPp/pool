@@ -23,7 +23,7 @@ export function Button({
     focus:z-10 focus:ring-3 focus:ring-red-300 align-middle`,
   };
   const disabledStyle = disabled ? "cursor-wait " : "";
-  console.log(onClick);
+  //  console.log(onClick);
   return (
     <button
       className={clsx(selectClass[typeClass], disabledStyle)}

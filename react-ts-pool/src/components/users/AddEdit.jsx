@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -35,12 +35,11 @@ export function AddEdit() {
     resolver: yupResolver(validationSchema),
   };
 
-  // get functions to build form with useForm() hook
   const { register, handleSubmit, reset, formState, control } =
     useForm(formOptions);
   const { errors, isSubmitting } = formState;
 
-  const user = useGetUserById(id);
+  const {data :user, isSuccess, isError, status} = useGetUserById(id);
 
   useEffect(() => {
     reset(user);

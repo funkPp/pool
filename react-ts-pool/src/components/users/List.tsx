@@ -18,6 +18,7 @@ export function List() {
 
   const head = ["id", "Имя", "Фамилия", "login", "роль"];
   const { data: users, error, isLoading } = useGetUsers();
+
   // console.log({ error });
   return (
     <div>
