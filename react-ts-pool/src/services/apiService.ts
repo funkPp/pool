@@ -1,4 +1,5 @@
 import { store, authActions } from "../store";
+import { IUser } from "./types";
 
 export const apiService = {
   get: request("GET"),
