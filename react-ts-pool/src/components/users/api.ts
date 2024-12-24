@@ -2,6 +2,7 @@ import {
   infiniteQueryOptions,
   queryOptions,
   useMutation,
+  UseMutationResult,
   useQuery,
 } from "@tanstack/react-query";
 import { apiService, IUser } from "../../services/";
@@ -80,12 +81,32 @@ export function useGetUserById(id: string) {
 // };
 
 
-// export function useUserMutation(isEdit: boolean, user: IUser){
-//   return useMutation(apiService.put(`${baseUrl}`, user) , user), {
-//     onSuccess: () => {
-//       queryClient.invalidateQueries('users');
-//       reset(); 
-//     },
-//   })
-// }
+export function useUserMutation(path: string, body: IUser){
+  return useMutation({
+    mutationFn: apiService.put(path, body),
+    onSuccess: () => { 
+      queryClient.invalidateQueries();
+    },
+  })
+}
 
+
+// // Пример мутации для создания пользователя
+// export const useCreateUser = () => {
+//   return useMutation((newUser: IUser) => apiService.post('/users', newUser));
+// };
+
+// // Пример мутации для обновления пользователя
+// export const useUpdateUser = () => {
+//   return useMutation(({ id, updatedData }) => apiService.put(/users/${id}, updatedData));
+// };
+
+// // Пример мутации для удаления пользователя
+// export const useDeleteUser = () => {
+//   return useMutation((userId) => apiService.delete(/users/${userId}));
+// };
+
+
+// export const useCreateUser = (): UseMutationResult<IUser, Error, IUser> => {
+//   return useMutation<IUser, Error, IUser, null>((newUser: IUser) => apiService.post('/users', newUser));
+// };
