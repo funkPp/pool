@@ -9,7 +9,7 @@ import {
   alertActions,
 } from "../../store";
 import Select from "react-select";
-import { useGetUserById } from "./api";
+import { useGetUserById, useUserMutationEdit, useUserMutationСreate} from "./api";
 import { clsx } from "clsx";
 import { history } from "../../services";
 
@@ -61,26 +61,22 @@ export function AddEdit() {
   //   }
   // }, []);
 
-
+  const mutationEdit = useUserMutationEdit(id)
+  const mutationCreate = useUserMutationСreate()
 
   async function onSubmit(data) {
     dispatch(alertActions.clear());
-    try {
-      let message;
-      if (id) {
-        // await dispatch(userActions.update({ id, data })).unwrap();
-        message = "Пользователь обновлен";
-      } else {
-        // await dispatch(userActions.register(data)).unwrap();
-        message = "Пользователь добален";
-      }
-      history.navigate("admin/users");
-      dispatch(alertActions.success({ message, showAfterRedirect: true }));
-    } catch (error) {
-       dispatch(alertActions.error(error));
-     }
+
+    if (id) {
+      mutationEdit.mutate(data);        
+    } else {
+      mutationCreate.mutate();
+    }
+    
+    history.navigate("admin/users");
   }
-  const styleInput = `
+
+      const styleInput = `
   bg-gray-50 border border-gray-300 text-sm rounded-lg 
   hover:border-cyan-600 focus:outline-cyan-700 block w-full p-2`;
 

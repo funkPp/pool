@@ -67,7 +67,7 @@ exports.updateUser = async (req, res) => {
   const {
     firstname: firstName,
     lastname: lastName,
-    userName: userName,
+    username: userName,
     role,
     password,
   } = req.body;

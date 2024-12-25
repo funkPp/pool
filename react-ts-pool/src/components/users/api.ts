@@ -7,6 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { apiService, IUser } from "../../services/";
 import { queryClient } from "../../services/queryClient";
+import { alertActions, useAppDispatch } from "../../store";
 
 const URL_API = process.env.REACT_APP_API_URL ?? "http://localhost:5555";
 const baseUrl = `${URL_API}/users`;
@@ -31,7 +32,7 @@ const userByIdApi = {
   baseKey: "users",
   getUserByIdQueryOptions: (id: string) => {
     return queryOptions({
-      queryKey: [usersListApi.baseKey, "list", id],
+      queryKey: [userByIdApi.baseKey, "list", id],
       queryFn: () => apiService.get(`${baseUrl}/${id}`, null),
       initialData: () =>  {
         const usersList = queryClient.getQueryData(usersListApi.getUsersListQueryOptions().queryKey,);
@@ -81,32 +82,37 @@ export function useGetUserById(id: string) {
 // };
 
 
-export function useUserMutation(path: string, body: IUser){
+export function useUserMutationEdit(id: string){
+  const dispatch = useAppDispatch()
   return useMutation({
-    mutationFn: apiService.put(path, body),
+    mutationFn: ( body: IUser) => apiService.put(`${baseUrl}/${id}`, body),
     onSuccess: () => { 
-      queryClient.invalidateQueries();
+      queryClient.invalidateQueries({queryKey: [usersListApi.baseKey]});
+      const message = 'Пользователь обновлен'
+      dispatch(alertActions.success({ message, showAfterRedirect: true }));
     },
+    onError: (err) => {
+      if (typeof err === 'string')
+      dispatch(alertActions.error(err));
+    }
   })
 }
 
 
-// // Пример мутации для создания пользователя
-// export const useCreateUser = () => {
-//   return useMutation((newUser: IUser) => apiService.post('/users', newUser));
-// };
+export function useUserMutationСreate(){
+  const dispatch = useAppDispatch()
+  return useMutation({
+    mutationFn: ( body: IUser) => apiService.post(`${baseUrl}/register`, body),
+    onSuccess: () => { 
+      queryClient.invalidateQueries({queryKey: [usersListApi.baseKey]});
+      const message = 'Пользователь добавлен'
+      dispatch(alertActions.success({ message, showAfterRedirect: true }));
+    },
+    onError: (err) => {
+      if (typeof err === 'string')
+      dispatch(alertActions.error(err));
+    }
+  })
+}
 
-// // Пример мутации для обновления пользователя
-// export const useUpdateUser = () => {
-//   return useMutation(({ id, updatedData }) => apiService.put(/users/${id}, updatedData));
-// };
 
-// // Пример мутации для удаления пользователя
-// export const useDeleteUser = () => {
-//   return useMutation((userId) => apiService.delete(/users/${userId}));
-// };
-
-
-// export const useCreateUser = (): UseMutationResult<IUser, Error, IUser> => {
-//   return useMutation<IUser, Error, IUser, null>((newUser: IUser) => apiService.post('/users', newUser));
-// };
