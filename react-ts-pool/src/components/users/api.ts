@@ -34,14 +34,18 @@ const userByIdApi = {
     return queryOptions({
       queryKey: [userByIdApi.baseKey, "list", id],
       queryFn: () => apiService.get(`${baseUrl}/${id}`, null),
-      initialData: () =>  {
-        const usersList = queryClient.getQueryData(usersListApi.getUsersListQueryOptions().queryKey,);
+      initialData: () => {
+        const usersList = queryClient.getQueryData(
+          usersListApi.getUsersListQueryOptions().queryKey,
+        );
         const userCach = usersList?.find((u: IUser) => u.id === +id);
-        return userCach
+        return userCach;
       },
       initialDataUpdatedAt: () => {
-        const state = queryClient.getQueryState(usersListApi.getUsersListQueryOptions().queryKey)   
-        return state?.dataUpdatedAt
+        const state = queryClient.getQueryState(
+          usersListApi.getUsersListQueryOptions().queryKey,
+        );
+        return state?.dataUpdatedAt;
       },
     });
   },
@@ -54,7 +58,6 @@ export function useGetUsers() {
   });
 }
 
-
 // export function useGetUserById(id: string) {
 //   const usersList = queryClient.getQueryData(
 //     usersListApi.getUsersListQueryOptions().queryKey,
@@ -63,15 +66,12 @@ export function useGetUsers() {
 //   return user;
 // }
 
-
-
 export function useGetUserById(id: string) {
   return useQuery({
     ...userByIdApi.getUserByIdQueryOptions(id),
     enabled: !!localStorage.getItem("auth"),
   });
 }
-
 
 // const useAddUser = () => {
 //   return useMutation(apiService.put, user), {
@@ -81,38 +81,32 @@ export function useGetUserById(id: string) {
 //   });
 // };
 
-
-export function useUserMutationEdit(id: string){
-  const dispatch = useAppDispatch()
+export function useUserMutationEdit(id: string) {
+  const dispatch = useAppDispatch();
   return useMutation({
-    mutationFn: ( body: IUser) => apiService.put(`${baseUrl}/${id}`, body),
-    onSuccess: () => { 
-      queryClient.invalidateQueries({queryKey: [usersListApi.baseKey]});
-      const message = 'Пользователь обновлен'
+    mutationFn: (body: IUser) => apiService.put(`${baseUrl}/${id}`, body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [usersListApi.baseKey] });
+      const message = "Пользователь обновлен";
       dispatch(alertActions.success({ message, showAfterRedirect: true }));
     },
     onError: (err) => {
-      if (typeof err === 'string')
-      dispatch(alertActions.error(err));
-    }
-  })
+      if (typeof err === "string") dispatch(alertActions.error(err));
+    },
+  });
 }
 
-
-export function useUserMutationСreate(){
-  const dispatch = useAppDispatch()
+export function useUserMutationСreate() {
+  const dispatch = useAppDispatch();
   return useMutation({
-    mutationFn: ( body: IUser) => apiService.post(`${baseUrl}/register`, body),
-    onSuccess: () => { 
-      queryClient.invalidateQueries({queryKey: [usersListApi.baseKey]});
-      const message = 'Пользователь добавлен'
+    mutationFn: (body: IUser) => apiService.post(`${baseUrl}/register`, body),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [usersListApi.baseKey] });
+      const message = "Пользователь добавлен";
       dispatch(alertActions.success({ message, showAfterRedirect: true }));
     },
     onError: (err) => {
-      if (typeof err === 'string')
-      dispatch(alertActions.error(err));
-    }
-  })
+      if (typeof err === "string") dispatch(alertActions.error(err));
+    },
+  });
 }
-
-

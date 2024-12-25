@@ -16,13 +16,13 @@ export function List() {
   //     dispatch(userActions.getAll());
   // }, []);
 
-  const head = ["id", "Имя", "Фамилия", "login", "роль"];
+  const head = ["id", "Имя", "Фамилия", "login", "Роль"];
   const { data: users, error, isLoading } = useGetUsers();
 
   // console.log({ error });
   return (
     <div>
-      <h1 className="p-2 m-2 font-semibold text-cyan-600 text-center">
+      <h1 className="p-2 font-semibold text-cyan-600 text-center">
         Пользователи
       </h1>
       {!error ? (

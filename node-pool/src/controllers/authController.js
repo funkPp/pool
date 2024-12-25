@@ -7,9 +7,9 @@ const expiresIn = process.env.EXPIRESIN;
 
 exports.authenticate = async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const result = await pool.query("SELECT * FROM users WHERE username = $1", [
-      username,
+    const { userName, password } = req.body;
+    const result = await pool.query("SELECT * FROM users WHERE userName = $1", [
+      userName,
     ]);
 
     if (

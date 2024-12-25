@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 exports.getUsers = async (req, res) => {
   try {
     const result = await pool.query(
-      "SELECT id, firstName, lastName, username, role FROM users ORDER BY id"
+      "SELECT id, firstName, lastName, userName, role FROM users ORDER BY id"
     );
     res.status(200).json(result.rows);
   } catch (err) {
@@ -17,7 +17,7 @@ exports.getUser = async (req, res) => {
   try {
     const { id } = req.params;
     const result = await pool.query(
-      "SELECT id, firstName, lastName, username, role FROM users WHERE id = $1",
+      "SELECT id, firstName, lastName, userName, role FROM users WHERE id = $1",
       [id]
     );
     res.status(200).json(result.rows[0]);
@@ -26,32 +26,28 @@ exports.getUser = async (req, res) => {
   }
 };
 
-const checkExistUser = async (username) => {
+const checkExistUser = async (userName) => {
   const existUser = await pool.query(
-    "select * from users where username = $1",
-    [username]
+    "select * from users where userName = $1",
+    [userName]
   );
-  console.log(username)
+  console.log(userName);
   if (existUser.rowCount) {
-    throw new Error(`Пользователь ${username} уже зарегистрирован!`);
+    throw new Error(`Пользователь ${userName} уже зарегистрирован!`);
   }
 };
 
 exports.createUser = async (req, res) => {
-  const {
-    firstName,
-    lastName ,
-    userName,
-    password,
-    role
-  } = req.body;
-  let userHash = await bcrypt.hash(password, 16);
-  console.log(req.body,firstName, lastName, userName, password);
+  const { firstName, lastName, userName, password, role } = req.body;
+
+  // console.log(req.body,firstName, lastName, userName, password);
   try {
+    console.log({ firstName, password });
+    let userHash = await bcrypt.hash(password, 16);
     await checkExistUser(userName);
 
     const result = await pool.query(
-      "INSERT INTO users (firstName, lastName, username, role, password) VALUES ($1, $2, $3, $4, $5) RETURNING id, firstName, lastName, username, role",
+      "INSERT INTO users (firstName, lastName, userName, role, password) VALUES ($1, $2, $3, $4, $5) RETURNING id, firstName, lastName, userName, role",
       [firstName, lastName, userName, role, userHash]
     );
 
@@ -65,9 +61,9 @@ exports.updateUser = async (req, res) => {
   const { id } = req.params;
 
   const {
-    firstname: firstName,
-    lastname: lastName,
-    username: userName,
+    firstName,
+    lastName,
+    userName,
     role,
     password,
   } = req.body;
@@ -79,12 +75,12 @@ exports.updateUser = async (req, res) => {
       userHash = await bcrypt.hash(password, 16);
       // console.log(password, userHash);
       result = await pool.query(
-        "UPDATE users SET firstname = $2, lastname = $3, username = $4, password = $5, role = $6 WHERE id = $1 RETURNING id, firstname, lastname, username, role",
+        "UPDATE users SET firstname = $2, lastname = $3, userName = $4, password = $5, role = $6 WHERE id = $1 RETURNING id, firstname, lastname, userName, role",
         [id, firstName, lastName, userName, userHash, role]
       );
     } else {
       result = await pool.query(
-        "UPDATE users SET firstname = $2, lastname = $3, username = $4, role = $5 WHERE id = $1 RETURNING id, firstname, lastname, username, role",
+        "UPDATE users SET firstname = $2, lastname = $3, userName = $4, role = $5 WHERE id = $1 RETURNING id, firstname, lastname, userName, role",
         [id, firstName, lastName, userName, role]
       );
     }

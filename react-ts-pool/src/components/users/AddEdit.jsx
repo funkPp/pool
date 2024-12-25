@@ -4,12 +4,13 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Card, LinkButton } from "../ui-kit";
 import * as Yup from "yup";
-import {
-  useAppDispatch,
-  alertActions,
-} from "../../store";
+import { useAppDispatch, alertActions } from "../../store";
 import Select from "react-select";
-import { useGetUserById, useUserMutationEdit, useUserMutationСreate} from "./api";
+import {
+  useGetUserById,
+  useUserMutationEdit,
+  useUserMutationСreate,
+} from "./api";
 import { clsx } from "clsx";
 import { history } from "../../services";
 
@@ -21,9 +22,9 @@ export function AddEdit() {
   // console.log({ user });
 
   const validationSchema = Yup.object().shape({
-    firstname: Yup.string().required("First Name is required"),
-    lastname: Yup.string().required("Last Name is required"),
-    username: Yup.string().required("Username is required"),
+    firstName: Yup.string().required("First Name is required"),
+    lastName: Yup.string().required("Last Name is required"),
+    userName: Yup.string().required("Username is required"),
     role: Yup.string().required("Заполните поле"),
     password: Yup.string()
       .transform((x) => (x === "" ? undefined : x))
@@ -39,14 +40,16 @@ export function AddEdit() {
     useForm(formOptions);
   const { errors, isSubmitting } = formState;
 
-  const {data :user, isSuccess, isError, status} = useGetUserById(id);
-
+  const { data: user, isSuccess } = useGetUserById(id);
+  console.log(user, isSuccess);
   useEffect(() => {
-    reset(user);
-  }, [reset, user]);
-
-
-
+    setTitle("Новый пользователь");
+    if (isSuccess && user) {
+      setTitle("Редактирование пользователеля");
+      console.log("reset", user.id);
+      reset(user);
+    }
+  }, [reset, user, isSuccess]);
   // useEffect(() => {
   //   if (id) {
   //     setTitle("Edit User");
@@ -61,22 +64,22 @@ export function AddEdit() {
   //   }
   // }, []);
 
-  const mutationEdit = useUserMutationEdit(id)
-  const mutationCreate = useUserMutationСreate()
+  const mutationEdit = useUserMutationEdit(id);
+  const mutationCreate = useUserMutationСreate();
 
   async function onSubmit(data) {
     dispatch(alertActions.clear());
 
     if (id) {
-      mutationEdit.mutate(data);        
+      mutationEdit.mutate(data);
     } else {
-      mutationCreate.mutate();
+      mutationCreate.mutate(data);
     }
-    
+
     history.navigate("admin/users");
   }
 
-      const styleInput = `
+  const styleInput = `
   bg-gray-50 border border-gray-300 text-sm rounded-lg 
   hover:border-cyan-600 focus:outline-cyan-700 block w-full p-2`;
 
@@ -95,7 +98,7 @@ export function AddEdit() {
 
   return (
     <Card typeClass="main">
-      <h1>{title}</h1>
+      <h1 className="text-center">{title}</h1>
       {!(user?.loading || user?.error) && (
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -105,44 +108,44 @@ export function AddEdit() {
             <div className="mb-3 col">
               <label className={clsx(styleLabel)}>Имя</label>
               <input
-                name="firstname"
+                name="firstName"
                 type="text"
-                {...register("firstname")}
+                {...register("firstName")}
                 className={clsx(styleInput)}
               />
-          <div className="mt-1 text-sm text-red-600">
-            {errors.firstname?.message}
-          </div>
+              <div className="mt-1 text-sm text-red-600">
+                {errors.firstName?.message}
+              </div>
             </div>
             <div className="mb-3 col">
               <label className={clsx(styleLabel)}>Фамилия</label>
               <input
                 name="lastName"
                 type="text"
-                {...register("lastname")}
+                {...register("lastName")}
                 className={clsx(styleInput)}
               />
-             <div className="mt-1 text-sm text-red-600">
-               {errors.lastname?.message}
-             </div>
+              <div className="mt-1 text-sm text-red-600">
+                {errors.lastName?.message}
+              </div>
             </div>
           </div>
           <div>
             <div className="mb-3 col">
               <label className={clsx(styleLabel)}>Login</label>
               <input
-                name="username"
+                name="userName"
                 type="text"
-                {...register("username")}
+                {...register("userName")}
                 className={clsx(styleInput)}
               />
               <div className="mt-1 text-sm text-red-600">
-                {errors.username?.message}
+                {errors.userName?.message}
               </div>
             </div>
             <div>
               <label className={clsx(styleLabel)}>Роль</label>
-              <div className=''>
+              <div className="">
                 <Controller
                   control={control}
                   defaultValue={"user"}
@@ -154,27 +157,23 @@ export function AddEdit() {
                       options={options}
                       value={getValue(value)}
                       onChange={(newValue) => onChange(newValue.value)}
-                      classNamePrefix="react-select" // Добавьте префикс для кастомизации
-                      className={styleSelect} // Применение стилей Tailwind
+                      classNamePrefix="react-select"
+                      className={styleSelect}
                       styles={{
                         control: (provided) => ({
                           ...provided,
-                          borderColor: 'none', // Скрыть стандартные границы
-                          boxShadow: 'none', // Убрать тень
-                          borderRadius: '5px',
-                          background: '#FAFAFA'
+                          borderColor: "none",
+                          boxShadow: "none",
+                          borderRadius: "5px",
+                          background: "#FAFAFA",
                         }),
                         menu: (provided) => ({
                           ...provided,
-                          zIndex: 9999, // Убедитесь, что меню отображается поверх других элементов
+                          zIndex: 9999,
                         }),
-                        // placeholder: (provided) => ({
-                        //   ...provided,
-                        //   color: 'rgb(14 116 144 / var(--tw-text-opacity, 1))' // Цвет плейсхолдера
-                        // }),
                         singleValue: (provided) => ({
                           ...provided,
-                          color: '#0097A7 ', // Цвет выбранного значения
+                          color: "#0097A7 ",
                         }),
                       }}
                     />
@@ -220,7 +219,7 @@ export function AddEdit() {
               disabled={isSubmitting}
               value="Сброс"
             />
-            
+
             <LinkButton typeClass="main" to="/admin/users">
               Отмена
             </LinkButton>

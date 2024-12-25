@@ -1,15 +1,19 @@
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useAppSelector } from "../../store";
+import { LinkButton } from "../ui-kit";
 
 export function Home() {
-  // const auth = useSelector(x => x.auth.value);
+  const auth = useAppSelector((x) => x.auth.value);
   return (
-    <div>
-      {/* <h3>Добрый день, {auth?.firstname +' '+ auth?.lastname+'!'}</h3> */}
-      <p>Вы на главной странице!</p>
-      <p>
-        <Link to="/admin/users">Управление пользователями</Link>
-      </p>
+    <div className="p-2 m-2">
+      <h3 className="text-cyan-900 p-2 m-2">
+        Добрый день, {auth?.firstName + " " + auth?.lastName + "!"}
+      </h3>
+
+      <LinkButton typeClass="main" to="/admin/users">
+        Управление пользователями
+      </LinkButton>
     </div>
   );
 }

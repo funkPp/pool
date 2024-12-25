@@ -8,7 +8,7 @@ interface IAuthUser {
   id: string;
   firstName: string;
   lastName: string;
-  username: string;
+  userName: string;
   token: string;
 }
 interface IAuthState {
@@ -52,13 +52,13 @@ function createExtraActions() {
     return createAsyncThunk(
       `${name}/login`,
       async function (
-        { username, password }: { username: string; password: string },
+        { userName, password }: { userName: string; password: string },
         { dispatch },
       ) {
         dispatch(alertActions.clear());
         try {
           const user = await apiService.post(`${baseUrl}/authenticate`, {
-            username,
+            userName,
             password,
           });
 

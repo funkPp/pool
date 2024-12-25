@@ -5,7 +5,7 @@
 CREATE TABLE IF NOT EXISTS public.users
 (
     id integer NOT NULL DEFAULT nextval('users_id_seq'::regclass),
-    username text COLLATE pg_catalog."default",
+    userName text COLLATE pg_catalog."default",
     firstname text COLLATE pg_catalog."default",
     lastname text COLLATE pg_catalog."default",
     password text COLLATE pg_catalog."default",

@@ -12,7 +12,7 @@ export function Login() {
   const dispatch = useAppDispatch();
 
   const validationSchema = Yup.object().shape({
-    username: Yup.string().required("Имя пользователя - обязательное поле"),
+    userName: Yup.string().required("Имя пользователя - обязательное поле"),
     password: Yup.string().required("Пароль - обязательное поле"),
   });
   const formOptions = { resolver: yupResolver(validationSchema) };
@@ -21,13 +21,13 @@ export function Login() {
   const { errors, isSubmitting } = formState;
 
   function onSubmit({
-    username,
+    userName,
     password,
   }: {
-    username: string;
+    userName: string;
     password: string;
   }) {
-    return dispatch(authActions.login({ username, password }));
+    return dispatch(authActions.login({ userName, password }));
   }
 
   const styleInput = `
@@ -43,11 +43,11 @@ export function Login() {
           <label className={clsx(styleLabel)}>Логин</label>
           <input
             type="text"
-            {...register("username")}
+            {...register("userName")}
             className={clsx(styleInput)}
           />
           <div className="mt-1 text-sm text-red-600">
-            {errors.username?.message}
+            {errors.userName?.message}
           </div>
         </div>
         <div className="mb-3">
