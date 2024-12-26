@@ -41,7 +41,6 @@ export function AddEdit() {
   const { data: user, isSuccess } = useGetUserById(id);
 
   useEffect(() => {
-    
     if (isSuccess && user) {
       setTitle("Редактирование пользователеля");
       console.log("reset", user.id, reset, isSuccess);

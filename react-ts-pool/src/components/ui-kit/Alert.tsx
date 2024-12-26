@@ -28,7 +28,7 @@ export function Alert() {
     <>
       <div
         id="alert-2"
-        className={clsx("flex items-center p-4 mb-4", colorAlert)}
+        className={clsx("flex items-center p-3 mb-2", colorAlert)}
         role={alert.type}
       >
         <span className="sr-only">{alert.type}</span>

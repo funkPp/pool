@@ -1,20 +1,22 @@
 import { Table } from "../ui-kit/Table";
 import { useGetUsers, useUserMurationDelete } from "./api";
 import LinkButton from "../ui-kit/LinkButton";
+import { Loader } from "../ui-kit/Loader";
+import { useMutation } from "@tanstack/react-query";
 
 export function List() {
   const head = ["id", "Имя", "Фамилия", "login", "Роль", "Действия:"];
-  const { data: users, error, isLoading } = useGetUsers();
+  const { data: users, error, isLoading, isStale } = useGetUsers();
 
   const mutationDelete = useUserMurationDelete();
   const handlerDeleteUser = (id: string) => {
     mutationDelete.mutate(id);
   };
-
-  console.log({ users });
+  console.log(mutationDelete.status, isLoading, isStale);
   return (
     <div>
-      <h1 className="p-2 font-semibold text-cyan-600 text-center">
+      {(isLoading || mutationDelete.isPending || isStale) && <Loader />}
+      <h1 className="p-1 font-semibold text-cyan-600 text-center">
         Пользователи
       </h1>
       {!error ? (
