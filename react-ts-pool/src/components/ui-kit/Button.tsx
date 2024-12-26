@@ -18,7 +18,7 @@ export function Button({
     border border-gray-300 hover:bg-gray-100 hover:text-cyan-700
     focus:z-10 focus:ring-3 focus:ring-cyan-100 align-middle`,
 
-    delete: `py-1 px-2 focus:outline-none bg-red-50 rounded-lg 
+    delete: `py-2 px-2 focus:outline-none bg-red-50 rounded-lg 
     border border-red-200 hover:bg-red-100 hover:text-grey-800
     focus:z-10 focus:ring-3 focus:ring-red-300 align-middle`,
   };

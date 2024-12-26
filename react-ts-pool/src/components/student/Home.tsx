@@ -8,7 +8,8 @@ export function Home() {
   return (
     <div className="p-2 m-2">
       <h3 className="text-cyan-900 p-2 m-2">
-        Добрый день, {auth?.firstName + " " + auth?.lastName + "!"}
+        Добрый день,{" "}
+        {auth?.id + " " + auth?.firstName + " " + auth?.lastName + "!"}
       </h3>
 
       <LinkButton typeClass="main" to="/admin/users">

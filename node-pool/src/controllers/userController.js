@@ -5,8 +5,9 @@ const bcrypt = require("bcryptjs");
 exports.getUsers = async (req, res) => {
   try {
     const result = await pool.query(
-      "SELECT id, firstName, lastName, userName, role FROM users ORDER BY id"
+      `SELECT id, firstname as "firstName", lastname as "lastName", username as "userName", role FROM users ORDER BY id`
     );
+    console.log(result.rows)
     res.status(200).json(result.rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -17,7 +18,7 @@ exports.getUser = async (req, res) => {
   try {
     const { id } = req.params;
     const result = await pool.query(
-      "SELECT id, firstName, lastName, userName, role FROM users WHERE id = $1",
+      `SELECT id, firstname as "firstName", lastname as "lastName", username as "userName", role FROM users WHERE id = $1`,
       [id]
     );
     res.status(200).json(result.rows[0]);
@@ -47,7 +48,7 @@ exports.createUser = async (req, res) => {
     await checkExistUser(userName);
 
     const result = await pool.query(
-      "INSERT INTO users (firstName, lastName, userName, role, password) VALUES ($1, $2, $3, $4, $5) RETURNING id, firstName, lastName, userName, role",
+      `INSERT INTO users (firstName, lastName, userName, role, password) VALUES ($1, $2, $3, $4, $5) RETURNING id, firstname as "firstName", lastname as "lastName", username as "userName", role`,
       [firstName, lastName, userName, role, userHash]
     );
 
@@ -75,12 +76,12 @@ exports.updateUser = async (req, res) => {
       userHash = await bcrypt.hash(password, 16);
       // console.log(password, userHash);
       result = await pool.query(
-        "UPDATE users SET firstname = $2, lastname = $3, userName = $4, password = $5, role = $6 WHERE id = $1 RETURNING id, firstname, lastname, userName, role",
+        `UPDATE users SET firstName = $2, lastName = $3, userName = $4, password = $5, role = $6 WHERE id = $1 RETURNING id, firstname as "firstName", lastname as "lastName", username as "userName", role`,
         [id, firstName, lastName, userName, userHash, role]
       );
     } else {
       result = await pool.query(
-        "UPDATE users SET firstname = $2, lastname = $3, userName = $4, role = $5 WHERE id = $1 RETURNING id, firstname, lastname, userName, role",
+        `UPDATE users SET firstName = $2, lastName = $3, userName = $4, role = $5 WHERE id = $1 RETURNING id, firstname as "firstName", lastname as "lastName", username as "userName", role`,
         [id, firstName, lastName, userName, role]
       );
     }

@@ -1,8 +1,8 @@
 export interface IUser {
-  id: string | number;
+  id: string;
   firstName: string;
   lastName: string;
   userName: string;
   role: string;
-  isDeleting?: boolean;
+  // isDeleting?: boolean;
 }

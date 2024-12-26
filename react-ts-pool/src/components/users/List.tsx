@@ -1,25 +1,17 @@
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-
-import { userActions, useAppSelector, useAppDispatch } from "../../store";
-import { Button } from "../ui-kit/Button";
 import { Table } from "../ui-kit/Table";
-import { useGetUsers } from "./api";
+import { useGetUsers, useUserMurationDelete } from "./api";
 import LinkButton from "../ui-kit/LinkButton";
 
 export function List() {
-  // const users = useAppSelector((x) => x.users.list);
-  // const dispatch = useAppDispatch();
-
-  // useEffect(() => {
-  //     dispatch(userActions.getAll());
-  // }, []);
-
-  const head = ["id", "Имя", "Фамилия", "login", "Роль"];
+  const head = ["id", "Имя", "Фамилия", "login", "Роль", "Действия:"];
   const { data: users, error, isLoading } = useGetUsers();
 
-  // console.log({ error });
+  const mutationDelete = useUserMurationDelete();
+  const handlerDeleteUser = (id: string) => {
+    mutationDelete.mutate(id);
+  };
+
+  console.log({ users });
   return (
     <div>
       <h1 className="p-2 font-semibold text-cyan-600 text-center">
@@ -39,6 +31,7 @@ export function List() {
             head={head}
             body={users}
             editById="/admin/users/edit/"
+            handlerDeleteById={handlerDeleteUser}
           />
         </div>
       ) : (

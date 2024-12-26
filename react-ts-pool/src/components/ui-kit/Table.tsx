@@ -5,14 +5,14 @@ import { ReactNode } from "react";
 import { IUser } from "../../services";
 import LinkButton from "./LinkButton";
 
-export function Table<T extends { id: string }>({
+export function Table<T extends IUser>({
   typeClass,
   disabled,
   onDelete,
   head,
   body,
   editById,
-  deleteById,
+  handlerDeleteById,
 }: {
   typeClass: string;
   disabled?: boolean;
@@ -20,7 +20,7 @@ export function Table<T extends { id: string }>({
   head?: string[];
   body?: T[];
   editById?: string;
-  deleteById?: string;
+  handlerDeleteById?: (id: string) => void;
 }) {
   const selectClass: { [index: string]: string } = {
     users: `text-cyan-900`,
@@ -34,7 +34,7 @@ export function Table<T extends { id: string }>({
   let headRender = null;
   if (head) {
     headRender = head.map((item) => (
-      <th key={item} scope="col" className="px-4 py-3">
+      <th key={item} scope="col" className="px-4 py-3 bg-gray-50">
         {item}
       </th>
     ));
@@ -45,28 +45,30 @@ export function Table<T extends { id: string }>({
   let bodyRender = null;
   if (body) {
     bodyRender = body.map((row) => (
-      <tr key={row.id} className="bg-white border-b  hover:bg-gray-50  ">
+      <tr key={row.id} className="bg-white border-b hover:bg-gray-50  ">
         {fieldsT.map((field) => (
-          <td className="px-4 py-2" key={String(field)}>
+          <td className="px-4 py-2 " key={String(field)}>
             {String(row[field])}
           </td>
         ))}
-        {editById && (
-          <td className="px-5 py-1 flex flex-wrap flex-row gap-1 justify-end">
-            <LinkButton to={`${editById}${row.id}`} typeClass="main">
-              Изменить
-            </LinkButton>
-          </td>
-        )}
-        {deleteById && (
-          <td>
-            <Button typeClass="delete" onClick={() => {}} value="Удалить" />
+        {(editById || handlerDeleteById) && (
+          <td className="px-2 py-1 flex flex-wrap flex-row gap-1  justify-center items-center ">
+            {editById && (
+              <LinkButton to={`${editById}${row.id}`} typeClass="flexRight">
+                Изменить
+              </LinkButton>
+            )}
+            {handlerDeleteById && (
+              <Button
+                typeClass="delete"
+                onClick={() => handlerDeleteById(row.id)}
+                value="Удалить"
+              />
+            )}
           </td>
         )}
       </tr>
     ));
-
-    // console.log(bodyRender);
   }
   return (
     <div className="mt-3 relative overflow-x-auto shadow-md sm:rounded-lg box-border ">
@@ -74,9 +76,9 @@ export function Table<T extends { id: string }>({
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>
             {headRender}
-            <th scope="col" className="px-4 py-3">
+            {/* <th scope="col" className="px-4 py-3">
               <span className="sr-only">Edit</span>
-            </th>
+            </th> */}
           </tr>
         </thead>
         <tbody className={clsx(selectClass[typeClass], disabledStyle)}>

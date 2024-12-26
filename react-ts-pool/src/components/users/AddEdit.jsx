@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Card, LinkButton } from "../ui-kit";
@@ -18,8 +18,6 @@ export function AddEdit() {
   const { id } = useParams();
   const [title, setTitle] = useState();
   const dispatch = useAppDispatch();
-
-  // console.log({ user });
 
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required("First Name is required"),
@@ -41,28 +39,17 @@ export function AddEdit() {
   const { errors, isSubmitting } = formState;
 
   const { data: user, isSuccess } = useGetUserById(id);
-  console.log(user, isSuccess);
+
   useEffect(() => {
-    setTitle("Новый пользователь");
+    
     if (isSuccess && user) {
       setTitle("Редактирование пользователеля");
-      console.log("reset", user.id);
+      console.log("reset", user.id, reset, isSuccess);
       reset(user);
+    } else {
+      setTitle("Новый пользователь");
     }
   }, [reset, user, isSuccess]);
-  // useEffect(() => {
-  //   if (id) {
-  //     setTitle("Edit User");
-  //    // fetch user details into redux state and
-  //    // populate form fields with reset()
-  //     dispatch(userActions.getById(id))
-  //       .unwrap()
-  //       .then((user) => reset(user));
-
-  //   } else {
-  //     setTitle("Add User");
-  //   }
-  // }, []);
 
   const mutationEdit = useUserMutationEdit(id);
   const mutationCreate = useUserMutationСreate();

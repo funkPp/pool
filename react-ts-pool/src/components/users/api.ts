@@ -38,7 +38,7 @@ const userByIdApi = {
         const usersList = queryClient.getQueryData(
           usersListApi.getUsersListQueryOptions().queryKey,
         );
-        const userCach = usersList?.find((u: IUser) => u.id === +id);
+        const userCach = usersList?.find((u: IUser) => u.id === id);
         return userCach;
       },
       initialDataUpdatedAt: () => {
@@ -109,4 +109,20 @@ export function useUserMutationСreate() {
       if (typeof err === "string") dispatch(alertActions.error(err));
     },
   });
+}
+
+export function useUserMurationDelete() {
+  const dispatch = useAppDispatch();
+  
+  return useMutation({
+    mutationFn: (id: string) => apiService.delete(`${baseUrl}/${id}`, null),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [usersListApi.baseKey] });
+      const message = "Пользователь удален";
+      dispatch(alertActions.success({ message, showAfterRedirect: true }));
+    },
+    onError: (err) => {
+      if (typeof err === "string") dispatch(alertActions.error(err));
+    },
+  });   
 }
