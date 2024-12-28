@@ -69,7 +69,7 @@ export function useGetUsers() {
 export function useGetUserById(id: string) {
   return useQuery({
     ...userByIdApi.getUserByIdQueryOptions(id),
-    enabled: !!localStorage.getItem("auth"),
+    enabled: !!localStorage.getItem("auth") && !!id,
   });
 }
 

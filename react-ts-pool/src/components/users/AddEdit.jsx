@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Card, LinkButton } from "../ui-kit";
+import { Button, Card, LinkButton, Loader } from "../ui-kit";
 import * as Yup from "yup";
 import { useAppDispatch, alertActions } from "../../store";
 import Select from "react-select";
@@ -36,14 +36,13 @@ export function AddEdit() {
 
   const { register, handleSubmit, reset, formState, control } =
     useForm(formOptions);
-  const { errors, isSubmitting } = formState;
+  const { errors, isSubmitting} = formState;
 
-  const { data: user, isSuccess } = useGetUserById(id);
+  const { data: user, isSuccess, isLoading : isLoadingUser, status  } = useGetUserById(id);
 
   useEffect(() => {
     if (isSuccess && user) {
       setTitle("Редактирование пользователеля");
-      console.log("reset", user.id, reset, isSuccess);
       reset(user);
     } else {
       setTitle("Новый пользователь");
@@ -82,8 +81,10 @@ export function AddEdit() {
   const getValue = (value) =>
     value ? options.find((o) => o.value === value) : "";
 
+  console.log(isLoadingUser, status);
   return (
     <Card typeClass="main">
+      {isLoadingUser && <Loader/>}
       <h1 className="text-center">{title}</h1>
       {!(user?.loading || user?.error) && (
         <form

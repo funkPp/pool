@@ -12,10 +12,10 @@ export function List() {
   const handlerDeleteUser = (id: string) => {
     mutationDelete.mutate(id);
   };
-  console.log(mutationDelete.status, isLoading, isStale);
+
   return (
     <div>
-      {(isLoading || mutationDelete.isPending || isStale) && <Loader />}
+      {(isLoading || mutationDelete.isPending) && <Loader />}
       <h1 className="p-1 font-semibold text-cyan-600 text-center">
         Пользователи
       </h1>
