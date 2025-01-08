@@ -1,7 +1,7 @@
-import { Table } from "../ui-kit/Table";
+import { Table } from "../../ui-kit/Table";
 import { useGetUsers, useUserMurationDelete } from "./api";
-import LinkButton from "../ui-kit/LinkButton";
-import { Loader } from "../ui-kit/Loader";
+import LinkButton from "../../ui-kit/LinkButton";
+import { Loader } from "../../ui-kit/Loader";
 import { useMutation } from "@tanstack/react-query";
 
 export function List() {

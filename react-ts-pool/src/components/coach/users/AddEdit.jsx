@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Card, LinkButton, Loader } from "../ui-kit";
+import { Button, Card, LinkButton, Loader } from "../../ui-kit";
 import * as Yup from "yup";
-import { useAppDispatch, alertActions } from "../../store";
+import { useAppDispatch, alertActions } from "../../../store";
 import Select from "react-select";
 import {
   useGetUserById,
@@ -12,7 +12,7 @@ import {
   useUserMutationСreate,
 } from "./api";
 import { clsx } from "clsx";
-import { history } from "../../services";
+import { history } from "../../../services";
 
 export function AddEdit() {
   const { id } = useParams();
@@ -36,9 +36,14 @@ export function AddEdit() {
 
   const { register, handleSubmit, reset, formState, control } =
     useForm(formOptions);
-  const { errors, isSubmitting} = formState;
+  const { errors, isSubmitting } = formState;
 
-  const { data: user, isSuccess, isLoading : isLoadingUser, status  } = useGetUserById(id);
+  const {
+    data: user,
+    isSuccess,
+    isLoading: isLoadingUser,
+    status,
+  } = useGetUserById(id);
 
   useEffect(() => {
     if (isSuccess && user) {
@@ -84,7 +89,7 @@ export function AddEdit() {
   console.log(isLoadingUser, status);
   return (
     <Card typeClass="main">
-      {isLoadingUser && <Loader/>}
+      {isLoadingUser && <Loader />}
       <h1 className="text-center">{title}</h1>
       {!(user?.loading || user?.error) && (
         <form

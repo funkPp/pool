@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import {MenuItem} from '.'
 
 interface INavProps {
   auth: {
@@ -9,6 +10,9 @@ interface INavProps {
 
 export function Nav({ auth, logout }: INavProps) {
   if (!auth) return <></>;
+
+  const handleExpand = () => {};
+
   return (
     <nav className="bg-white rounded-xl shadow-md flex flex-col text-center sm:flex-row sm:text-left sm:justify-between font-semibold text-cyan-600">
       <div className="p-2 m-2 font-semibold text-cyan-600">
@@ -16,7 +20,11 @@ export function Nav({ auth, logout }: INavProps) {
           Личный кабинет родителя
         </NavLink>
         {auth.role === "admin" || auth.role === "owner" ? (
-          <NavLink to="/admin" className="p-2 m-2  hover:text-cyan-800">
+          <NavLink
+            to="/admin"
+            onChange={handleExpand}
+            className="p-2 m-2  hover:text-cyan-800"
+          >
             Личный кабинет преподавателя
           </NavLink>
         ) : null}
@@ -29,6 +37,8 @@ export function Nav({ auth, logout }: INavProps) {
           Выйти
         </button>
       </div>
+
+      <MenuItem />
     </nav>
   );
 }

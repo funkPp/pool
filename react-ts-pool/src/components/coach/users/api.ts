@@ -5,9 +5,9 @@ import {
   UseMutationResult,
   useQuery,
 } from "@tanstack/react-query";
-import { apiService, IUser } from "../../services/";
-import { queryClient } from "../../services/queryClient";
-import { alertActions, useAppDispatch } from "../../store";
+import { apiService, IUser } from "../../../services";
+import { queryClient } from "../../../services/queryClient";
+import { alertActions, useAppDispatch } from "../../../store";
 
 const URL_API = process.env.REACT_APP_API_URL ?? "http://localhost:5555";
 const baseUrl = `${URL_API}/users`;
@@ -113,7 +113,7 @@ export function useUserMutationСreate() {
 
 export function useUserMurationDelete() {
   const dispatch = useAppDispatch();
-  
+
   return useMutation({
     mutationFn: (id: string) => apiService.delete(`${baseUrl}/${id}`, null),
     onSuccess: () => {
@@ -124,5 +124,5 @@ export function useUserMurationDelete() {
     onError: (err) => {
       if (typeof err === "string") dispatch(alertActions.error(err));
     },
-  });   
+  });
 }
