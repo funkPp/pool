@@ -5,4 +5,4 @@ export * from "./LinkButton";
 export * from "./Nav";
 export * from "./Table";
 export * from "./Loader";
-export * from "./MenuItem";
+export * from "./DropdownMenu";

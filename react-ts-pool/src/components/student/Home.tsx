@@ -11,9 +11,9 @@ export function Home() {
         Добрый день, {auth?.firstName + " " + auth?.lastName + "!"}
       </h3>
 
-      <LinkButton typeClass="main" to="/admin/users">
+      {/* <LinkButton typeClass="main" to="/admin/users">
         Управление пользователями
-      </LinkButton>
+      </LinkButton> */}
     </div>
   );
 }

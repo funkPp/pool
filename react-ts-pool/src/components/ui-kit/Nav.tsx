@@ -1,5 +1,6 @@
 import { NavLink } from "react-router-dom";
-import {MenuItem} from '.'
+import { DropdownMenu } from ".";
+import { FaUserEdit } from "react-icons/fa";
 
 interface INavProps {
   auth: {
@@ -10,35 +11,41 @@ interface INavProps {
 
 export function Nav({ auth, logout }: INavProps) {
   if (!auth) return <></>;
-
-  const handleExpand = () => {};
+  console.log(auth.role);
 
   return (
-    <nav className="bg-white rounded-xl shadow-md flex flex-col text-center sm:flex-row sm:text-left sm:justify-between font-semibold text-cyan-600">
-      <div className="p-2 m-2 font-semibold text-cyan-600">
-        <NavLink to="/" className="p-2 m-2  hover:text-cyan-800">
-          Личный кабинет родителя
-        </NavLink>
-        {auth.role === "admin" || auth.role === "owner" ? (
-          <NavLink
-            to="/admin"
-            onChange={handleExpand}
-            className="p-2 m-2  hover:text-cyan-800"
-          >
-            Личный кабинет преподавателя
-          </NavLink>
-        ) : null}
-        <NavLink to="/" className="p-2 m-2  hover:text-cyan-800">
-          Контакты
-        </NavLink>
-      </div>
+    <nav className="bg-white rounded-xl shadow-md flex flex-col text-sm text-center sm:flex-row sm:text-left sm:justify-between font-semibold text-cyan-600">
+      <DropdownMenu
+        buttonLabel="Кабинет родителя"
+        items={[
+          {
+            title: "Ребенок",
+            url: "/parent",
+            icon: undefined,
+          },
+        ]}
+      />
+      {auth.role === "admin" || auth.role === "owner" ? (
+        <DropdownMenu
+          buttonLabel="Кабинет тренера"
+          items={[
+            {
+              title: "Пользователи",
+              url: "/admin/users",
+              icon: <FaUserEdit />,
+            },
+          ]}
+        />
+      ) : null}
+      <NavLink to="/" className="p-2 m-2  hover:text-cyan-800">
+        Контакты
+      </NavLink>
+
       <div className="p-2  ml-auto  hover:text-cyan-800">
         <button onClick={logout} className="p-2 mr-3">
           Выйти
         </button>
       </div>
-
-      <MenuItem />
     </nav>
   );
 }
