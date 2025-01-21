@@ -13,6 +13,7 @@ import { PrivateRoute, PrivateAdminRoute } from "./components/routers";
 import { history } from "./services/history";
 import { authActions, useAppDispatch, useAppSelector } from "./store";
 import { Alert } from "./components/ui-kit/Alert";
+import { ScheduleLayout } from "./components/coach/schedule";
 
 function App() {
   const auth = useAppSelector((x) => x.auth.value);
@@ -33,6 +34,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route element={<PrivateAdminRoute />}>
                 <Route path="/admin/users/*" element={<UsersLayout />} />
+                <Route path="/admin/schedule/*" element={<ScheduleLayout />} />
               </Route>
             </Route>
           </Routes>

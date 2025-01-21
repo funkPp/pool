@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { DropdownMenu } from ".";
-import { FaUserEdit } from "react-icons/fa";
+import { FaCalendarAlt, FaUserEdit } from "react-icons/fa";
 
 interface INavProps {
   auth: {
@@ -33,6 +33,11 @@ export function Nav({ auth, logout }: INavProps) {
               title: "Пользователи",
               url: "/admin/users",
               icon: <FaUserEdit />,
+            },
+            {
+              title: "Расписание",
+              url: "/admin/schedule",
+              icon: <FaCalendarAlt />,
             },
           ]}
         />
