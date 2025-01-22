@@ -2,6 +2,7 @@ import { Calendar, momentLocalizer, DateLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment/locale/ru";
+import { useMemo } from "react";
 
 const mLocalizer = momentLocalizer(moment);
 const myEventsList = [
@@ -14,7 +15,6 @@ const myEventsList = [
   },
 ];
 
-// const cultures = "ru-RU";
 const messages = {
   week: "Неделя",
   work_week: "Рабочая неделя",
@@ -29,7 +29,20 @@ const messages = {
   event: "Группа",
 };
 
+const resources = [
+  {
+    id: 1,
+    title: "Дорожка №1",
+  },
+  {
+    id: 2,
+    title: "Дорожка №2",
+  },
+];
+
 export function Schedule() {
+  const minTime = useMemo(() => new Date(1972, 0, 0, 8, 0, 0, 0), []);
+  const maxTime = useMemo(() => new Date(1972, 0, 0, 22, 0, 0, 0), []);
   return (
     <div>
       <h1 className="p-1 font-semibold text-cyan-600 text-center">
@@ -44,7 +57,11 @@ export function Schedule() {
             events={myEventsList}
             startAccessor="start"
             endAccessor="end"
+            min={minTime}
+            max={maxTime}
             style={{ height: 500 }}
+            resources={resources}
+            resourceGroupingLayout={true}
           />
         </div>
         <div className="w-1/4 border"></div>
