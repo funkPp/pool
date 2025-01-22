@@ -1,9 +1,9 @@
 import { Calendar, momentLocalizer, DateLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-require("globalize/lib/cultures/globalize.culture.ru-RU");
+import "moment/locale/ru";
 
-const mlocalizer = momentLocalizer(moment);
+const mLocalizer = momentLocalizer(moment);
 const myEventsList = [
   {
     id: 10,
@@ -14,7 +14,7 @@ const myEventsList = [
   },
 ];
 
-const cultures = "ru-RU";
+// const cultures = "ru-RU";
 const messages = {
   week: "Неделя",
   work_week: "Рабочая неделя",
@@ -29,7 +29,7 @@ const messages = {
   event: "Группа",
 };
 
-export function Schedule({ localizer }: { localizer: DateLocalizer }) {
+export function Schedule() {
   return (
     <div>
       <h1 className="p-1 font-semibold text-cyan-600 text-center">
@@ -38,9 +38,9 @@ export function Schedule({ localizer }: { localizer: DateLocalizer }) {
       <div className="flex flex-row columns-2">
         <div className="w-3/4 ">
           <Calendar
-            culture={cultures}
+            selectable
             messages={messages}
-            localizer={localizer}
+            localizer={mLocalizer}
             events={myEventsList}
             startAccessor="start"
             endAccessor="end"
