@@ -7,7 +7,7 @@ exports.getUsers = async (req, res) => {
     const result = await pool.query(
       `SELECT id, firstname as "firstName", lastname as "lastName", username as "userName", role FROM users ORDER BY id`
     );
-    console.log(result.rows)
+    //console.log(result.rows)
     res.status(200).json(result.rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
