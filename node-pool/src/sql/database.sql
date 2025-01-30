@@ -47,12 +47,11 @@ CREATE SEQUENCE IF NOT EXISTS public.students_id_seq
 CREATE TABLE IF NOT EXISTS public.students
 (
     id integer NOT NULL DEFAULT nextval('students_id_seq'::regclass),
-    CONSTRAINT students_pkey PRIMARY KEY (id)
     parent_id integer,
     firstname text COLLATE pg_catalog."default",
     lastname text COLLATE pg_catalog."default",
     birthday date NOT NULL,
-
+    CONSTRAINT students_pkey PRIMARY KEY (id)
 )
 
 TABLESPACE pg_default;

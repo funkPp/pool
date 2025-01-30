@@ -1,4 +1,4 @@
-import { store, authActions } from "../store";
+import { store, authActions } from "../shared/store";
 import { IUser } from "./types";
 
 export const apiService = {

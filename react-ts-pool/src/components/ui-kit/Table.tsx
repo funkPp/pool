@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { Link } from "react-router-dom";
 import { Button } from "./Button";
 import { ReactNode } from "react";
-import { IUser } from "../../services";
+import { IUser } from "../../shared";
 import LinkButton from "./LinkButton";
 
 export function Table<T extends IUser>({

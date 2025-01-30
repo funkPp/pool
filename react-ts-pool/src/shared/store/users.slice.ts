@@ -5,7 +5,7 @@ import {
   SerializedError,
 } from "@reduxjs/toolkit";
 import { alertActions, authActions, RootState } from ".";
-import { apiService, IUser } from "../services";
+import { apiService, IUser } from "../shared";
 
 interface IUsersState {
   list: {
@@ -117,9 +117,9 @@ function createExtraActions() {
   function register() {
     return createAsyncThunk(
       `${name}/register`,
-      async (user: IUserRegister, {dispatch}) => {
-        await apiService.post(`${baseUrl}/register`, user)
-      }
+      async (user: IUserRegister, { dispatch }) => {
+        await apiService.post(`${baseUrl}/register`, user);
+      },
     );
   }
 

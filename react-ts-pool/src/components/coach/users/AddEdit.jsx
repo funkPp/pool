@@ -12,7 +12,7 @@ import {
   useUserMutationСreate,
 } from "./api";
 import { clsx } from "clsx";
-import { history } from "../../../services";
+import { history } from "../../../shared";
 
 export function AddEdit() {
   const { id } = useParams();

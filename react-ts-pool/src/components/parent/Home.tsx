@@ -1,6 +1,4 @@
-import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useAppSelector } from "../../store";
+import { useAppSelector } from "../../shared/store";
 import { LinkButton } from "../ui-kit";
 
 export function Home() {

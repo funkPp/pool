@@ -5,9 +5,9 @@ import {
   UseMutationResult,
   useQuery,
 } from "@tanstack/react-query";
-import { apiService, IUser } from "../../../services";
-import { queryClient } from "../../../services/queryClient";
-import { alertActions, useAppDispatch } from "../../../store";
+import { apiService, IUser } from "../../../shared";
+import { queryClient } from "../../../shared/queryClient";
+import { alertActions, useAppDispatch } from "../../../shared/store";
 
 const URL_API = process.env.REACT_APP_API_URL ?? "http://localhost:5555";
 const baseUrl = `${URL_API}/users`;

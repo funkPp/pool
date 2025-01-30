@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from "react-router-dom";
-import { authActions, useAppDispatch } from "../../store";
+import { authActions, useAppDispatch } from  "../../shared/store";
 import { Login, Register } from ".";
 
 export function AccountLayout() {

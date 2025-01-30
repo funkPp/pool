@@ -5,13 +5,13 @@ import * as Yup from "yup";
 import clsx from "clsx";
 import { Button } from "../ui-kit/Button";
 import { Card } from "../ui-kit/Card";
-import { history } from "../../services";
+import { history } from "../../shared";
 import {
   authActions,
   useAppDispatch,
   userActions,
   alertActions,
-} from "../../store";
+} from "../../shared/store";
 
 interface IError {
   message?: string;

@@ -6,12 +6,12 @@ import {
   useLocation,
 } from "react-router-dom";
 import { Nav } from "./components/ui-kit/Nav";
-import { Home } from "./components/student";
+import { Home } from "./components/parent";
 import { UsersLayout } from "./components/coach/users";
 import { AccountLayout } from "./components/account";
 import { PrivateRoute, PrivateAdminRoute } from "./components/routers";
-import { history } from "./services/history";
-import { authActions, useAppDispatch, useAppSelector } from "./store";
+import { history } from "./shared/history";
+import { authActions, useAppDispatch, useAppSelector } from "./shared/store";
 import { Alert } from "./components/ui-kit/Alert";
 import { ScheduleLayout } from "./components/coach/schedule";
 

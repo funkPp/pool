@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 
-import { List } from "./List";
+import { List } from "./UsersList";
 import { AddEdit } from "./AddEdit";
 
 export function UsersLayout() {
