@@ -19,8 +19,8 @@ export function Nav({ auth, logout }: INavProps) {
         buttonLabel="Кабинет родителя"
         items={[
           {
-            title: "Ребенок",
-            url: "/parent",
+            title: "Дети",
+            url: "/parent/students/",
             icon: undefined,
           },
         ]}

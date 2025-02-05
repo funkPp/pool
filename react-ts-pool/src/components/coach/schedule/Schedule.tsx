@@ -3,6 +3,7 @@ import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment/locale/ru";
 import { useMemo } from "react";
+import { messages, resources } from "./configCalendar";
 
 const mLocalizer = momentLocalizer(moment);
 const myEventsList = [
@@ -12,31 +13,6 @@ const myEventsList = [
     start: new Date(2025, 0, 21, 9, 0, 0),
     end: new Date(2025, 0, 21, 10, 30, 0),
     resourceId: [1],
-  },
-];
-
-const messages = {
-  week: "Неделя",
-  work_week: "Рабочая неделя",
-  day: "День",
-  month: "Месяц",
-  previous: "Назад",
-  next: "Вперед",
-  today: "Сегодня",
-  agenda: "План",
-  date: "Дата",
-  time: "Время",
-  event: "Группа",
-};
-
-const resources = [
-  {
-    id: 1,
-    title: "Дорожка №1",
-  },
-  {
-    id: 2,
-    title: "Дорожка №2",
   },
 ];
 

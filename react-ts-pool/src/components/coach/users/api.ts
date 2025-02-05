@@ -1,8 +1,6 @@
 import {
-  infiniteQueryOptions,
   queryOptions,
   useMutation,
-  UseMutationResult,
   useQuery,
 } from "@tanstack/react-query";
 import { apiService, IUser } from "../../../shared";

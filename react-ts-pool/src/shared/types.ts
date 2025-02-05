@@ -6,3 +6,11 @@ export interface IUser {
   role: string;
   // isDeleting?: boolean;
 }
+
+export interface IStudent {
+  id: string;
+  firstName: string;
+  lastName: string;
+  birthday: string;
+}
+

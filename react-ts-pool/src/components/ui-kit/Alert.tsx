@@ -5,7 +5,7 @@ import {
   useAppSelector,
   useAppDispatch,
   IAlert,
-} from "../../store";
+} from "../../shared/store";
 import { clsx } from "clsx";
 
 export function Alert() {

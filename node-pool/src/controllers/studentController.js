@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 exports.getStudents = async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT id, firstname as "firstName", lastname as "lastName", parent, birthday FROM students ORDER BY id`
+      `SELECT id, firstname as "firstName", lastname as "lastName", parent_id, birthday FROM students ORDER BY id`
     );
     //console.log(result.rows)
     res.status(200).json(result.rows);
@@ -18,7 +18,7 @@ exports.getStudentById = async (req, res) => {
   try {
     const { id } = req.params;
     const result = await pool.query(
-      `SELECT id, firstname as "firstName", lastname as "lastName", parent, birthday FROM students WHERE id = $1`,
+      `SELECT id, firstname as "firstName", lastname as "lastName", parent_id, birthday FROM students WHERE id = $1`,
       [id]
     );
     res.status(200).json(result.rows[0]);
@@ -32,9 +32,10 @@ exports.getStudentByParent = async (req, res) => {
   try {
     const { parent } = req.params;
     const result = await pool.query(
-      `SELECT id, firstname as "firstName", lastname as "lastName", parent, birthday FROM students WHERE parent = $1`,
+      `SELECT id, firstname as "firstName", lastname as "lastName", parent_id, birthday FROM students WHERE parent_id = $1`,
       [parent]
     );
+    console.log(result.rows[0])
     res.status(200).json(result.rows[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -62,7 +63,7 @@ exports.createStudent = async (req, res) => {
     // await checkExistStudent(userName);
 
     const result = await pool.query(
-      `INSERT INTO students (firstName, lastName, parent, birthday) VALUES ($1, $2, $3, $4, $5) RETURNING id, firstname as "firstName", lastname as "lastName", parent, birthday`,
+      `INSERT INTO students (firstName, lastName, parent_id, birthday) VALUES ($1, $2, $3, $4, $5) RETURNING id, firstname as "firstName", lastname as "lastName", parent_id, birthday`,
       [firstName, lastName, parent, birthday]
     );
 
@@ -84,7 +85,7 @@ exports.updateStudent = async (req, res) => {
 
   try {
     const result = await pool.query(
-        `UPDATE students SET firstName = $2, lastName = $3, parent= $4, birthday = $5 WHERE id = $1 RETURNING id, firstname as "firstName", lastname as "lastName", parent, birthday`,
+        `UPDATE students SET firstName = $2, lastName = $3, parent_id= $4, birthday = $5 WHERE id = $1 RETURNING id, firstname as "firstName", lastname as "lastName", parent_id, birthday`,
         [id, firstName, lastName, parent, birthday]
       );
    

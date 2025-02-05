@@ -5,7 +5,7 @@ import {
   SerializedError,
 } from "@reduxjs/toolkit";
 import { alertActions, authActions, RootState } from ".";
-import { apiService, IUser } from "../shared";
+import { apiService, IUser } from "../";
 
 interface IUsersState {
   list: {

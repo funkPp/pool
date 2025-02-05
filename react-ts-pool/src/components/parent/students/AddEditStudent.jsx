@@ -7,14 +7,14 @@ import * as Yup from "yup";
 import { useAppDispatch, alertActions } from "../../../shared/store";
 import Select from "react-select";
 import {
-  useGetUserById,
-  useUserMutationEdit,
-  useUserMutationСreate,
+  useGetStudentById,
+  useStudentMutationEdit,
+  useStudentMutationСreate,
 } from "./api";
 import { clsx } from "clsx";
 import { history } from "../../../shared";
 
-export function AddEdit() {
+export function AddEditStudent() {
   const { id } = useParams();
   const [title, setTitle] = useState();
   const dispatch = useAppDispatch();
@@ -43,7 +43,7 @@ export function AddEdit() {
     isSuccess,
     isLoading: isLoadingUser,
     status,
-  } = useGetUserById(id);
+  } = useGetStudentById(id);
 
   useEffect(() => {
     if (isSuccess && user) {
@@ -54,8 +54,8 @@ export function AddEdit() {
     }
   }, [reset, user, isSuccess]);
 
-  const mutationEdit = useUserMutationEdit(id);
-  const mutationCreate = useUserMutationСreate();
+  const mutationEdit = useStudentMutationEdit(id);
+  const mutationCreate = useStudentMutationСreate();
 
   async function onSubmit(data) {
     dispatch(alertActions.clear());

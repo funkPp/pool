@@ -1,5 +1,5 @@
 import { Navigate, Outlet } from "react-router-dom";
-import { useAppSelector } from "../../store";
+import { useAppSelector } from "../../shared/store";
 import { history } from "../../shared";
 
 export function PrivateRoute() {

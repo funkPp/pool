@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS public.students
     parent_id integer,
     firstname text COLLATE pg_catalog."default",
     lastname text COLLATE pg_catalog."default",
-    birthday date NOT NULL,
+    birthday timestamp without time zone NOT NULL,
     CONSTRAINT students_pkey PRIMARY KEY (id)
 )
 

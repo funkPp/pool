@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { alertActions } from ".";
-import { apiService } from "../shared";
-import { history } from "../shared/history";
+import { apiService } from "../";
+import { history } from "../history";
 
 interface IAuthUser {
   id: string;

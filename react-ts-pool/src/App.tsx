@@ -14,6 +14,7 @@ import { history } from "./shared/history";
 import { authActions, useAppDispatch, useAppSelector } from "./shared/store";
 import { Alert } from "./components/ui-kit/Alert";
 import { ScheduleLayout } from "./components/coach/schedule";
+import { StudentsLayout } from "./components/parent/students/StudentsLayout";
 
 function App() {
   const auth = useAppSelector((x) => x.auth.value);
@@ -32,6 +33,7 @@ function App() {
             <Route path="*" element={<Navigate to="/" />} />
             <Route element={<PrivateRoute />}>
               <Route path="/" element={<Home />} />
+              <Route path="/parent/students/*" element={<StudentsLayout />} />
               <Route element={<PrivateAdminRoute />}>
                 <Route path="/admin/users/*" element={<UsersLayout />} />
                 <Route path="/admin/schedule/*" element={<ScheduleLayout />} />
