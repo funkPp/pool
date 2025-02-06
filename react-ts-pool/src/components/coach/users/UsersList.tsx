@@ -4,7 +4,16 @@ import LinkButton from "../../ui-kit/LinkButton";
 import { Loader } from "../../ui-kit/Loader";
 
 export function List() {
-  const head = ["id", "Имя", "Фамилия", "login", "Роль", "Действия:"];
+  // const head = ["id", "Имя", "Фамилия", "login", "Роль", "Действия:"];
+
+  const head = [
+    { label: "id", field: "id", sort: 0 },
+    { label: "Имя", field: "firstName", sort: 1 },
+    { label: "Фамилия", field: "lastName", sort: 2 },
+    { label: "Login", field: "userName", sort: 3 },
+    { label: "Роль", field: "role", sort: 3 },
+  ];
+
   const { data: users, error, isLoading } = useGetUsers();
 
   const mutationDelete = useUserMurationDelete();

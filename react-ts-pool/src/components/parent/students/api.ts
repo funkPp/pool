@@ -22,7 +22,7 @@ const studentsListApi = {
 
 const studentsListByParentApi = {
   baseKey: "students",
-  getStudentsListQueryOptions: (parentId: string) => {
+  getStudentsByParentListQueryOptions: (parentId: string) => {
     return queryOptions({
       queryKey: [studentsListApi.baseKey, "list", parentId],
       queryFn: () => apiService.get(`${baseUrl}/parent/${parentId}`, null),
@@ -69,7 +69,7 @@ export function useGetStudentById(id: string) {
 
 export function useGetStudentByParent(parentId: string) {
   return useQuery({
-    ...studentByIdApi.getStudentByIdQueryOptions(parentId),
+    ...studentsListByParentApi.getStudentsByParentListQueryOptions(parentId),
     enabled: !!localStorage.getItem("auth") && !!parentId,
   });
 }

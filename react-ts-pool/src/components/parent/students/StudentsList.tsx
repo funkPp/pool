@@ -3,16 +3,37 @@ import { useGetStudentByParent, useStudentMurationDelete } from "./api";
 import LinkButton from "../../ui-kit/LinkButton";
 import { Loader } from "../../ui-kit/Loader";
 import { useAppSelector } from "../../../shared/store";
+import { IStudentView, IStudent } from "../../../shared";
+import { data } from "react-router-dom";
+import moment from "moment";
 
 export function StudentsList() {
   const parent = useAppSelector((x) => x.auth.value.id);
 
-  const head = ["id", "Имя", "Фамилия", "Дата рождения", "Действия:"];
+  // const head = ["id", "Имя", "Фамилия", "Дата рождения", "Действия:"];
+  const headTable = [
+    { label: "id", field: "id", sort: 0 },
+    { label: "Имя", field: "firstName", sort: 1 },
+    { label: "Фамилия", field: "lastName", sort: 2 },
+    { label: "Возраст", field: "age", sort: 3 },
+    // { label: "Действия", field: "", sort: 100 },
+  ];
+
   const { data: students, error, isLoading } = useGetStudentByParent(parent);
-
-  console.log({ parent }, students);
-
   const mutationDelete = useStudentMurationDelete();
+
+  if (!students) return <></>;
+
+  const studentsView = students.map((student: IStudent): IStudentView => {
+    console.log(student.birthday);
+    student.age = moment().diff(moment(new Date(student.birthday)), "year");
+    // console.log(student.birthday);
+    const { parent_id, ...rest } = student;
+    return rest;
+  });
+
+  console.log({ studentsView });
+
   const handlerDeleteStudent = (id: string) => {
     mutationDelete.mutate(id);
   };
@@ -32,10 +53,10 @@ export function StudentsList() {
             >
               Добавить ребёнка
             </LinkButton>
-            <Table
+            <Table<IStudent>
               typeClass="students"
-              head={head}
-              body={students}
+              head={headTable}
+              body={studentsView}
               editById="/parent/students/edit/"
               handlerDeleteById={handlerDeleteStudent}
             />

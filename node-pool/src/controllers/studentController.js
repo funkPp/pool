@@ -35,8 +35,8 @@ exports.getStudentByParent = async (req, res) => {
       `SELECT id, firstname as "firstName", lastname as "lastName", parent_id, birthday FROM students WHERE parent_id = $1`,
       [parent]
     );
-    console.log(result.rows[0])
-    res.status(200).json(result.rows[0]);
+    // console.log(result.rows)
+    res.status(200).json(result.rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

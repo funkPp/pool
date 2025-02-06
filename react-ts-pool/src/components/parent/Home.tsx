@@ -5,7 +5,7 @@ export function Home() {
   const auth = useAppSelector((x) => x.auth.value);
   return (
     <div className="p-2 m-2">
-      <h3 className="text-cyan-900 p-2 m-2">
+      <h3 className="text-cyan-900 p-2 mx-auto">
         Добрый день, {auth?.firstName + " " + auth?.lastName + "!"}
       </h3>
 

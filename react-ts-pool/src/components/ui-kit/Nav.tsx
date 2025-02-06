@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 import { DropdownMenu } from ".";
-import { FaCalendarAlt, FaUserEdit } from "react-icons/fa";
+import { FaCalendarAlt, FaUserEdit, FaBaby } from "react-icons/fa";
 
 interface INavProps {
   auth: {
@@ -15,16 +15,18 @@ export function Nav({ auth, logout }: INavProps) {
 
   return (
     <nav className="bg-white rounded-xl shadow-md flex flex-col text-sm text-center sm:flex-row sm:text-left sm:justify-between font-semibold text-cyan-600">
-      <DropdownMenu
-        buttonLabel="Кабинет родителя"
-        items={[
-          {
-            title: "Дети",
-            url: "/parent/students/",
-            icon: undefined,
-          },
-        ]}
-      />
+      {auth.role === "user" ? (
+        <DropdownMenu
+          buttonLabel="Кабинет родителя"
+          items={[
+            {
+              title: "Дети",
+              url: "/parent/students/",
+              icon: <FaBaby />,
+            },
+          ]}
+        />
+      ) : null}
       {auth.role === "admin" || auth.role === "owner" ? (
         <DropdownMenu
           buttonLabel="Кабинет тренера"

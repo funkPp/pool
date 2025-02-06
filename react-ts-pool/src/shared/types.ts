@@ -7,10 +7,20 @@ export interface IUser {
   // isDeleting?: boolean;
 }
 
+
 export interface IStudent {
   id: string;
+  parent_id: string
   firstName: string;
   lastName: string;
-  birthday: string;
+  birthday: string | Date;
+  age?: number  
+}
+
+export interface IStudentView {
+  firstName: string;
+  lastName: string;
+  birthday: string | Date;
+  age?: number | undefined
 }
 

@@ -1,14 +1,17 @@
 import clsx from "clsx";
-import { Link } from "react-router-dom";
 import { Button } from "./Button";
 import { ReactNode } from "react";
-import { IUser } from "../../shared";
 import LinkButton from "./LinkButton";
 
-export function Table<T extends IUser>({
+interface Ihead {
+  label: string;
+  field: string;
+  sort: number;
+}
+
+export function Table<T extends { id: string }>({
   typeClass,
   disabled,
-  onDelete,
   head,
   body,
   editById,
@@ -16,8 +19,7 @@ export function Table<T extends IUser>({
 }: {
   typeClass: string;
   disabled?: boolean;
-  onDelete?: () => void;
-  head?: string[];
+  head?: Ihead[];
   body?: T[];
   editById?: string;
   handlerDeleteById?: (id: string) => void;
@@ -31,37 +33,42 @@ export function Table<T extends IUser>({
     return <div>No data available</div>;
   }
 
+  const fieldsHead = head?.sort((a, b) => a.sort - b.sort);
   let headRender = null;
   if (head) {
-    headRender = head.map((item) => (
-      <th key={item} scope="col" className="px-4 py-3 bg-gray-50">
-        {item}
+    headRender = fieldsHead!.map((item) => (
+      <th key={item.field} scope="col" className="px-4 py-3 bg-gray-50">
+        {item.label}
       </th>
     ));
+    headRender.push(<th key="key"></th>);
   }
 
-  const fieldsT = Object.keys(body[0]) as Array<keyof T>;
-
+  // const fieldsT = Object.keys(body[0]) as Array<keyof T>;
+  console.log(body);
   let bodyRender = null;
   if (body) {
     bodyRender = body.map((row) => (
       <tr key={row.id} className="bg-white border-b hover:bg-gray-50  ">
-        {fieldsT.map((field) => (
-          <td className="px-4 py-2 " key={String(field)}>
-            {String(row[field])}
+        {fieldsHead!.map((fieldname) => (
+          <td className="px-4 py-2 " key={String(fieldname.field)}>
+            {row[fieldname.field as keyof T] as ReactNode}
           </td>
         ))}
         {(editById || handlerDeleteById) && (
-          <td className="px-2 py-1 flex flex-wrap flex-row gap-1  justify-center items-center ">
+          <td
+            className="px-2 py-1 flex flex-wrap flex-row gap-1 justify-center items-center  "
+            key={" "}
+          >
             {editById && (
-              <LinkButton to={`${editById}${row.id}`} typeClass="flexRight">
-                Изменить
+              <LinkButton to={`${editById}${row.id}`} typeClass="main">
+                Детали
               </LinkButton>
             )}
             {handlerDeleteById && (
               <Button
-                typeClass="delete"
-                onClick={() => handlerDeleteById(row.id)}
+                typeClass="main"
+                onClick={() => handlerDeleteById(row.id!)}
                 value="Удалить"
               />
             )}
@@ -74,12 +81,7 @@ export function Table<T extends IUser>({
     <div className="mt-3 relative overflow-x-auto shadow-md sm:rounded-lg box-border ">
       <table className="w-full text-sm text-left rtl:text-right text-gray-500">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-          <tr>
-            {headRender}
-            {/* <th scope="col" className="px-4 py-3">
-              <span className="sr-only">Edit</span>
-            </th> */}
-          </tr>
+          <tr>{headRender}</tr>
         </thead>
         <tbody className={clsx(selectClass[typeClass], disabledStyle)}>
           {bodyRender as ReactNode}

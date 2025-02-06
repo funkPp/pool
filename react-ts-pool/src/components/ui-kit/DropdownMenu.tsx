@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
@@ -18,8 +18,28 @@ export function DropdownMenu({
   const handleToggle = () => {
     setOpen((prev) => !prev);
   };
+
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  useEffect(() => {
+    const handler = (event: MouseEvent | TouchEvent) => {
+      if (
+        open &&
+        menuRef.current &&
+        !menuRef.current.contains(event.target as Node)
+      ) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    document.addEventListener("touchstart", handler);
+    return () => {
+      document.removeEventListener("mousedown", handler);
+      document.removeEventListener("touchstart", handler);
+    };
+  }, [open]);
+
   return (
-    <div className="relative">
+    <div className="relative" ref={menuRef}>
       <button
         type="button"
         className="flex items-center justify-center rounded-md text-sm p-2 m-2"
