@@ -8,7 +8,7 @@ export function Card({
   children: ReactNode;
 }) {
   const selectClass: { [index: string]: string } = {
-    main: `max-w-sm mx-auto  bg-white text-cyan-700 p-6 
+    main: `m-1 max-w-sm mx-auto  bg-white text-cyan-700 p-6 
     border border-gray-200 rounded-lg shadow`,
   };
 

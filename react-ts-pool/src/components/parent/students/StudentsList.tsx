@@ -3,20 +3,18 @@ import { useGetStudentByParent, useStudentMurationDelete } from "./api";
 import LinkButton from "../../ui-kit/LinkButton";
 import { Loader } from "../../ui-kit/Loader";
 import { useAppSelector } from "../../../shared/store";
-import { IStudentView, IStudent } from "../../../shared";
-import { data } from "react-router-dom";
+import { IStudent } from "../../../shared";
 import moment from "moment";
 
 export function StudentsList() {
   const parent = useAppSelector((x) => x.auth.value.id);
 
-  // const head = ["id", "Имя", "Фамилия", "Дата рождения", "Действия:"];
   const headTable = [
     { label: "id", field: "id", sort: 0 },
     { label: "Имя", field: "firstName", sort: 1 },
     { label: "Фамилия", field: "lastName", sort: 2 },
     { label: "Возраст", field: "age", sort: 3 },
-    // { label: "Действия", field: "", sort: 100 },
+    { label: "Пол", field: "genderView", sort: 4 },
   ];
 
   const { data: students, error, isLoading } = useGetStudentByParent(parent);
@@ -24,10 +22,10 @@ export function StudentsList() {
 
   if (!students) return <></>;
 
-  const studentsView = students.map((student: IStudent): IStudentView => {
+  const studentsView = students.map((student: IStudent): IStudent => {
     console.log(student.birthday);
     student.age = moment().diff(moment(new Date(student.birthday)), "year");
-    // console.log(student.birthday);
+    student.genderView = student.gender === "male" ? "муж" : "жен";
     const { parent_id, ...rest } = student;
     return rest;
   });
@@ -58,7 +56,7 @@ export function StudentsList() {
               head={headTable}
               body={studentsView}
               editById="/parent/students/edit/"
-              handlerDeleteById={handlerDeleteStudent}
+              //handlerDeleteById={handlerDeleteStudent}
             />
           </div>
         ) : (

@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 exports.getStudents = async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT id, firstname as "firstName", lastname as "lastName", parent_id, birthday FROM students ORDER BY id`
+      `SELECT id, firstname as "firstName", lastname as "lastName", parent_id, birthday, gender FROM students ORDER BY id`
     );
     //console.log(result.rows)
     res.status(200).json(result.rows);
@@ -18,7 +18,7 @@ exports.getStudentById = async (req, res) => {
   try {
     const { id } = req.params;
     const result = await pool.query(
-      `SELECT id, firstname as "firstName", lastname as "lastName", parent_id, birthday FROM students WHERE id = $1`,
+      `SELECT id, firstname as "firstName", lastname as "lastName", parent_id, birthday, gender FROM students WHERE id = $1`,
       [id]
     );
     res.status(200).json(result.rows[0]);
@@ -27,12 +27,11 @@ exports.getStudentById = async (req, res) => {
   }
 };
 
-
 exports.getStudentByParent = async (req, res) => {
   try {
     const { parent } = req.params;
     const result = await pool.query(
-      `SELECT id, firstname as "firstName", lastname as "lastName", parent_id, birthday FROM students WHERE parent_id = $1`,
+      `SELECT id, firstname as "firstName", lastname as "lastName", parent_id, birthday, gender FROM students WHERE parent_id = $1`,
       [parent]
     );
     // console.log(result.rows)
@@ -41,7 +40,6 @@ exports.getStudentByParent = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
 
 // const checkExistStudent = async (userName) => {
 //   const existStudent = await pool.query(
@@ -55,7 +53,7 @@ exports.getStudentByParent = async (req, res) => {
 // };
 
 exports.createStudent = async (req, res) => {
-  const { firstName, lastName, parent, birthday } = req.body;
+  const { firstName, lastName, parent_id, birthday, gender } = req.body;
 
   // console.log(req.body,firstName, lastName, userName);
   try {
@@ -63,8 +61,8 @@ exports.createStudent = async (req, res) => {
     // await checkExistStudent(userName);
 
     const result = await pool.query(
-      `INSERT INTO students (firstName, lastName, parent_id, birthday) VALUES ($1, $2, $3, $4, $5) RETURNING id, firstname as "firstName", lastname as "lastName", parent_id, birthday`,
-      [firstName, lastName, parent, birthday]
+      `INSERT INTO students (firstName, lastName, parent_id, birthday, gender) VALUES ($1, $2, $3, $4, $5) RETURNING id, firstname as "firstName", lastname as "lastName", parent_id, birthday, gender`,
+      [firstName, lastName, parent_id, birthday, gender]
     );
 
     res.status(201).json(result.rows);
@@ -76,19 +74,14 @@ exports.createStudent = async (req, res) => {
 exports.updateStudent = async (req, res) => {
   const { id } = req.params;
 
-  const {
-    firstName,
-    lastName,
-    parent,
-    birthday
-  } = req.body;
+  const { firstName, lastName, parent_id, birthday, gender } = req.body;
 
   try {
     const result = await pool.query(
-        `UPDATE students SET firstName = $2, lastName = $3, parent_id= $4, birthday = $5 WHERE id = $1 RETURNING id, firstname as "firstName", lastname as "lastName", parent_id, birthday`,
-        [id, firstName, lastName, parent, birthday]
-      );
-   
+      `UPDATE students SET firstName = $2, lastName = $3, parent_id= $4, birthday = $5, gender =$6 WHERE id = $1 RETURNING id, firstname as "firstName", lastname as "lastName", parent_id, birthday, gender`,
+      [id, firstName, lastName, parent_id, birthday, gender]
+    );
+
     res.status(200).json(result.rows[0]);
   } catch (err) {
     res.status(500).json({ error: err.message });

@@ -4,7 +4,11 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Card, LinkButton, Loader } from "../../ui-kit";
 import * as Yup from "yup";
-import { useAppDispatch, alertActions } from "../../../shared/store";
+import {
+  useAppDispatch,
+  alertActions,
+  useAppSelector,
+} from "../../../shared/store";
 import Select from "react-select";
 import {
   useGetStudentById,
@@ -15,6 +19,7 @@ import { clsx } from "clsx";
 import { history } from "../../../shared";
 
 export function AddEditStudent() {
+  const parent = useAppSelector((x) => x.auth.value.id);
   const { id } = useParams();
   const [title, setTitle] = useState();
   const dispatch = useAppDispatch();
@@ -22,12 +27,8 @@ export function AddEditStudent() {
   const validationSchema = Yup.object().shape({
     firstName: Yup.string().required("First Name is required"),
     lastName: Yup.string().required("Last Name is required"),
-    userName: Yup.string().required("Username is required"),
-    role: Yup.string().required("Заполните поле"),
-    password: Yup.string()
-      .transform((x) => (x === "" ? undefined : x))
-      .concat(id ? null : Yup.string().required("Password is required"))
-      .min(6, "Password must be at least 6 characters"),
+    birthday: Yup.string().required("Username is required"),
+    gender: Yup.string().required("Username is required"),
   });
   const formOptions = {
     mode: "onChange",
@@ -39,34 +40,35 @@ export function AddEditStudent() {
   const { errors, isSubmitting } = formState;
 
   const {
-    data: user,
+    data: student,
     isSuccess,
     isLoading: isLoadingUser,
     status,
   } = useGetStudentById(id);
 
   useEffect(() => {
-    if (isSuccess && user) {
-      setTitle("Редактирование пользователеля");
-      reset(user);
+    if (isSuccess && student && student.parent_id === parent) {
+      setTitle("Изменить данные");
+      reset(student);
     } else {
-      setTitle("Новый пользователь");
+      setTitle("Добавить нового ученика");
     }
-  }, [reset, user, isSuccess]);
+  }, [reset, student, isSuccess]);
 
   const mutationEdit = useStudentMutationEdit(id);
   const mutationCreate = useStudentMutationСreate();
 
   async function onSubmit(data) {
     dispatch(alertActions.clear());
-
+    console.log("parent", parent);
+    const dataPrepare = { ...data, parent_id: parent };
     if (id) {
-      mutationEdit.mutate(data);
+      mutationEdit.mutate(dataPrepare);
     } else {
-      mutationCreate.mutate(data);
+      mutationCreate.mutate(dataPrepare);
     }
 
-    history.navigate("admin/users");
+    history.navigate("parent/students");
   }
 
   const styleInput = `
@@ -79,9 +81,8 @@ export function AddEditStudent() {
   const styleLabel = "block mb-2 text-sm font-medium";
 
   const options = [
-    { value: "user", label: "Пользователь" },
-    { value: "admin", label: "Администратор" },
-    { value: "owner", label: "Владелец" },
+    { value: "male", label: "муж" },
+    { value: "female", label: "жен" },
   ];
   const getValue = (value) =>
     value ? options.find((o) => o.value === value) : "";
@@ -91,7 +92,7 @@ export function AddEditStudent() {
     <Card typeClass="main">
       {isLoadingUser && <Loader />}
       <h1 className="text-center">{title}</h1>
-      {!(user?.loading || user?.error) && (
+      {!(student?.loading || student?.error) && (
         <form
           onSubmit={handleSubmit(onSubmit)}
           style={{ maxWidth: "400px", margin: "0 auto" }}
@@ -124,11 +125,11 @@ export function AddEditStudent() {
           </div>
           <div>
             <div className="mb-3 col">
-              <label className={clsx(styleLabel)}>Login</label>
+              <label className={clsx(styleLabel)}>День рождения</label>
               <input
-                name="userName"
+                name="birthday"
                 type="text"
-                {...register("userName")}
+                {...register("birthday")}
                 className={clsx(styleInput)}
               />
               <div className="mt-1 text-sm text-red-600">
@@ -136,15 +137,15 @@ export function AddEditStudent() {
               </div>
             </div>
             <div>
-              <label className={clsx(styleLabel)}>Роль</label>
+              <label className={clsx(styleLabel)}>Пол</label>
               <div className="">
                 <Controller
                   control={control}
-                  defaultValue={"user"}
-                  name="role"
+                  defaultValue={"male"}
+                  name="gender"
                   render={({ field: { onChange, value, ref } }) => (
                     <Select
-                      placeholder="Выберите роль"
+                      placeholder="Выберите пол"
                       inputRef={ref}
                       options={options}
                       value={getValue(value)}
@@ -176,25 +177,6 @@ export function AddEditStudent() {
                 {errors.role?.message}
               </div>
             </div>
-            <div className="mb-1 col">
-              <label className={clsx(styleLabel)}>
-                Пароль
-                {id && (
-                  <em className="ml-1 font-light">
-                    (Оставьте поле пустым, чтобы не менять пароль)
-                  </em>
-                )}
-              </label>
-              <input
-                name="password"
-                type="password"
-                {...register("password")}
-                className={clsx(styleInput)}
-              />
-              <div className="mt-1 text-sm text-red-600">
-                {errors.password?.message}
-              </div>
-            </div>
           </div>
           <div className="mt-3 flex flex-wrap justify-between">
             <Button
@@ -212,22 +194,12 @@ export function AddEditStudent() {
               value="Сброс"
             />
 
-            <LinkButton typeClass="main" to="/admin/users">
+            <LinkButton typeClass="main" to="/parent/students">
               Отмена
             </LinkButton>
           </div>
         </form>
       )}
-      {/* {user?.loading && (
-        <div className="text-center m-5">
-          <span className="spinner-border spinner-border-lg align-center"></span>
-        </div>
-      )}
-      {user?.error && (
-        <div class="text-center m-5">
-          <div class="text-danger">Error loading user: {user.error}</div>
-        </div>
-      )} */}
     </Card>
   );
 }

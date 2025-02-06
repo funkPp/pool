@@ -14,7 +14,7 @@ export function Nav({ auth, logout }: INavProps) {
   console.log(auth.role);
 
   return (
-    <nav className="bg-white rounded-xl shadow-md flex flex-col text-sm text-center sm:flex-row sm:text-left sm:justify-between font-semibold text-cyan-600">
+    <nav className="bg-white rounded-md shadow-md flex flex-col text-sm text-center sm:flex-row sm:text-left sm:justify-between font-semibold text-cyan-600">
       {auth.role === "user" ? (
         <DropdownMenu
           buttonLabel="Кабинет родителя"
