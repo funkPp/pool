@@ -21,7 +21,7 @@ exports.authenticate = async (req, res) => {
 
     const user = result.rows[0];
     const token = jwt.sign({ sub: user.id }, secret, { expiresIn: expiresIn });
-    console.log(token);
+    // console.log(token);
     res.status(200).json({ ...omitPassword(user), token });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -45,6 +45,7 @@ exports.authorize = () => {
       jwt.verify(token, secret, (err, user) => {
         if (err) return res.sendStatus(403).json({ error: "Неавторизован" }); //!!!
         req.user = user;
+        // console.log('user:',req)
         next();
       });
     },

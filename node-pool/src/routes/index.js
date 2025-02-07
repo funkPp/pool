@@ -15,7 +15,7 @@ router.delete("/users/:id", authController.authorize(), userController.deleteUse
 router.get("/students", authController.authorize(), studentController.getStudents);
 router.get("/students/:id", authController.authorize(), studentController.getStudentById);
 router.get("/students/parent/:parent", authController.authorize(), studentController.getStudentByParent);
-router.post("/students/add", authController.authorize(), studentController.createStudent);
+router.post("/students/create", authController.authorize(), studentController.createStudent);
 router.put("/students/:id", authController.authorize(), studentController.updateStudent);
 router.delete("/students/:id", authController.authorize(), studentController.deleteStudent);
 

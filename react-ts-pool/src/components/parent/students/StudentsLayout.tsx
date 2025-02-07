@@ -9,8 +9,8 @@ export function StudentsLayout() {
       <div className="container">
         <Routes>
           <Route index element={<StudentsList />} />
-          {/* <Route path="add" element={<AddEditStudent />} /> */}
           <Route path="edit/:id" element={<AddEditStudent />} />
+          <Route path="add" element={<AddEditStudent />} />
         </Routes>
       </div>
     </div>

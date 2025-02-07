@@ -45,7 +45,7 @@ export function Table<T extends { id: string }>({
   }
 
   // const fieldsT = Object.keys(body[0]) as Array<keyof T>;
-  console.log(body);
+  // console.log(body);
   let bodyRender = null;
   if (body) {
     bodyRender = body.map((row) => (

@@ -46,8 +46,10 @@ export function AddEditStudent() {
     status,
   } = useGetStudentById(id);
 
+  if (student && student.birthday) student.birthday = student.birthday.substring(0, 10)
+
   useEffect(() => {
-    if (isSuccess && student && student.parent_id === parent) {
+    if (isSuccess && student) {
       setTitle("Изменить данные");
       reset(student);
     } else {
@@ -60,34 +62,15 @@ export function AddEditStudent() {
 
   async function onSubmit(data) {
     dispatch(alertActions.clear());
-    console.log("parent", parent);
-    const dataPrepare = { ...data, parent_id: parent };
     if (id) {
-      mutationEdit.mutate(dataPrepare);
+      mutationEdit.mutate(data);
     } else {
+      const dataPrepare = { ...data, parent_id: parent };
       mutationCreate.mutate(dataPrepare);
     }
 
     history.navigate("parent/students");
   }
-
-  const styleInput = `
-  bg-gray-50 border border-gray-300 text-sm rounded-lg 
-  hover:border-cyan-600 focus:outline-cyan-700 block w-full p-2`;
-
-  const styleSelect = `
-  bg-gray-50 border border-gray-300 text-sm rounded-lg 
-  hover:border-cyan-600 focus:outline-cyan-700 block w-full`;
-  const styleLabel = "block mb-2 text-sm font-medium";
-
-  const options = [
-    { value: "male", label: "муж" },
-    { value: "female", label: "жен" },
-  ];
-  const getValue = (value) =>
-    value ? options.find((o) => o.value === value) : "";
-
-  console.log(isLoadingUser, status);
   return (
     <Card typeClass="main">
       {isLoadingUser && <Loader />}
@@ -128,7 +111,7 @@ export function AddEditStudent() {
               <label className={clsx(styleLabel)}>День рождения</label>
               <input
                 name="birthday"
-                type="text"
+                type="date"
                 {...register("birthday")}
                 className={clsx(styleInput)}
               />
@@ -200,6 +183,34 @@ export function AddEditStudent() {
           </div>
         </form>
       )}
+
+      {student?.loading && (
+        <div className="text-center m-5">
+          <span className="spinner-border spinner-border-lg align-center"></span>
+        </div>
+      )}
+      {student?.error && (
+        <div class="text-center m-5">
+          <div class="text-danger">Error loading user: {student.error}</div>
+        </div>
+      )}
     </Card>
   );
 }
+
+
+  const styleInput = `
+  bg-gray-50 border border-gray-300 text-sm rounded-lg 
+  hover:border-cyan-600 focus:outline-cyan-700 block w-full p-2`;
+
+  const styleSelect = `
+  bg-gray-50 border border-gray-300 text-sm rounded-lg 
+  hover:border-cyan-600 focus:outline-cyan-700 block w-full`;
+  const styleLabel = "block mb-2 text-sm font-medium";
+
+  const options = [
+    { value: "male", label: "муж" },
+    { value: "female", label: "жен" },
+  ];
+  const getValue = (value) =>
+    value ? options.find((o) => o.value === value) : "";

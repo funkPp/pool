@@ -17,9 +17,11 @@ exports.getStudents = async (req, res) => {
 exports.getStudentById = async (req, res) => {
   try {
     const { id } = req.params;
+    const parentIdAuth  = req.user.sub;
+    // console.log(req.user.sub)
     const result = await pool.query(
-      `SELECT id, firstname as "firstName", lastname as "lastName", parent_id, birthday, gender FROM students WHERE id = $1`,
-      [id]
+      `SELECT id, firstname as "firstName", lastname as "lastName", parent_id, birthday, gender FROM students WHERE id = $1 and parent_id = $2 `,
+      [id, parentIdAuth]
     );
     res.status(200).json(result.rows[0]);
   } catch (err) {
@@ -31,7 +33,7 @@ exports.getStudentByParent = async (req, res) => {
   try {
     const { parent } = req.params;
     const result = await pool.query(
-      `SELECT id, firstname as "firstName", lastname as "lastName", parent_id, birthday, gender FROM students WHERE parent_id = $1`,
+      `SELECT id, firstname as "firstName", lastname as "lastName", parent_id, birthday, gender FROM students WHERE parent_id = $1 order by id`,
       [parent]
     );
     // console.log(result.rows)
@@ -75,11 +77,11 @@ exports.updateStudent = async (req, res) => {
   const { id } = req.params;
 
   const { firstName, lastName, parent_id, birthday, gender } = req.body;
-
+  const parentIdAuth  = req.user.sub;
   try {
     const result = await pool.query(
-      `UPDATE students SET firstName = $2, lastName = $3, parent_id= $4, birthday = $5, gender =$6 WHERE id = $1 RETURNING id, firstname as "firstName", lastname as "lastName", parent_id, birthday, gender`,
-      [id, firstName, lastName, parent_id, birthday, gender]
+      `UPDATE students SET firstName = $2, lastName = $3, parent_id= $4, birthday = $5, gender =$6 WHERE id = $1 and parent_id = $7 RETURNING id, firstname as "firstName", lastname as "lastName", parent_id, birthday, gender`,
+      [id, firstName, lastName, parent_id, birthday, gender, parentIdAuth]
     );
 
     res.status(200).json(result.rows[0]);
@@ -90,8 +92,9 @@ exports.updateStudent = async (req, res) => {
 
 exports.deleteStudent = async (req, res) => {
   const { id } = req.params;
+  const parentIdAuth  = req.user.sub;
   try {
-    await pool.query("DELETE FROM students WHERE id = $1", [id]);
+    await pool.query("DELETE FROM students WHERE id = $1 and parent_id = $2", [id, parentIdAuth]);
     res.status(204).send();
   } catch (err) {
     res.status(500).json({ error: err.message });

@@ -11,7 +11,7 @@ interface INavProps {
 
 export function Nav({ auth, logout }: INavProps) {
   if (!auth) return <></>;
-  console.log(auth.role);
+  // console.log(auth.role);
 
   return (
     <nav className="bg-white rounded-md shadow-md flex flex-col text-sm text-center sm:flex-row sm:text-left sm:justify-between font-semibold text-cyan-600">

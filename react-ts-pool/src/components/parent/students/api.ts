@@ -40,7 +40,7 @@ const studentByIdApi = {
         const studentsList = queryClient.getQueryData(
           studentsListApi.getStudentsListQueryOptions().queryKey,
         );
-        const studentCach = studentsList?.find((u: IStudent) => u.id === id);
+        const studentCach = studentsList?.find((u: IStudent) => u.id === id );
         return studentCach;
       },
       initialDataUpdatedAt: () => {
@@ -63,7 +63,7 @@ export function useGetStudents() {
 export function useGetStudentById(id: string) {
   return useQuery({
     ...studentByIdApi.getStudentByIdQueryOptions(id),
-    enabled: !!localStorage.getItem("auth") && !!id,
+    enabled: !!localStorage.getItem("auth") && !!id ,
   });
 }
 
@@ -92,7 +92,7 @@ export function useStudentMutationEdit(id: string) {
 export function useStudentMutationСreate() {
   const dispatch = useAppDispatch();
   return useMutation({
-    mutationFn: (body: IStudent) => apiService.post(`${baseUrl}/register`, body),
+    mutationFn: (body: IStudent) => apiService.post(`${baseUrl}/create`, body),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [studentsListApi.baseKey] });
       const message = "Ученик добавлен";

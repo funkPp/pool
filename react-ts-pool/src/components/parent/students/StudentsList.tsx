@@ -19,18 +19,20 @@ export function StudentsList() {
 
   const { data: students, error, isLoading } = useGetStudentByParent(parent);
   const mutationDelete = useStudentMurationDelete();
+  let studentsView: IStudent[] | undefined = undefined;
 
-  if (!students) return <></>;
+  if (students) {
+    studentsView = students.map((student: IStudent): IStudent => {
+      // console.log(student.birthday);
+      student.age = moment().diff(moment(new Date(student.birthday)), "year");
+      student.genderView = student.gender === "male" ? "муж" : "жен";
+      student.birthday = student.birthday.substring(0, 10);
+      const { parent_id, ...rest } = student;
+      return rest;
+    });
+  }
 
-  const studentsView = students.map((student: IStudent): IStudent => {
-    console.log(student.birthday);
-    student.age = moment().diff(moment(new Date(student.birthday)), "year");
-    student.genderView = student.gender === "male" ? "муж" : "жен";
-    const { parent_id, ...rest } = student;
-    return rest;
-  });
-
-  console.log({ studentsView });
+  // console.log({ error });
 
   const handlerDeleteStudent = (id: string) => {
     mutationDelete.mutate(id);

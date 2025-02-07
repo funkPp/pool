@@ -86,7 +86,7 @@ export function AddEdit() {
   const getValue = (value) =>
     value ? options.find((o) => o.value === value) : "";
 
-  console.log(isLoadingUser, status);
+  // console.log(isLoadingUser, status);
   return (
     <Card typeClass="main">
       {isLoadingUser && <Loader />}

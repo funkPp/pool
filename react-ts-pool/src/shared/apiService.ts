@@ -1,3 +1,4 @@
+import { error } from "console";
 import { store, authActions } from "../shared/store";
 import { IUser } from "./types";
 
@@ -25,7 +26,7 @@ function request<Ibody>(method: string) {
       requestOptions.headers["Content-Type"] = "application/json";
       requestOptions.body = JSON.stringify(body);
     }
-    return fetch(url, requestOptions).then(handleResponse);
+    return fetch(url, requestOptions).then(handleResponse)//.catch((error)=> console.log(error));
   };
 }
 

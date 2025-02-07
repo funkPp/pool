@@ -32,7 +32,7 @@ const checkExistUser = async (userName) => {
     "select * from users where userName = $1",
     [userName]
   );
-  console.log(userName);
+
   if (existUser.rowCount) {
     throw new Error(`Пользователь ${userName} уже зарегистрирован!`);
   }
