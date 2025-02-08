@@ -21,6 +21,10 @@ export function Button({
     delete: `py-1 px-2 focus:outline-none bg-red-50 rounded-md 
     border border-red-200 hover:bg-red-100 hover:text-grey-800
     focus:z-10 focus:ring-3 focus:ring-red-300 align-middle`,
+
+    group: `m-1 py-1 px-2 focus:outline-none bg-green-50 rounded-md 
+    border border-green-200 hover:bg-green-100 hover:text-grey-800
+    focus:z-10 focus:ring-3 focus:ring-green-300 align-middle`,
   };
   const disabledStyle = disabled ? "cursor-wait " : "";
   //  console.log(onClick);

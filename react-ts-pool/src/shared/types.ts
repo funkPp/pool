@@ -18,6 +18,12 @@ export interface IStudent {
   genderView?: string;
 }
 
+export interface IGroup {
+  id: string;
+  resourcesId?: string;
+  name: string;
+}
+
 // export interface IStudentView {
 //   firstName: string;
 //   lastName: string;

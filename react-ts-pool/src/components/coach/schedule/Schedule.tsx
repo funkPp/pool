@@ -4,6 +4,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment/locale/ru";
 import { useMemo } from "react";
 import { messages, resources } from "./configCalendar";
+import { GroupList } from "../groups/GroupList";
 
 const mLocalizer = momentLocalizer(moment);
 const myEventsList = [
@@ -40,7 +41,9 @@ export function Schedule() {
             resourceGroupingLayout={true}
           />
         </div>
-        <div className="w-1/4 border"></div>
+        <div className="w-1/4 border items-center mx-1">
+          <GroupList />
+        </div>
       </div>
     </div>
   );

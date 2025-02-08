@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS public.students
     CONSTRAINT students_pkey PRIMARY KEY (id)
 )
 
+
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.students
@@ -64,4 +65,70 @@ ALTER SEQUENCE public.students_id_seq
     OWNED BY public.students.id;
 
 ALTER SEQUENCE public.students_id_seq
+    OWNER TO postgres;
+
+
+
+
+-- Table: public.groups
+
+-- DROP TABLE IF EXISTS public.groups;
+
+CREATE SEQUENCE IF NOT EXISTS public.groups_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+
+CREATE TABLE IF NOT EXISTS public.groups
+(
+    id integer NOT NULL DEFAULT nextval('groups_id_seq'::regclass),
+    resources_id integer,
+    name text COLLATE pg_catalog."default"
+    CONSTRAINT groups_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.groups
+    OWNER to postgres;
+
+
+ALTER SEQUENCE public.groups_id_seq
+    OWNED BY public.groups.id;
+
+ALTER SEQUENCE public.groups_id_seq
+    OWNER TO postgres;
+
+
+
+    -- Table: public.resources
+
+-- DROP TABLE IF EXISTS public.resources;
+CREATE SEQUENCE IF NOT EXISTS public.resources_id_seq
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 2147483647
+    CACHE 1;
+
+
+CREATE TABLE IF NOT EXISTS public.resources
+(
+    id integer NOT NULL DEFAULT nextval('resources_id_seq'::regclass),
+    title text COLLATE pg_catalog."default"
+    CONSTRAINT resources_pkey PRIMARY KEY (id)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.resources
+    OWNER to postgres;
+
+ALTER SEQUENCE public.resources_id_seq
+    OWNED BY public.resources.id;
+
+ALTER SEQUENCE public.resources_id_seq
     OWNER TO postgres;
