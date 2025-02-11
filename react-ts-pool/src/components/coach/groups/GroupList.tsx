@@ -9,7 +9,7 @@ export function GroupList() {
   if (groups) {
     groupsRender = groups.map((group: IGroup) => {
       return (
-        <li key={group.id} className="mx-2">
+        <li key={group.id} className="mx-2" draggable="true">
           <Button typeClass="group" value={group.name} />
         </li>
       );
