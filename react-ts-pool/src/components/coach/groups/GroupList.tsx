@@ -1,15 +1,26 @@
 import { IGroup } from "../../../shared";
 import { Button } from "../../ui-kit";
+import { IEvent } from "../schedule/Schedule";
 import { useGetGroups } from "./api";
 
-export function GroupList() {
+export function GroupList({
+  handleDragStart,
+}: {
+  handleDragStart: React.DragEventHandler<HTMLLIElement>;
+}) {
   const { data: groups, error, isLoading } = useGetGroups();
 
   let groupsRender = null;
   if (groups) {
     groupsRender = groups.map((group: IGroup) => {
       return (
-        <li key={group.id} className="mx-2" draggable="true">
+        <li
+          key={group.id}
+          className="mx-2"
+          draggable="true"
+          onDragStart={handleDragStart}
+          data-name={group.name}
+        >
           <Button typeClass="group" value={group.name} />
         </li>
       );

@@ -1,41 +1,56 @@
-import { Calendar, momentLocalizer, DateLocalizer } from "react-big-calendar";
+import {
+  Calendar,
+  momentLocalizer,
+  DateLocalizer,
+  Views,
+} from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment/locale/ru";
 import { useCallback, useMemo, useState } from "react";
 import { messages, resources } from "./configCalendar";
 import { GroupList } from "../groups/GroupList";
-import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
-const DnDCalendar = withDragAndDrop(Calendar);
+import withDragAndDrop, {
+  withDragAndDropProps,
+} from "react-big-calendar/lib/addons/dragAndDrop";
+
+const DnDCalendar = withDragAndDrop<IEvent, IResources>(Calendar);
 const mLocalizer = momentLocalizer(moment);
-const myEventsList = [
+const events = [
   {
     id: 10,
     title: "Тестовое событие",
     start: new Date(2025, 0, 21, 9, 0, 0),
     end: new Date(2025, 0, 21, 10, 30, 0),
-    resourceId: [1],
+    resourceId: 1,
   },
 ];
 
-interface IEvent {
+type stringOrDate = string | Date;
+
+export interface IEvent {
   id: number;
   title: string;
-  start: Date;
-  end: Date;
-  resourceId: number[];
-  isDraggable: boolean;
-  isAllDay?: boolean;
+  start: stringOrDate;
+  end: stringOrDate;
+  resourceId?: string | number | undefined;
+  isDraggable?: boolean;
+  allDay?: boolean;
+}
+
+interface IResources {
+  id: number;
+  title: string;
 }
 
 export function Schedule() {
   const minTime = useMemo(() => new Date(1972, 0, 0, 8, 0, 0, 0), []);
   const maxTime = useMemo(() => new Date(1972, 0, 0, 22, 0, 0, 0), []);
+  const defaultDate = useMemo(() => new Date(), []);
 
-  const [draggedEvent, setDraggedEvent] = useState<string | null>();
-  const dragFromOutsideItem = useCallback(
-    () => (draggedEvent === "undroppable" ? null : draggedEvent),
-    [draggedEvent],
+  const [myEvents, setMyEvents] = useState<IEvent[]>(events);
+  const [draggedEvent, setDraggedEvent] = useState<React.DragEvent | null>(
+    null,
   );
 
   const eventPropGetter = useCallback(
@@ -46,77 +61,109 @@ export function Schedule() {
     }),
     [],
   );
-  // const handleDisplayDragItemInCell = useCallback(
-  //   () => setDisplayDragItemInCell((prev) => !prev),
-  //   [],
-  // );
+  // (event: React.DragEvent<T>) => void
+  const handleDragStart = useCallback(
+    (event: React.DragEvent<HTMLLIElement>) => {
+      setDraggedEvent(event);
+    },
+    [],
+  );
 
-  // const moveEvent = useCallback(
-  //   ({ event, start, end, isAllDay: droppedOnAllDaySlot = false }) => {
-  //     const { allDay } = event;
-  //     if (!allDay && droppedOnAllDaySlot) {
-  //       event.allDay = true;
-  //     }
+  const customOnDragOverFromOutside = useCallback(
+    (dragEvent: React.DragEvent) => {
+      dragEvent.preventDefault();
+    },
+    [],
+  );
 
-  //     setMyEvents((prev) => {
-  //       const existing = prev.find((ev) => ev.id === event.id) ?? {};
-  //       const filtered = prev.filter((ev) => ev.id !== event.id);
-  //       return [...filtered, { ...existing, start, end, allDay }];
-  //     });
-  //   },
-  //   [setMyEvents],
-  // );
+  const moveEvent = useCallback(
+    ({
+      event,
+      start,
+      end,
+      resourceId,
+      isAllDay: droppedOnAllDaySlot = false,
+    }: {
+      event: IEvent;
+      start: stringOrDate;
+      end: stringOrDate;
+      resourceId?: string | number | undefined;
+      isAllDay?: boolean;
+    }) => {
+      const { allDay } = event;
+      if (!allDay && droppedOnAllDaySlot) {
+        event.allDay = true;
+      }
 
-  // const newEvent = useCallback(
-  //   (event) => {
-  //     setMyEvents((prev) => {
-  //       const idList = prev.map((item) => item.id);
-  //       const newId = Math.max(...idList) + 1;
-  //       return [...prev, { ...event, id: newId }];
-  //     });
-  //   },
-  //   [setMyEvents],
-  // );
+      setMyEvents((prev) => {
+        const existing =
+          prev.find((ev) => ev.id === event.id) ?? ({} as IEvent);
+        const filtered = prev.filter((ev) => ev.id !== event.id);
+        return [...filtered, { ...existing, start, end, allDay }];
+      });
+    },
+    [setMyEvents],
+  );
+  const newEvent = useCallback(
+    (event: Omit<IEvent, "id" | "title">) => {
+      setMyEvents((prev) => {
+        const idList = prev.map((item) => item.id);
+        const newId = Math.max(...idList) + 1;
+        return [...prev, { ...event, id: newId } as IEvent];
+      });
+    },
+    [setMyEvents],
+  );
 
-  // const onDropFromOutside = useCallback(
-  //   ({
-  //     start,
-  //     end,
-  //     isAllDay,
-  //   }: {
-  //     start: Date;
-  //     end: Date;
-  //     isAllDay: boolean;
-  //   }) => {
-  //     if (draggedEvent === "undroppable") {
-  //       setDraggedEvent(null);
-  //       return;
-  //     }
+  const onDropFromOutside = useCallback(
+    ({
+      start,
+      end,
+      allDay: isAllDay,
+    }: {
+      start: stringOrDate;
+      end: stringOrDate;
+      allDay?: boolean;
+    }) => {
+      // if (draggedEvent === "undroppable") {
+      //   setDraggedEvent(null);
+      //   return;
+      // }
+      console.log("!!!!", draggedEvent);
 
-  //     const { name } = draggedEvent;
-  //     const event = {
-  //       title: name,
-  //       start,
-  //       end,
-  //       isAllDay,
-  //     };
-  //     setDraggedEvent(null);
-  //     newEvent(event);
-  //   },
-  //   [draggedEvent, counters, setDraggedEvent, newEvent],
-  // );
+      const name = draggedEvent?.target;
 
-  // const resizeEvent = useCallback(
-  //   ({ event, start, end }) => {
-  //     setMyEvents((prev) => {
-  //       const existing = prev.find((ev) => ev.id === event.id) ?? {};
-  //       const filtered = prev.filter((ev) => ev.id !== event.id);
-  //       return [...filtered, { ...existing, start, end }];
-  //     });
-  //   },
-  //   [setMyEvents],
-  // );
+      const event = {
+        title: "s",
+        start,
+        end,
+        isAllDay,
+      };
+      setDraggedEvent(null);
+      newEvent(event);
+    },
+    [draggedEvent, setDraggedEvent, newEvent],
+  );
 
+  const resizeEvent = useCallback(
+    ({
+      event,
+      start,
+      end,
+    }: {
+      event: IEvent;
+      start: stringOrDate;
+      end: stringOrDate;
+    }) => {
+      setMyEvents((prev) => {
+        const existing =
+          prev.find((ev) => ev.id === event.id) ?? ({} as IEvent);
+        const filtered = prev.filter((ev) => ev.id !== event.id);
+        return [...filtered, { ...existing, start, end }];
+      });
+    },
+    [setMyEvents],
+  );
   return (
     <div>
       <h1 className="p-1 font-semibold text-cyan-600 text-center">
@@ -125,30 +172,36 @@ export function Schedule() {
       <div className="flex flex-row columns-2">
         <div className="w-3/4 ">
           <DnDCalendar
-            selectable
+            // selectable
             messages={messages}
-            localizer={mLocalizer}
-            events={myEventsList}
-            // startAccessor="start"
-            // endAccessor="end"
+            // localizer={mLocalizer}
+            // events={myEvents}
+            startAccessor="start"
+            endAccessor="end"
             min={minTime}
             max={maxTime}
             style={{ height: 500 }}
             resources={resources}
             resourceGroupingLayout={true}
-            // dragFromOutsideItem={dragFromOutsideItem}
-            // // draggableAccessor="isDraggable"
-            // eventPropGetter={eventPropGetter}
-            // onDropFromOutside={onDropFromOutside}
-            // onDragOverFromOutside={customOnDragOverFromOutside}
-            // onEventDrop={moveEvent}
-            // onEventResize={resizeEvent}
-            // onSelectSlot={newEvent}
+            defaultDate={defaultDate}
+            defaultView={Views.DAY}
+            dragFromOutsideItem={() => "id"}
+            eventPropGetter={eventPropGetter}
+            draggableAccessor={() => true}
+            resizableAccessor={() => true}
+            events={myEvents}
+            localizer={mLocalizer}
+            onDropFromOutside={onDropFromOutside}
+            onDragOver={customOnDragOverFromOutside}
+            onEventDrop={moveEvent}
+            onEventResize={resizeEvent}
+            onSelectSlot={newEvent}
             resizable
+            selectable
           />
         </div>
         <div className="w-1/4 border items-center mx-1">
-          <GroupList />
+          <GroupList handleDragStart={handleDragStart} />
         </div>
       </div>
     </div>
