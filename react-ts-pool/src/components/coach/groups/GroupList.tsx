@@ -19,7 +19,7 @@ export function GroupList({
           className="mx-2"
           draggable="true"
           onDragStart={handleDragStart}
-          data-name={group.name}
+          data-group-id={group.id}
         >
           <Button typeClass="group" value={group.name} />
         </li>

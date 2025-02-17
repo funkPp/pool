@@ -20,9 +20,9 @@ const events = [
   {
     id: 10,
     title: "Тестовое событие",
-    start: new Date(2025, 0, 21, 9, 0, 0),
-    end: new Date(2025, 0, 21, 10, 30, 0),
-    resourceId: 1,
+    start: new Date(2025, 1, 17, 9, 0, 0),
+    end: new Date(2025, 1, 17, 10, 30, 0),
+    // resourceId: 1,
   },
 ];
 
@@ -49,9 +49,12 @@ export function Schedule() {
   const defaultDate = useMemo(() => new Date(), []);
 
   const [myEvents, setMyEvents] = useState<IEvent[]>(events);
+  const [copyEvent, setCopyEvent] = useState(true);
   const [draggedEvent, setDraggedEvent] = useState<React.DragEvent | null>(
     null,
   );
+
+  console.log(myEvents);
 
   const eventPropGetter = useCallback(
     (event: IEvent) => ({
@@ -99,16 +102,19 @@ export function Schedule() {
         const existing =
           prev.find((ev) => ev.id === event.id) ?? ({} as IEvent);
         const filtered = prev.filter((ev) => ev.id !== event.id);
-        return [...filtered, { ...existing, start, end, allDay }];
+        return [...filtered, { ...existing, start, end, allDay, resourceId }];
       });
     },
     [setMyEvents],
   );
+
   const newEvent = useCallback(
-    (event: Omit<IEvent, "id" | "title">) => {
+    (event: Omit<IEvent, "id">) => {
+      // console.log("new", event);
       setMyEvents((prev) => {
         const idList = prev.map((item) => item.id);
         const newId = Math.max(...idList) + 1;
+        console.log("new", [...prev, { ...event, id: newId } as IEvent]);
         return [...prev, { ...event, id: newId } as IEvent];
       });
     },
@@ -129,17 +135,21 @@ export function Schedule() {
       //   setDraggedEvent(null);
       //   return;
       // }
-      console.log("!!!!", draggedEvent);
 
-      const name = draggedEvent?.target;
+      const target = draggedEvent?.target;
 
+      if (!(target instanceof HTMLLIElement)) return;
+
+      const id = target.dataset.groupId;
       const event = {
-        title: "s",
+        title: "Группа №" + id,
         start,
         end,
         isAllDay,
       };
       setDraggedEvent(null);
+
+      console.log(event);
       newEvent(event);
     },
     [draggedEvent, setDraggedEvent, newEvent],
@@ -195,7 +205,7 @@ export function Schedule() {
             onDragOver={customOnDragOverFromOutside}
             onEventDrop={moveEvent}
             onEventResize={resizeEvent}
-            onSelectSlot={newEvent}
+            //onSelectSlot={newEvent}
             resizable
             selectable
           />
