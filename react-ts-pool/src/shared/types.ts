@@ -24,6 +24,24 @@ export interface IGroup {
   name: string;
 }
 
+type stringOrDate = string | Date;
+
+export interface IEvent {
+  id: number;
+  title: string;
+  start: stringOrDate;
+  end: stringOrDate;
+  resourceId?: string | number | undefined;
+  isDraggable?: boolean;
+  allDay?: boolean;
+}
+
+export interface IResources {
+  id: number;
+  title: string;
+}
+
+
 // export interface IStudentView {
 //   firstName: string;
 //   lastName: string;

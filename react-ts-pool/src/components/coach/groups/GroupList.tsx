@@ -1,6 +1,5 @@
 import { IGroup } from "../../../shared";
 import { Button } from "../../ui-kit";
-import { IEvent } from "../schedule/Schedule";
 import { useGetGroups } from "./api";
 
 export function GroupList({

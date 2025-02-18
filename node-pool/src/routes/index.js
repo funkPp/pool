@@ -4,6 +4,7 @@ const userController = require("../controllers/userController");
 const authController = require("../controllers/AuthController");
 const studentController = require("../controllers/studentController");
 const groupController = require("../controllers/groupController");
+const eventController = require("../controllers/eventController");
 
 router.post("/users/authenticate", authController.authenticate);
 
@@ -69,5 +70,30 @@ router.delete(
   authController.authorize(),
   groupController.deleteGroup
 );
+
+
+
+router.get("/events", authController.authorize(), eventController.getEvents);
+router.get(
+  "/events/:id",
+  authController.authorize(),
+  eventController.getEventById
+);
+router.post(
+  "/events/create",
+  authController.authorize(),
+  eventController.createEvent
+);
+router.put(
+  "/events/:id",
+  authController.authorize(),
+  eventController.updateEvent
+);
+router.delete(
+  "/events/:id",
+  authController.authorize(),
+  eventController.deleteEvent
+);
+
 
 module.exports = router;
