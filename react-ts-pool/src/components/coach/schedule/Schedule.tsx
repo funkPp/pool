@@ -4,11 +4,19 @@ import {
   DateLocalizer,
   Views,
   stringOrDate,
+  Components,
+  EventProps,
 } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment/locale/ru";
-import { useCallback, useMemo, useState } from "react";
+import {
+  ComponentType,
+  FunctionComponent,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import { messages, resources } from "./configCalendar";
 import { GroupList } from "../groups/GroupList";
 import withDragAndDrop, {
@@ -42,17 +50,31 @@ export function Schedule() {
 
   const { data: events, error, isLoading } = useGetEvents();
 
-  console.log(events);
+  if (events) {
+    events.forEach((element: IEvent) => {
+      if ("resource_id" in element)
+        element.resourceId = +(element.resource_id as string);
+    });
+    console.log(events);
+  }
 
-  const eventPropGetter = useCallback(
-    (event: IEvent) => ({
-      ...(event.isDraggable
-        ? { className: "isDraggable" }
-        : { className: "nonDraggable" }),
-    }),
-    [],
-  );
-  // (event: React.DragEvent<T>) => void
+  // const eventPropGetter = useCallback(
+  //   (event: IEvent) => ({
+  //     ...(event.isDraggable
+  //       ? { className: "isDraggable" }
+  //       : { className: "nonDraggable" }),
+  //   }),
+  //   [],
+  // );
+  const eventView = (comp: Components<IEvent, IResources>) =>
+    comp?.event ? (
+      <div className="">
+        {comp.event.event.start} <b>{event.title}</b> :
+      </div>
+    ) : (
+      <></>
+    );
+
   const handleDragStart = useCallback(
     (event: React.DragEvent<HTMLLIElement>) => {
       setDraggedEvent(event);
@@ -186,7 +208,7 @@ export function Schedule() {
             defaultDate={defaultDate}
             defaultView={Views.DAY}
             dragFromOutsideItem={() => "id"}
-            eventPropGetter={eventPropGetter}
+            // eventPropGetter={eventPropGetter}
             draggableAccessor={() => true}
             resizableAccessor={() => true}
             events={events}
@@ -198,6 +220,8 @@ export function Schedule() {
             //onSelectSlot={newEvent}
             resizable
             selectable
+            step={45}
+            // components={{ event: eventView }}
           />
         </div>
         <div className="w-1/4 border items-center mx-1">
