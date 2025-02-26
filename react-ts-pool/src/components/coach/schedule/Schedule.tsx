@@ -24,6 +24,7 @@ import withDragAndDrop, {
 } from "react-big-calendar/lib/addons/dragAndDrop";
 import { IEvent, IResources } from "../../../shared";
 import { useGetEvents } from "./api";
+import { components } from "react-select";
 
 const DnDCalendar = withDragAndDrop<IEvent, IResources>(Calendar);
 const mLocalizer = momentLocalizer(moment);
@@ -66,13 +67,13 @@ export function Schedule() {
   //   }),
   //   [],
   // );
-  const eventView = (comp: Components<IEvent, IResources>) =>
-    comp?.event ? (
+  const eventView = ({ event }: EventProps<IEvent>) =>
+    event ? (
       <div className="">
-        {comp.event.event.start} <b>{event.title}</b> :
+        <b>{event.title}</b>
       </div>
     ) : (
-      <></>
+      <>?</>
     );
 
   const handleDragStart = useCallback(
@@ -189,17 +190,13 @@ export function Schedule() {
       <div className="flex flex-row columns-2">
         <div className="w-3/4 ">
           <DnDCalendar
-            // selectable
             messages={messages}
-            // localizer={mLocalizer}
-            // events={myEvents}
             startAccessor={(event) => {
               return new Date(event.start);
             }}
             endAccessor={(event) => {
               return new Date(event.end);
             }}
-            // endAccessor="end"
             min={minTime}
             max={maxTime}
             style={{ height: 500 }}
@@ -221,7 +218,11 @@ export function Schedule() {
             resizable
             selectable
             step={45}
-            // components={{ event: eventView }}
+            // components={{
+            //   event: eventView,
+            //   day: { event: eventView },
+            //   week: { event: eventView },
+            // }}
           />
         </div>
         <div className="w-1/4 border items-center mx-1">
