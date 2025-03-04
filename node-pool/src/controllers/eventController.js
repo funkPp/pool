@@ -8,7 +8,7 @@ exports.getEvents = async (req, res) => {
     const result = await pool.query(
       `SELECT id, title, start_time as start, end_time as end, resource_id, group_id FROM events ORDER BY id`
     );
-    console.log(result.rows)
+    //console.log(result.rows)
     res.status(200).json(result.rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -45,7 +45,7 @@ exports.createEvent = async (req, res) => {
 
   // console.log(req.body,firstName, lastName, userName);
   try {
-    console.log({ firstName });
+    //console.log({ firstName });
     // await checkExistEvent(userName);
 
     const result = await pool.query(
@@ -62,12 +62,13 @@ exports.createEvent = async (req, res) => {
 exports.updateEvent = async (req, res) => {
   const { id } = req.params;
 
-  const { resource_id, name } = req.body;
+  const {title, start, end, resource_id, group_id } = req.body;
   const parentIdAuth = req.user.sub;
   try {
+    console.log(id, title, start, end, resource_id, group_id)
     const result = await pool.query(
       `UPDATE events SET title = $2, start_time = $3, end_time = $4, resource_id = $5, group_id = $6 WHERE id = $1 RETURNING id, title,start_time as start, end_time as end, resource_id, group_id `,
-      [title, start, end, resource_id, group_id]
+      [id, title, start, end, resource_id, group_id]
     );
 
     res.status(200).json(result.rows[0]);

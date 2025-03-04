@@ -75,7 +75,7 @@ export function useGetEventByGroup(groupId: string) {
   });
 }
 
-export function useEventMutationEdit(id: string) {
+export function useEventMutationEdit(id: string | null) {
   const dispatch = useAppDispatch();
   return useMutation({
     mutationFn: (body: IEvent) => apiService.put(`${baseUrl}/${id}`, body),

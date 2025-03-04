@@ -15,6 +15,7 @@ import {
   FunctionComponent,
   useCallback,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { messages, resources } from "./configCalendar";
@@ -23,7 +24,11 @@ import withDragAndDrop, {
   withDragAndDropProps,
 } from "react-big-calendar/lib/addons/dragAndDrop";
 import { IEvent, IResources } from "../../../shared";
-import { useGetEvents } from "./api";
+import {
+  useEventMutationEdit,
+  useEventMutationСreate,
+  useGetEvents,
+} from "./api";
 import { components } from "react-select";
 
 const DnDCalendar = withDragAndDrop<IEvent, IResources>(Calendar);
@@ -48,8 +53,12 @@ export function Schedule() {
   const [draggedEvent, setDraggedEvent] = useState<React.DragEvent | null>(
     null,
   );
+  const refId = useRef<string>("");
 
   const { data: events, error, isLoading } = useGetEvents();
+
+  const mutationEdit = useEventMutationEdit(refId.current);
+  const mutationCreate = useEventMutationСreate();
 
   if (events) {
     events.forEach((element: IEvent) => {
@@ -108,6 +117,12 @@ export function Schedule() {
       if (!allDay && droppedOnAllDaySlot) {
         event.allDay = true;
       }
+
+      refId.current = event.id.toString();
+
+      const eventUpdate = { ...event, start, end, allDay, resourceId };
+      console.log("upd:", eventUpdate);
+      mutationEdit.mutate(eventUpdate);
 
       // setMyEvents((prev) => {
       //   const existing =
