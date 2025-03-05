@@ -75,10 +75,10 @@ export function useGetEventByGroup(groupId: string) {
   });
 }
 
-export function useEventMutationEdit(id: string | null) {
+export function useEventMutationEdit() {
   const dispatch = useAppDispatch();
   return useMutation({
-    mutationFn: (body: IEvent) => apiService.put(`${baseUrl}/${id}`, body),
+    mutationFn: (body: IEvent) => apiService.put(`${baseUrl}/${body.id}`, body),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [eventsListApi.baseKey] });
       const message = "Событие обновлено";
@@ -87,6 +87,7 @@ export function useEventMutationEdit(id: string | null) {
     onError: (err) => {
       if (typeof err === "string") dispatch(alertActions.error(err));
     },
+    
   });
 }
 

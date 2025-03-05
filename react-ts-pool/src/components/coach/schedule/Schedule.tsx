@@ -13,6 +13,7 @@ import "moment/locale/ru";
 import {
   ComponentType,
   FunctionComponent,
+  SyntheticEvent,
   useCallback,
   useMemo,
   useRef,
@@ -21,6 +22,8 @@ import {
 import { messages, resources } from "./configCalendar";
 import { GroupList } from "../groups/GroupList";
 import withDragAndDrop, {
+  EventInteractionArgs,
+  OnDragStartArgs,
   withDragAndDropProps,
 } from "react-big-calendar/lib/addons/dragAndDrop";
 import { IEvent, IResources } from "../../../shared";
@@ -57,7 +60,7 @@ export function Schedule() {
 
   const { data: events, error, isLoading } = useGetEvents();
 
-  const mutationEdit = useEventMutationEdit(refId.current);
+  const mutationEdit = useEventMutationEdit();
   const mutationCreate = useEventMutationСreate();
 
   if (events) {
@@ -65,7 +68,7 @@ export function Schedule() {
       if ("resource_id" in element)
         element.resourceId = +(element.resource_id as string);
     });
-    console.log(events);
+    //console.log(events);
   }
 
   // const eventPropGetter = useCallback(
@@ -95,6 +98,14 @@ export function Schedule() {
   const customOnDragOverFromOutside = useCallback(
     (dragEvent: React.DragEvent) => {
       dragEvent.preventDefault();
+    },
+    [],
+  );
+
+  const selectEvent = useCallback(
+    (event: IEvent, e: React.SyntheticEvent<HTMLElement>) => {
+      console.log("Forus-", event.id.toString());
+      refId.current = event.id.toString();
     },
     [],
   );
@@ -227,12 +238,14 @@ export function Schedule() {
             localizer={mLocalizer}
             onDropFromOutside={onDropFromOutside}
             onDragOver={customOnDragOverFromOutside}
+            // onDragStart={dragStart}
             onEventDrop={moveEvent}
             onEventResize={resizeEvent}
+            onSelectEvent={selectEvent}
             //onSelectSlot={newEvent}
             resizable
             selectable
-            step={45}
+            step={30}
             // components={{
             //   event: eventView,
             //   day: { event: eventView },
