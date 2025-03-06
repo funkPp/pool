@@ -94,7 +94,7 @@ export function useEventMutationEdit() {
 export function useEventMutationСreate() {
   const dispatch = useAppDispatch();
   return useMutation({
-    mutationFn: (body: IEvent) => apiService.post(`${baseUrl}/create`, body),
+    mutationFn: (body: Omit<IEvent, 'id'>) => apiService.post(`${baseUrl}/create`, body),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [eventsListApi.baseKey] });
       const message = "Событие добавлено";

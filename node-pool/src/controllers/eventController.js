@@ -49,10 +49,10 @@ exports.createEvent = async (req, res) => {
     // await checkExistEvent(userName);
 
     const result = await pool.query(
-      `INSERT INTO events (title, start, end, resource_id, group_id) VALUES ($1, $2, $3, $4, $5) RETURNING id, title, start_time as start, end_time as end, resource_id, group_id `,
-      [resource_id, name]
+      `INSERT INTO events (title, start_time, end_time, resource_id, group_id) VALUES ($1, $2, $3, $4, $5) RETURNING id, title, start_time as start, end_time as end, resource_id, group_id `,
+      [title, start, end, resource_id, group_id]
     );
-
+    console.log(result)
     res.status(201).json(result.rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -67,7 +67,7 @@ exports.updateEvent = async (req, res) => {
   try {
     console.log(id, title, start, end, resource_id, group_id)
     const result = await pool.query(
-      `UPDATE events SET title = $2, start_time = $3, end_time = $4, resource_id = $5, group_id = $6 WHERE id = $1 RETURNING id, title,start_time as start, end_time as end, resource_id, group_id `,
+      `UPDATE events SET title = $2, start_time = $3, end_time = $4, resource_id = $5, group_id = $6 WHERE id = $1 RETURNING id, title, start_time as start, end_time as end, resource_id, group_id `,
       [id, title, start, end, resource_id, group_id]
     );
 

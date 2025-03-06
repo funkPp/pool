@@ -134,26 +134,17 @@ export function Schedule() {
       const eventUpdate = { ...event, start, end, allDay, resourceId };
       console.log("upd:", eventUpdate);
       mutationEdit.mutate(eventUpdate);
-
-      // setMyEvents((prev) => {
-      //   const existing =
-      //     prev.find((ev) => ev.id === event.id) ?? ({} as IEvent);
-      //   const filtered = prev.filter((ev) => ev.id !== event.id);
-      //   return [...filtered, { ...existing, start, end, allDay, resourceId }];
-      // });
     },
     [],
   );
 
-  const newEvent = useCallback((event: Omit<IEvent, "id">) => {
-    // console.log("new", event);
-    // setMyEvents((prev) => {
-    //   const idList = prev.map((item) => item.id);
-    //   const newId = Math.max(...idList) + 1;
-    //   console.log("new", [...prev, { ...event, id: newId } as IEvent]);
-    //   return [...prev, { ...event, id: newId } as IEvent];
-    // });
-  }, []);
+  const newEvent = useCallback(
+    (event: Omit<IEvent, "id">) => {
+      console.log("new", event);
+      mutationCreate.mutate(event);
+    },
+    [mutationCreate],
+  );
 
   const onDropFromOutside = useCallback(
     ({
@@ -165,11 +156,6 @@ export function Schedule() {
       end: stringOrDate;
       allDay?: boolean;
     }) => {
-      // if (draggedEvent === "undroppable") {
-      //   setDraggedEvent(null);
-      //   return;
-      // }
-
       const target = draggedEvent?.target;
 
       if (!(target instanceof HTMLLIElement)) return;
@@ -186,7 +172,7 @@ export function Schedule() {
       console.log(event);
       newEvent(event);
     },
-    [draggedEvent, setDraggedEvent, newEvent],
+    [draggedEvent, newEvent],
   );
 
   const resizeEvent = useCallback(
@@ -199,12 +185,9 @@ export function Schedule() {
       start: stringOrDate;
       end: stringOrDate;
     }) => {
-      // setMyEvents((prev) => {
-      //   const existing =
-      //     prev.find((ev) => ev.id === event.id) ?? ({} as IEvent);
-      //   const filtered = prev.filter((ev) => ev.id !== event.id);
-      //   return [...filtered, { ...existing, start, end }];
-      // });
+      const eventUpdate = { ...event, start, end };
+      console.log("resize:", eventUpdate);
+      mutationEdit.mutate(eventUpdate);
     },
     [],
   );

@@ -7,8 +7,6 @@ export function ScheduleLayout() {
       <div className="container">
         <Routes>
           <Route index element={<Schedule />} />
-          {/* <Route path="add" element={<AddEdit />} />
-          <Route path="edit/:id" element={<AddEdit />} /> */}
         </Routes>
       </div>
     </div>
