@@ -33,6 +33,7 @@ import {
   useGetEvents,
 } from "./api";
 import { components } from "react-select";
+import { group } from "console";
 
 const DnDCalendar = withDragAndDrop<IEvent, IResources>(Calendar);
 const mLocalizer = momentLocalizer(moment);
@@ -151,10 +152,12 @@ export function Schedule() {
       start,
       end,
       allDay: isAllDay,
+      resource,
     }: {
       start: stringOrDate;
       end: stringOrDate;
       allDay?: boolean;
+      resource?: string | number;
     }) => {
       const target = draggedEvent?.target;
 
@@ -166,6 +169,9 @@ export function Schedule() {
         start,
         end,
         isAllDay,
+        group_id: id,
+        resourceId: resource,
+        resource_id: resource,
       };
       setDraggedEvent(null);
 

@@ -34,6 +34,7 @@ export interface IEvent {
   resourceId?: string | number | undefined;
   isDraggable?: boolean;
   allDay?: boolean;
+  group_id?: string | number;
 }
 
 export interface IResources {
