@@ -62,13 +62,13 @@ exports.createEvent = async (req, res) => {
 exports.updateEvent = async (req, res) => {
   const { id } = req.params;
 
-  const {title, start, end, resource_id, group_id } = req.body;
+  const {title, start, end, resourceId, group_id } = req.body;
   const parentIdAuth = req.user.sub;
   try {
-    console.log(id, title, start, end, resource_id, group_id)
+    console.log(id, title, start, end, resourceId, group_id)
     const result = await pool.query(
-      `UPDATE events SET title = $2, start_time = $3, end_time = $4, resource_id = $5, group_id = $6 WHERE id = $1 RETURNING id, title, start_time as start, end_time as end, resource_id, group_id `,
-      [id, title, start, end, resource_id, group_id]
+      `UPDATE events SET title = $2, start_time = $3, end_time = $4, resource_id = $5, group_id = $6 WHERE id = $1 RETURNING id, title, start_time as start, end_time as end, resource_id as resourceId, group_id `,
+      [id, title, start, end, resourceId, group_id]
     );
 
     res.status(200).json(result.rows[0]);

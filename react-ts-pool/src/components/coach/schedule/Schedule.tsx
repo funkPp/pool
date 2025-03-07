@@ -1,39 +1,24 @@
 import {
   Calendar,
   momentLocalizer,
-  DateLocalizer,
   Views,
   stringOrDate,
-  Components,
   EventProps,
 } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment/locale/ru";
-import {
-  ComponentType,
-  FunctionComponent,
-  SyntheticEvent,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { messages, resources } from "./configCalendar";
 import { GroupList } from "../groups/GroupList";
-import withDragAndDrop, {
-  EventInteractionArgs,
-  OnDragStartArgs,
-  withDragAndDropProps,
-} from "react-big-calendar/lib/addons/dragAndDrop";
+import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import { IEvent, IResources } from "../../../shared";
 import {
+  useEventMurationDelete,
   useEventMutationEdit,
   useEventMutationСreate,
   useGetEvents,
 } from "./api";
-import { components } from "react-select";
-import { group } from "console";
 
 const DnDCalendar = withDragAndDrop<IEvent, IResources>(Calendar);
 const mLocalizer = momentLocalizer(moment);
@@ -63,6 +48,7 @@ export function Schedule() {
 
   const mutationEdit = useEventMutationEdit();
   const mutationCreate = useEventMutationСreate();
+  const mutationDelete = useEventMurationDelete();
 
   if (events) {
     events.forEach((element: IEvent) => {
@@ -127,7 +113,7 @@ export function Schedule() {
     }) => {
       const { allDay } = event;
       if (!allDay && droppedOnAllDaySlot) {
-        event.allDay = true;
+        event.allDay = false;
       }
 
       refId.current = event.id.toString();
@@ -163,6 +149,11 @@ export function Schedule() {
 
       if (!(target instanceof HTMLLIElement)) return;
 
+      const addPERIOD = 30;
+      if (end instanceof Date && start instanceof Date) {
+        end.setMinutes(end.getMinutes() + addPERIOD);
+      }
+
       const id = target.dataset.groupId;
       const event = {
         title: "Группа №" + id,
@@ -197,6 +188,18 @@ export function Schedule() {
     },
     [],
   );
+
+  const keyPressEvent = (
+    event: IEvent,
+    e: React.SyntheticEvent<HTMLElement>,
+  ) => {
+    console.log({ e });
+    if ("key" in e) {
+      if (e.key === "Delete") {
+        mutationDelete.mutate(event.id.toString());
+      }
+    }
+  };
   return (
     <div>
       <h1 className="p-1 font-semibold text-cyan-600 text-center">
@@ -205,6 +208,7 @@ export function Schedule() {
       <div className="flex flex-row columns-2">
         <div className="w-3/4 ">
           <DnDCalendar
+            onKeyPressEvent={keyPressEvent}
             messages={messages}
             startAccessor={(event) => {
               return new Date(event.start);
