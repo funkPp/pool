@@ -13,6 +13,8 @@ export const messages = {
   event: "Группа",
 };
 
+export const ADD_PERIOD = 30;
+
 export const resources = [
   {
     id: 1,
@@ -23,3 +25,5 @@ export const resources = [
     title: "Дорожка №2",
   },
 ];
+
+

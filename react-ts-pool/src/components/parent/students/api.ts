@@ -30,6 +30,16 @@ const studentsListByParentApi = {
   },
 };
 
+const studentsListByGroupApi = {
+  baseKey: "students",
+  getStudentsByGroupListQueryOptions: (groupId: string) => {
+    return queryOptions({
+      queryKey: [studentsListApi.baseKey, "list", groupId],
+      queryFn: () => apiService.get(`${baseUrl}/group/${groupId}`, null),
+    });
+  },
+};
+
 const studentByIdApi = {
   baseKey: "students",
   getStudentByIdQueryOptions: (id: string) => {
@@ -73,6 +83,14 @@ export function useGetStudentByParent(parentId: string) {
     enabled: !!localStorage.getItem("auth") && !!parentId,
   });
 }
+
+export function useGetStudentByGroup(groupId: string) {
+  return useQuery({
+    ...studentsListByGroupApi.getStudentsByGroupListQueryOptions(groupId),
+    enabled: !!localStorage.getItem("auth") && !!groupId,
+  });
+}
+
 
 export function useStudentMutationEdit(id: string) {
   const dispatch = useAppDispatch();

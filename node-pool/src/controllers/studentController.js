@@ -43,6 +43,25 @@ exports.getStudentByParent = async (req, res) => {
   }
 };
 
+exports.getStudentsByGroup = async (req, res) => {
+  try {
+    const { groupId } = req.params;
+    const result = await pool.query(
+     `select s.*
+      from lnk_students_groups sg inner join students s on
+	      s.id = sg.student_id inner join groups g on
+	      g.id = sg.group_id
+      where sg.group_id = $1 order by id`,
+      [groupId]
+    );
+    // console.log(result.rows)
+    res.status(200).json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
 // const checkExistStudent = async (userName) => {
 //   const existStudent = await pool.query(
 //     "select * from students where userName = $1",

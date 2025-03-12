@@ -3,13 +3,12 @@ import {
   momentLocalizer,
   Views,
   stringOrDate,
-  EventProps,
 } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment/locale/ru";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { messages, resources } from "./configCalendar";
+import { messages, resources, ADD_PERIOD } from "./configCalendar";
 import { GroupList } from "../groups/GroupList";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import { IEvent, IResources } from "../../../shared";
@@ -19,18 +18,10 @@ import {
   useEventMutationСreate,
   useGetEvents,
 } from "./api";
+import { useGetGroups } from "../groups/api";
 
 const DnDCalendar = withDragAndDrop<IEvent, IResources>(Calendar);
 const mLocalizer = momentLocalizer(moment);
-// const events = [
-//   {
-//     id: 10,
-//     title: "Тестовое событие",
-//     start: new Date(2025, 1, 17, 9, 0, 0),
-//     end: new Date(2025, 1, 17, 10, 30, 0),
-//     resourceId: 1,
-//   },
-// ];
 
 export function Schedule() {
   const minTime = useMemo(() => new Date(1972, 0, 0, 8, 0, 0, 0), []);
@@ -38,13 +29,13 @@ export function Schedule() {
   const defaultDate = useMemo(() => new Date(), []);
 
   // const [myEvents, setMyEvents] = useState<IEvent[]>(events);
-  const [copyEvent, setCopyEvent] = useState(true);
   const [draggedEvent, setDraggedEvent] = useState<React.DragEvent | null>(
     null,
   );
   const refId = useRef<string>("");
 
   const { data: events, error, isLoading } = useGetEvents();
+  const { data: groups } = useGetGroups();
 
   const mutationEdit = useEventMutationEdit();
   const mutationCreate = useEventMutationСreate();
@@ -57,23 +48,6 @@ export function Schedule() {
     });
     //console.log(events);
   }
-
-  // const eventPropGetter = useCallback(
-  //   (event: IEvent) => ({
-  //     ...(event.isDraggable
-  //       ? { className: "isDraggable" }
-  //       : { className: "nonDraggable" }),
-  //   }),
-  //   [],
-  // );
-  const eventView = ({ event }: EventProps<IEvent>) =>
-    event ? (
-      <div className="">
-        <b>{event.title}</b>
-      </div>
-    ) : (
-      <>?</>
-    );
 
   const handleDragStart = useCallback(
     (event: React.DragEvent<HTMLLIElement>) => {
@@ -122,7 +96,7 @@ export function Schedule() {
       console.log("upd:", eventUpdate);
       mutationEdit.mutate(eventUpdate);
     },
-    [],
+    [mutationEdit],
   );
 
   const newEvent = useCallback(
@@ -149,14 +123,18 @@ export function Schedule() {
 
       if (!(target instanceof HTMLLIElement)) return;
 
-      const addPERIOD = 30;
       if (end instanceof Date && start instanceof Date) {
-        end.setMinutes(end.getMinutes() + addPERIOD);
+        end.setMinutes(end.getMinutes() + ADD_PERIOD);
       }
 
       const id = target.dataset.groupId;
+
+      let nameGroup = "!";
+      if (Array.isArray(groups) && id) {
+        nameGroup = groups.find((g) => +g.id === +id).name;
+      }
       const event = {
-        title: "Группа №" + id,
+        title: "Занятие: " + nameGroup,
         start,
         end,
         isAllDay,
@@ -170,23 +148,6 @@ export function Schedule() {
       newEvent(event);
     },
     [draggedEvent, newEvent],
-  );
-
-  const resizeEvent = useCallback(
-    ({
-      event,
-      start,
-      end,
-    }: {
-      event: IEvent;
-      start: stringOrDate;
-      end: stringOrDate;
-    }) => {
-      const eventUpdate = { ...event, start, end };
-      console.log("resize:", eventUpdate);
-      mutationEdit.mutate(eventUpdate);
-    },
-    [],
   );
 
   const keyPressEvent = (
@@ -224,7 +185,6 @@ export function Schedule() {
             defaultDate={defaultDate}
             defaultView={Views.DAY}
             dragFromOutsideItem={() => "id"}
-            // eventPropGetter={eventPropGetter}
             draggableAccessor={() => true}
             resizableAccessor={() => true}
             events={events}
@@ -233,17 +193,10 @@ export function Schedule() {
             onDragOver={customOnDragOverFromOutside}
             // onDragStart={dragStart}
             onEventDrop={moveEvent}
-            onEventResize={resizeEvent}
             onSelectEvent={selectEvent}
-            //onSelectSlot={newEvent}
             resizable
             selectable
             step={30}
-            // components={{
-            //   event: eventView,
-            //   day: { event: eventView },
-            //   week: { event: eventView },
-            // }}
           />
         </div>
         <div className="w-1/4 border items-center mx-1">

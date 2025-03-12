@@ -80,7 +80,7 @@ export function useGroupMutationEdit(id: string) {
     mutationFn: (body: IGroup) => apiService.put(`${baseUrl}/${id}`, body),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [groupsListApi.baseKey] });
-      const message = "Ученик обновлен";
+      const message = "Группа обновлена";
       dispatch(alertActions.success({ message, showAfterRedirect: true }));
     },
     onError: (err) => {
@@ -92,10 +92,10 @@ export function useGroupMutationEdit(id: string) {
 export function useGroupMutationСreate() {
   const dispatch = useAppDispatch();
   return useMutation({
-    mutationFn: (body: IGroup) => apiService.post(`${baseUrl}/create`, body),
+    mutationFn: (body: Omit<IGroup, 'id'>) => apiService.post(`${baseUrl}/create`, body),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [groupsListApi.baseKey] });
-      const message = "Ученик добавлен";
+      const message = "Группа добавлена";
       dispatch(alertActions.success({ message, showAfterRedirect: true }));
     },
     onError: (err) => {
@@ -104,14 +104,14 @@ export function useGroupMutationСreate() {
   });
 }
 
-export function useGroupMurationDelete() {
+export function useGroupMutationDelete() {
   const dispatch = useAppDispatch();
 
   return useMutation({
     mutationFn: (id: string) => apiService.delete(`${baseUrl}/${id}`, null),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [groupsListApi.baseKey] });
-      const message = "Ученик удален";
+      const message = "Группа удалена";
       dispatch(alertActions.success({ message, showAfterRedirect: true }));
     },
     onError: (err) => {

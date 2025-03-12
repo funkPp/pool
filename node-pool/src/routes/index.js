@@ -33,6 +33,12 @@ router.get(
   authController.authorize(),
   studentController.getStudentByParent
 );
+
+router.get(
+  "/students/group/:id",
+  authController.authorize(),
+  studentController.getStudentsByGroup
+);
 router.post(
   "/students/create",
   authController.authorize(),

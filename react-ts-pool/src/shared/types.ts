@@ -20,7 +20,6 @@ export interface IStudent {
 
 export interface IGroup {
   id: string;
-  resourcesId?: string;
   name: string;
 }
 

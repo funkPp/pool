@@ -5,7 +5,7 @@ const bcrypt = require("bcryptjs");
 exports.getGroups = async (req, res) => {
   try {
     const result = await pool.query(
-      `SELECT id, resources_id, name FROM groups ORDER BY id`
+      `SELECT id, name FROM groups ORDER BY id`
     );
     //console.log(result.rows)
     res.status(200).json(result.rows);
@@ -20,7 +20,7 @@ exports.getGroupById = async (req, res) => {
     const parentIdAuth = req.user.sub;
     // console.log(req.user.sub)
     const result = await pool.query(
-      `SELECT id, resources_id, name  FROM groups WHERE id = $1 `,
+      `SELECT id, name  FROM groups WHERE id = $1 `,
       [id, parentIdAuth]
     );
     res.status(200).json(result.rows[0]);
@@ -40,16 +40,15 @@ const checkExistGroup = async (name) => {
 };
 
 exports.createGroup = async (req, res) => {
-  const { resourcesId, name } = req.body;
+  const { name } = req.body;
 
   // console.log(req.body,firstName, lastName, userName);
   try {
-    console.log({ firstName });
-    // await checkExistGroup(userName);
+    await checkExistGroup(name);
 
     const result = await pool.query(
-      `INSERT INTO groups (resources_id, name ) VALUES ($1, $2) RETURNING id, resources_id, name `,
-      [resourcesId, name]
+      `INSERT INTO groups ( name ) VALUES ($1) RETURNING id, name `,
+      [ name]
     );
 
     res.status(201).json(result.rows);
@@ -65,7 +64,7 @@ exports.updateGroup = async (req, res) => {
   const parentIdAuth = req.user.sub;
   try {
     const result = await pool.query(
-      `UPDATE groups SET resourcesId = $2, name = $3 WHERE id = $1 RETURNING id, resources_id, name `,
+      `UPDATE groups SET name = $3 WHERE id = $1 RETURNING id, name `,
       [id, resourcesId, name]
     );
 

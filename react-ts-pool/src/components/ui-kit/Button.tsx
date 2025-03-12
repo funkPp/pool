@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { ReactNode } from "react";
 
 export function Button({
   typeClass,
@@ -9,7 +10,7 @@ export function Button({
 }: {
   typeClass: string;
   disabled?: boolean;
-  value: string;
+  value: string | ReactNode;
   onClick?: () => void;
   type?: "button" | "submit" | "reset" | undefined;
 }) {
@@ -25,6 +26,10 @@ export function Button({
     group: `m-1 py-1 px-2 focus:outline-none bg-green-50 rounded-md 
     border border-green-200 hover:bg-green-100 hover:text-grey-800
     focus:z-10 focus:ring-3 focus:ring-green-300 align-middle`,
+
+    close: `p-1 focus:outline-none bg-green-50 rounded-full 
+    border border-green-200 hover:bg-green-100 hover:text-grey-800
+    focus:z-10 focus:ring-3 focus:ring-green-300 align-middle content-center absolute self-end top-[-10px] right-[-13px]`,
   };
   const disabledStyle = disabled ? "cursor-wait " : "";
   //  console.log(onClick);
