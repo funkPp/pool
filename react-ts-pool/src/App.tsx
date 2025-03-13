@@ -15,7 +15,6 @@ import { authActions, useAppDispatch, useAppSelector } from "./shared/store";
 import { Alert } from "./components/ui-kit/Alert";
 import { ScheduleLayout } from "./components/coach/schedule";
 import { StudentsLayout } from "./components/parent/students/StudentsLayout";
-import { StudentsByGroupLayout } from "./components/coach/groups/GroupLayout";
 
 function App() {
   const auth = useAppSelector((x) => x.auth.value);
@@ -38,10 +37,6 @@ function App() {
               <Route element={<PrivateAdminRoute />}>
                 <Route path="/admin/users/*" element={<UsersLayout />} />
                 <Route path="/admin/schedule/*" element={<ScheduleLayout />} />
-                {/* <Route
-                  path="/admin/studentsByGroup/*"
-                  element={<StudentsByGroupLayout />}
-                /> */}
               </Route>
             </Route>
           </Routes>

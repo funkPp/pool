@@ -11,6 +11,7 @@ import {
 import { useState } from "react";
 import { StudentsByGroupList } from "./StudentsByGroupList ";
 import clsx from "clsx";
+import { GroupEditAdd } from "./GroupEditAdd";
 
 export function GroupList({
   handleDragStart,
@@ -19,6 +20,7 @@ export function GroupList({
 }) {
   const { data: groups, error, isLoading } = useGetGroups();
   const [nameNewGroup, setNameNewGroup] = useState("");
+  const [currentIdGroup, setCurrentIdGroup] = useState("");
 
   const [hidden, setHidden] = useState("hidden");
   // const [currentGroup, setCurrentGroup] = useState<string | undefined>(undefined,  );
@@ -45,7 +47,10 @@ export function GroupList({
           onKeyDown={(e) => {
             if (e.code === "Delete") deleteGroup(group.id);
           }}
-          onDoubleClick={() => setHidden("")}
+          onDoubleClick={() => {
+            setHidden("");
+            setCurrentIdGroup(group.id);
+          }}
         >
           <Button typeClass="group" value={group.name} />
         </li>
@@ -59,7 +64,7 @@ export function GroupList({
         <input
           type="text"
           value={nameNewGroup}
-          className="px-1 bg-gray-50 border border-gray-300 text-sm rounded-lg 
+          className="px-1 bg-gray-50 border border-gray-300 text-sm rounded-sm 
   hover:border-cyan-600 focus:outline-cyan-700 block w-full p-2"
           onChange={(value) => setNameNewGroup(value.target.value)}
         />
@@ -81,15 +86,15 @@ export function GroupList({
           hidden,
         )}
       >
-        <div className="fixed top-12 left-1/4 z-50">
-          <Card typeClass="main">
+        <div className="fixed top-12 left-1/3 z-50">
+          <Card typeClass="student">
             <div className="flex flex-col">
               <Button
                 typeClass="close"
                 value={<FaXmark />}
                 onClick={() => setHidden("hidden")}
               />
-              <StudentsByGroupList id="" />
+              <GroupEditAdd id={currentIdGroup} />
             </div>
           </Card>
         </div>

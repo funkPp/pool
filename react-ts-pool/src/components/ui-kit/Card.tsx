@@ -10,6 +10,8 @@ export function Card({
   const selectClass: { [index: string]: string } = {
     main: `m-1 max-w-sm mx-auto  bg-white text-cyan-700 p-6 
     border border-gray-200 rounded-lg shadow`,
+    student: `m-1 max-w-md mx-auto  bg-white text-cyan-700 p-6 
+    border border-gray-200 rounded-lg shadow`,
     hidden: `hidden`,
   };
 

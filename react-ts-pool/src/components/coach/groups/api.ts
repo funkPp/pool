@@ -77,7 +77,7 @@ export function useGetGroupByParent(parentId: string) {
 export function useGroupMutationEdit(id: string) {
   const dispatch = useAppDispatch();
   return useMutation({
-    mutationFn: (body: IGroup) => apiService.put(`${baseUrl}/${id}`, body),
+    mutationFn: (body: Omit<IGroup, 'id'>) => apiService.put(`${baseUrl}/${id}`, body),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [groupsListApi.baseKey] });
       const message = "Группа обновлена";

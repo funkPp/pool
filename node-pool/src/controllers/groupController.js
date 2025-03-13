@@ -17,11 +17,10 @@ exports.getGroups = async (req, res) => {
 exports.getGroupById = async (req, res) => {
   try {
     const { id } = req.params;
-    const parentIdAuth = req.user.sub;
-    // console.log(req.user.sub)
+
     const result = await pool.query(
       `SELECT id, name  FROM groups WHERE id = $1 `,
-      [id, parentIdAuth]
+      [id]
     );
     res.status(200).json(result.rows[0]);
   } catch (err) {
@@ -60,12 +59,12 @@ exports.createGroup = async (req, res) => {
 exports.updateGroup = async (req, res) => {
   const { id } = req.params;
 
-  const { resourcesId, name } = req.body;
+  const { name } = req.body;
   const parentIdAuth = req.user.sub;
   try {
     const result = await pool.query(
-      `UPDATE groups SET name = $3 WHERE id = $1 RETURNING id, name `,
-      [id, resourcesId, name]
+      `UPDATE groups SET name = $2 WHERE id = $1 RETURNING id, name `,
+      [id, name]
     );
 
     res.status(200).json(result.rows[0]);

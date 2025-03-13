@@ -17,20 +17,21 @@ export function Table<T extends { id: string }>({
   editById,
   handlerDeleteById,
 }: {
-  typeClass: string;
+  typeClass: "users" | "students";
   disabled?: boolean;
-  head?: Ihead[];
+  head: Ihead[];
   body?: T[];
   editById?: string;
   handlerDeleteById?: (id: string) => void;
 }) {
   const selectClass: { [index: string]: string } = {
     users: `text-cyan-900`,
+    students: ` text-cyan-900`,
   };
   const disabledStyle = disabled ? "cursor-wait" : "";
 
   if (!body || body.length === 0) {
-    return <div>No data available</div>;
+    return <div>Нет данных</div>;
   }
 
   const fieldsHead = head?.sort((a, b) => a.sort - b.sort);
@@ -78,7 +79,7 @@ export function Table<T extends { id: string }>({
     ));
   }
   return (
-    <div className="mt-3 relative overflow-x-auto shadow-md sm:rounded-md box-border ">
+    <div className="mt-3 relative overflow-hidden shadow-md sm:rounded-md box-border ">
       <table className="w-full text-sm text-left rtl:text-right text-gray-500">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>{headRender}</tr>

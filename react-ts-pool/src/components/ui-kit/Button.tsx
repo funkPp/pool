@@ -8,7 +8,7 @@ export function Button({
   onClick,
   type,
 }: {
-  typeClass: string;
+  typeClass: "main" | "delete" | "group" | "close" | "";
   disabled?: boolean;
   value: string | ReactNode;
   onClick?: () => void;
@@ -23,9 +23,9 @@ export function Button({
     border border-red-200 hover:bg-red-100 hover:text-grey-800
     focus:z-10 focus:ring-3 focus:ring-red-300 align-middle`,
 
-    group: `m-1 py-1 px-2 focus:outline-none bg-green-50 rounded-md 
-    border border-green-200 hover:bg-green-100 hover:text-grey-800
-    focus:z-10 focus:ring-3 focus:ring-green-300 align-middle`,
+    group: `m-1 py-1 px-2 focus:outline-none bg-gray-100 rounded-sm 
+    border border-gray-300 hover:bg-gray-200 hover:text-gray-800
+    focus:z-10 focus:ring-3 focus:ring-gray-300 align-middle`,
 
     close: `p-1 focus:outline-none bg-green-50 rounded-full 
     border border-green-200 hover:bg-green-100 hover:text-grey-800
