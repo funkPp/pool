@@ -16,6 +16,7 @@ export function GroupEditAdd({ id }: { id: string }) {
 
   // console.log({ groupById });
   const timerDebounceRef = useRef<undefined | NodeJS.Timeout>();
+  const searchStudentRef = useRef<string>();
 
   useEffect(() => {
     if (typeof groupById === "object" && "name" in groupById) {
@@ -32,6 +33,7 @@ export function GroupEditAdd({ id }: { id: string }) {
       }
       timerDebounceRef.current = setTimeout(() => {
         console.log(searchStudent);
+        searchStudentRef.current = searchStudent;
       }, 500);
     }
   };
@@ -72,7 +74,7 @@ export function GroupEditAdd({ id }: { id: string }) {
           onChange={handleDebounceSearch}
         />
       </label>
-      <StudentsByNameList name={searchStudent} />
+      <StudentsByNameList name={searchStudentRef.current as string} />
     </div>
   );
 }

@@ -73,7 +73,7 @@ exports.getStudentsByName = async (req, res) => {
       where lastname ||' '|| firstname  ilike $1`,
       [`%${name}%`]
     );
-     console.log({result})
+     console.log({name})
     res.status(200).json(result.rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
