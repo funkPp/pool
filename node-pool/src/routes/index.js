@@ -39,6 +39,13 @@ router.get(
   authController.authorize(),
   studentController.getStudentsByGroup
 );
+
+router.get(
+  "/students/search/:name",
+  authController.authorize(),
+  studentController.getStudentsByName
+);
+
 router.post(
   "/students/create",
   authController.authorize(),

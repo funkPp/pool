@@ -46,7 +46,7 @@ exports.getStudentByParent = async (req, res) => {
 exports.getStudentsByGroup = async (req, res) => {
   try {
     const { id: groupId } = req.params;
-    console.log(groupId)
+    // console.log(groupId)
     const result = await pool.query(
      `select s.*
       from lnk_students_groups sg inner join students s on
@@ -55,7 +55,25 @@ exports.getStudentsByGroup = async (req, res) => {
       where sg.group_id = $1 order by id`,
       [groupId]
     );
-     console.log(result.rows)
+     //console.log(result.rows)
+    res.status(200).json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+exports.getStudentsByName = async (req, res) => {
+  try {
+    const { name } = req.params;
+    //console.log(name)
+    const result = await pool.query(
+     `select *
+      from students
+      where lastname ||' '|| firstname  ilike $1`,
+      [`%${name}%`]
+    );
+     console.log({result})
     res.status(200).json(result.rows);
   } catch (err) {
     res.status(500).json({ error: err.message });

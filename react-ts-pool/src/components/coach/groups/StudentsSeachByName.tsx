@@ -1,10 +1,10 @@
 import moment from "moment";
 import { IStudent, IGroup } from "../../../shared/types";
-import { useGetStudentByGroup } from "../../parent/students/api";
+import { useGetStudentByName } from "../../parent/students/api";
 import { Table } from "../../ui-kit";
 
-export function StudentsByGroupList({ id }: { id: string }) {
-  const { data: students, error, isLoading } = useGetStudentByGroup(id);
+export function StudentsByNameList({ name }: { name: string }) {
+  const { data: students, error, isLoading } = useGetStudentByName(name);
 
   const headTable = [
     // { label: "id", field: "id", sort: 0 },
