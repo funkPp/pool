@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { ReactNode } from "react";
+import { TypeClass } from "../../shared/types";
 
 export function Button({
   typeClass,
@@ -8,7 +9,7 @@ export function Button({
   onClick,
   type,
 }: {
-  typeClass: "main" | "delete" | "group" | "close" | "";
+  typeClass: TypeClass;
   disabled?: boolean;
   value: string | ReactNode;
   onClick?: () => void;
@@ -23,6 +24,14 @@ export function Button({
     border border-red-200 hover:bg-red-100 hover:text-grey-800
     focus:z-10 focus:ring-3 focus:ring-red-300 align-middle`,
 
+    minus: `mt-1 py-1 px-1 focus:outline-none bg-red-50 rounded-full 
+    border border-red-200 hover:bg-red-100 hover:text-grey-800
+    focus:z-10 focus:ring-3 focus:ring-red-300 align-middle`,
+
+    plus: `py-1 px-1 focus:outline-none bg-green-50 rounded-full 
+    border border-green-200 hover:bg-green-100 hover:text-grey-800
+    focus:z-10 focus:ring-3 focus:ring-green-300 align-middle`,
+
     group: `m-1 py-1 px-2 focus:outline-none bg-gray-100 rounded-sm 
     border border-gray-300 hover:bg-gray-200 hover:text-gray-800
     focus:z-10 focus:ring-3 focus:ring-gray-300 align-middle`,
@@ -35,7 +44,7 @@ export function Button({
   //  console.log(onClick);
   return (
     <button
-      className={clsx(selectClass[typeClass], disabledStyle)}
+      className={clsx(typeClass ? selectClass[typeClass] : "", disabledStyle)}
       onClick={onClick}
       disabled={disabled}
       type={type}

@@ -1,8 +1,12 @@
 import moment from "moment";
 import { IStudent, IGroup } from "../../../shared/types";
-import { useGetStudentByGroup } from "../../parent/students/api";
+// import { useGetStudentByGroup } from "../../parent/students/api";
 import { Table } from "../../ui-kit";
-import { useGetGroupById, useGroupMutationEdit } from "./api";
+import {
+  useGetGroupById,
+  useGroupMutationEdit,
+  useGetStudentByGroup,
+} from "./api";
 import { number, object } from "yup";
 import { StudentsByGroupList } from "./StudentsByGroupList ";
 import { useMutation } from "@tanstack/react-query";
@@ -13,6 +17,7 @@ export function GroupEditAdd({ id }: { id: string }) {
   const { data: groupById } = useGetGroupById(id);
   const [nameGroup, setNameGroup] = useState("");
   const [searchStudent, setSearchStudent] = useState("");
+  const [searchStudentDebounce, setSearchStudentDebounce] = useState("");
 
   // console.log({ groupById });
   const timerDebounceRef = useRef<undefined | NodeJS.Timeout>();
@@ -26,14 +31,17 @@ export function GroupEditAdd({ id }: { id: string }) {
 
   const handleDebounceSearch = (e: React.SyntheticEvent<HTMLInputElement>) => {
     if (e.target instanceof HTMLInputElement) {
+      console.log("e.t.v:", e.target.value);
       setSearchStudent(e.target.value);
 
       if (timerDebounceRef.current) {
         clearTimeout(timerDebounceRef.current);
       }
       timerDebounceRef.current = setTimeout(() => {
-        console.log(searchStudent);
-        searchStudentRef.current = searchStudent;
+        if (e.target instanceof HTMLInputElement) {
+          searchStudentRef.current = e.target.value;
+          setSearchStudentDebounce(e.target.value);
+        }
       }, 500);
     }
   };
@@ -74,7 +82,10 @@ export function GroupEditAdd({ id }: { id: string }) {
           onChange={handleDebounceSearch}
         />
       </label>
-      <StudentsByNameList name={searchStudentRef.current as string} />
+      <StudentsByNameList
+        name={searchStudentRef.current as string}
+        groupId={id}
+      />
     </div>
   );
 }

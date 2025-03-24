@@ -6,6 +6,7 @@ import {
 import { apiService, IGroup } from "../../../shared";
 import { queryClient } from "../../../shared/queryClient";
 import { alertActions, useAppDispatch } from "../../../shared/store";
+import { studentsListApi } from "../../parent/students/api";
 
 const URL_API = process.env.REACT_APP_API_URL ?? "http://localhost:5555";
 const baseUrl = `${URL_API}/groups`;
@@ -74,6 +75,43 @@ export function useGetGroupByParent(parentId: string) {
   });
 }
 
+
+
+const studentsListByGroupApi = {
+  baseKey: "students",
+  getStudentsByGroupListQueryOptions: (groupId: string) => {
+    return queryOptions({
+      queryKey: [studentsListApi.baseKey, "list", groupId],
+      queryFn: () => apiService.get(`${URL_API}/students/group/${groupId}`, null),
+    });
+  },
+  getStudentsByNameListQueryOptions: (name: string) => {
+
+    return queryOptions({
+      queryKey: [studentsListApi.baseKey, "list", name],
+      queryFn: () => apiService.get(`${URL_API}/students/search/${name}`, null),
+    });
+  },
+};
+
+export function useGetStudentByGroup(groupId: string) {
+  return useQuery({
+    ...studentsListByGroupApi.getStudentsByGroupListQueryOptions(groupId),
+    enabled: !!localStorage.getItem("auth") && !!groupId,
+  });
+}
+
+export function useGetStudentByName(name: string) {
+
+  return useQuery({
+    ...studentsListByGroupApi.getStudentsByNameListQueryOptions(name),
+    enabled: !!localStorage.getItem("auth") && !!name,
+  });
+}
+
+
+
+
 export function useGroupMutationEdit(id: string) {
   const dispatch = useAppDispatch();
   return useMutation({
@@ -112,6 +150,40 @@ export function useGroupMutationDelete() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [groupsListApi.baseKey] });
       const message = "Группа удалена";
+      dispatch(alertActions.success({ message, showAfterRedirect: true }));
+    },
+    onError: (err) => {
+      if (typeof err === "string") dispatch(alertActions.error(err));
+    },
+  });
+}
+
+
+export function useMutationRemoveByStudentId(groupId: string) {
+  const dispatch = useAppDispatch();
+
+  return useMutation({
+    mutationFn: (studentId:string) => apiService.delete(`${URL_API}/students/group/${groupId}/${studentId}`, null),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [studentsListApi.baseKey, "list", groupId] });
+      const message = "Группа изменена";
+      dispatch(alertActions.success({ message, showAfterRedirect: true }));
+    },
+    onError: (err) => {
+      if (typeof err === "string") dispatch(alertActions.error(err));
+    },
+  });
+}
+
+
+export function useMutationAddStudentId(groupId: string) {
+  const dispatch = useAppDispatch();
+
+  return useMutation({
+    mutationFn: (studentId:string) => apiService.post(`${URL_API}/students/group/${groupId}/${studentId}`, null),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [studentsListApi.baseKey, "list", groupId] });
+      const message = "Группа изменена";
       dispatch(alertActions.success({ message, showAfterRedirect: true }));
     },
     onError: (err) => {

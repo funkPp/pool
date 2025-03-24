@@ -1,7 +1,10 @@
 import moment from "moment";
 import { IStudent, IGroup } from "../../../shared/types";
-import { useGetStudentByGroup } from "../../parent/students/api";
+import { useGetStudentByGroup, useMutationRemoveByStudentId } from "./api";
 import { Table } from "../../ui-kit";
+import { useCallback } from "react";
+import { FaMinus } from "react-icons/fa";
+import { useMutation } from "@tanstack/react-query";
 
 export function StudentsByGroupList({ id }: { id: string }) {
   const { data: students, error, isLoading } = useGetStudentByGroup(id);
@@ -16,7 +19,7 @@ export function StudentsByGroupList({ id }: { id: string }) {
 
   let studentsView: IStudent[] | undefined = undefined;
 
-  if (students) {
+  if (Array.isArray(students)) {
     studentsView = students.map((student: IStudent): IStudent => {
       // console.log(student.birthday);
       student.age = moment().diff(moment(new Date(student.birthday)), "year");
@@ -27,9 +30,22 @@ export function StudentsByGroupList({ id }: { id: string }) {
     });
   }
 
+  const mutation = useMutationRemoveByStudentId(id);
+
+  const handlerRemove = useCallback((studentId: string) => {
+    mutation.mutate(studentId);
+  }, []);
+
   return (
-    <div>
-      <Table typeClass="students" body={studentsView} head={headTable} />
+    <div key={id}>
+      <Table
+        typeClass="students"
+        body={studentsView}
+        head={headTable}
+        handlerButton={handlerRemove}
+        valueButton={<FaMinus />}
+        typeButton="minus"
+      />
     </div>
   );
 }

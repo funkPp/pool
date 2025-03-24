@@ -10,7 +10,7 @@ import { alertActions, useAppDispatch } from "../../../shared/store";
 const URL_API = process.env.REACT_APP_API_URL ?? "http://localhost:5555";
 const baseUrl = `${URL_API}/students`;
 
-const studentsListApi = {
+export const studentsListApi = {
   baseKey: "students",
   getStudentsListQueryOptions: () => {
     return queryOptions({
@@ -30,22 +30,6 @@ const studentsListByParentApi = {
   },
 };
 
-const studentsListByGroupApi = {
-  baseKey: "students",
-  getStudentsByGroupListQueryOptions: (groupId: string) => {
-    return queryOptions({
-      queryKey: [studentsListApi.baseKey, "list", groupId],
-      queryFn: () => apiService.get(`${baseUrl}/group/${groupId}`, null),
-    });
-  },
-  getStudentsByNameListQueryOptions: (name: string) => {
-
-    return queryOptions({
-      queryKey: [studentsListApi.baseKey, "list", name],
-      queryFn: () => apiService.get(`${baseUrl}/search/${name}`, null),
-    });
-  },
-};
 
 const studentByIdApi = {
   baseKey: "students",
@@ -88,21 +72,6 @@ export function useGetStudentByParent(parentId: string) {
   return useQuery({
     ...studentsListByParentApi.getStudentsByParentListQueryOptions(parentId),
     enabled: !!localStorage.getItem("auth") && !!parentId,
-  });
-}
-
-export function useGetStudentByGroup(groupId: string) {
-  return useQuery({
-    ...studentsListByGroupApi.getStudentsByGroupListQueryOptions(groupId),
-    enabled: !!localStorage.getItem("auth") && !!groupId,
-  });
-}
-
-export function useGetStudentByName(name: string) {
-
-  return useQuery({
-    ...studentsListByGroupApi.getStudentsByNameListQueryOptions(name),
-    enabled: !!localStorage.getItem("auth") && !!name,
   });
 }
 

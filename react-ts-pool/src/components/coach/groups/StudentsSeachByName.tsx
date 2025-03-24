@@ -1,9 +1,17 @@
 import moment from "moment";
 import { IStudent, IGroup } from "../../../shared/types";
-import { useGetStudentByName } from "../../parent/students/api";
+import { useGetStudentByName, useMutationAddStudentId } from "./api";
 import { Table } from "../../ui-kit";
+import { FaPlus } from "react-icons/fa";
+import { useCallback } from "react";
 
-export function StudentsByNameList({ name }: { name: string }) {
+export function StudentsByNameList({
+  name,
+  groupId,
+}: {
+  name: string;
+  groupId: string;
+}) {
   const { data: students, error, isLoading } = useGetStudentByName(name);
 
   const headTable = [
@@ -27,9 +35,22 @@ export function StudentsByNameList({ name }: { name: string }) {
     });
   }
 
+  const mutationAdd = useMutationAddStudentId(groupId);
+
+  const handlerAdd = useCallback((id: string) => {
+    mutationAdd.mutate(id);
+  }, []);
+
   return (
-    <div>
-      <Table typeClass="students" body={studentsView} head={headTable} />
+    <div key={name}>
+      <Table
+        typeClass="students"
+        body={studentsView}
+        head={headTable}
+        handlerButton={handlerAdd}
+        valueButton={<FaPlus />}
+        typeButton="minus"
+      />
     </div>
   );
 }

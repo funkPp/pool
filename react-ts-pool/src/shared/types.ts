@@ -41,6 +41,7 @@ export interface IResources {
   title: string;
 }
 
+export type TypeClass = "main" | "delete" | "group" | "close" | "minus" | "plus" | undefined;
 
 // export interface IStudentView {
 //   firstName: string;

@@ -66,14 +66,14 @@ exports.getStudentsByGroup = async (req, res) => {
 exports.getStudentsByName = async (req, res) => {
   try {
     const { name } = req.params;
-    //console.log(name)
+    console.log(name)
     const result = await pool.query(
      `select *
       from students
       where lastname ||' '|| firstname  ilike $1`,
       [`%${name}%`]
     );
-     console.log({name})
+
     res.status(200).json(result.rows);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -97,7 +97,7 @@ exports.createStudent = async (req, res) => {
 
   // console.log(req.body,firstName, lastName, userName);
   try {
-    console.log({ firstName });
+   // console.log({ firstName });
     // await checkExistStudent(userName);
 
     const result = await pool.query(
@@ -138,3 +138,45 @@ exports.deleteStudent = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.deleteStudentInGroup = async (req, res) => {
+  const { groupId, studentId } = req.params;
+  
+  //const parentIdAuth  = req.user.sub;
+  try {
+    await pool.query("DELETE FROM lnk_students_groups WHERE group_id = $1 and student_id = $2", [groupId, studentId]);
+    res.status(204).send();
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+exports.addStudentInGroup = async (req, res) => {
+  const { groupId, studentId } = req.params;
+  try {
+    await checkExistLinkGroupStudent(groupId, studentId);
+
+    const result = await pool.query(
+      `INSERT INTO lnk_students_groups ( group_id, student_id) VALUES ($1, $2) RETURNING *`,
+      [groupId, studentId]
+    );
+
+    res.status(201).json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+const checkExistLinkGroupStudent = async (groupId, studentId) => {
+  const existStudent = await pool.query(
+    "select * from lnk_students_groups WHERE group_id = $1 and student_id = $2",
+     [groupId, studentId]
+  );
+  
+  if (existStudent.rowCount) {
+    throw new Error(`Ученик с id-${studentId} уже добавлен в группу`);
+  }
+};
+
+

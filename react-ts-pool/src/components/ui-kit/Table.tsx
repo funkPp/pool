@@ -2,6 +2,7 @@ import clsx from "clsx";
 import { Button } from "./Button";
 import { ReactNode } from "react";
 import LinkButton from "./LinkButton";
+import { TypeClass } from "../../shared/types";
 
 interface Ihead {
   label: string;
@@ -16,6 +17,9 @@ export function Table<T extends { id: string }>({
   body,
   editById,
   handlerDeleteById,
+  handlerButton,
+  valueButton,
+  typeButton,
 }: {
   typeClass: "users" | "students";
   disabled?: boolean;
@@ -23,6 +27,9 @@ export function Table<T extends { id: string }>({
   body?: T[];
   editById?: string;
   handlerDeleteById?: (id: string) => void;
+  handlerButton?: (id: string) => void;
+  valueButton?: ReactNode;
+  typeButton?: TypeClass;
 }) {
   const selectClass: { [index: string]: string } = {
     users: `text-cyan-900`,
@@ -46,7 +53,7 @@ export function Table<T extends { id: string }>({
   }
 
   // const fieldsT = Object.keys(body[0]) as Array<keyof T>;
-  // console.log(body);
+  // console.log({ typeClass });
   let bodyRender = null;
   if (body) {
     bodyRender = body.map((row) => (
@@ -56,7 +63,7 @@ export function Table<T extends { id: string }>({
             {row[fieldname.field as keyof T] as ReactNode}
           </td>
         ))}
-        {(editById || handlerDeleteById) && (
+        {(editById || handlerDeleteById || handlerButton) && (
           <td
             className="px-2 py-1 flex flex-wrap flex-row gap-1 justify-center items-center  "
             key={" "}
@@ -71,6 +78,13 @@ export function Table<T extends { id: string }>({
                 typeClass="delete"
                 onClick={() => handlerDeleteById(row.id!)}
                 value="Удалить"
+              />
+            )}
+            {handlerButton && (
+              <Button
+                typeClass={typeButton}
+                onClick={() => handlerButton(row.id!)}
+                value={valueButton}
               />
             )}
           </td>

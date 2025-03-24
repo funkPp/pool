@@ -40,6 +40,19 @@ router.get(
   studentController.getStudentsByGroup
 );
 
+router.delete(
+  "/students/group/:groupId/:studentId",
+  authController.authorize(),
+  studentController.deleteStudentInGroup
+);
+
+router.post(
+  "/students/group/:groupId/:studentId",
+  authController.authorize(),
+  studentController.addStudentInGroup
+);
+
+
 router.get(
   "/students/search/:name",
   authController.authorize(),
