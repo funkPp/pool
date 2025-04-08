@@ -6,7 +6,7 @@ import { Card } from "../ui-kit/Card";
 import { Button } from "../ui-kit/Button";
 import clsx from "clsx";
 
-import { authActions, useAppDispatch } from  "../../shared/store";
+import { authActions, useAppDispatch } from "../../shared/store";
 
 export function Login() {
   const dispatch = useAppDispatch();

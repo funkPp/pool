@@ -16,7 +16,7 @@ export function Button({
   type?: "button" | "submit" | "reset" | undefined;
 }) {
   const selectClass: { [index: string]: string } = {
-    main: ` px-2 focus:outline-none bg-gray-50 rounded-md
+    main: ` px-2 p-2 sm:px-2 focus:outline-none bg-gray-50 rounded-md
     border border-gray-300 hover:bg-gray-100 hover:text-cyan-700
     focus:z-10 focus:ring-3 focus:ring-cyan-100 align-middle`,
 

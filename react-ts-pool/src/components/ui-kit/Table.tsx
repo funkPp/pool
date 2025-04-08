@@ -93,7 +93,7 @@ export function Table<T extends { id: string }>({
     ));
   }
   return (
-    <div className="mt-3 relative overflow-hidden shadow-md sm:rounded-md box-border ">
+    <div className="mt-3 relative overflow-x-auto sm:overflow-hidden shadow-md sm:rounded-md box-border ">
       <table className="w-full text-sm text-left rtl:text-right text-gray-500">
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
           <tr>{headRender}</tr>

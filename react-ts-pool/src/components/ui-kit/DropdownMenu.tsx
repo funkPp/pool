@@ -39,10 +39,10 @@ export function DropdownMenu({
   }, [open]);
 
   return (
-    <div className="relative" ref={menuRef}>
+    <div className="relative self-center border" ref={menuRef}>
       <button
         type="button"
-        className="flex items-center justify-center rounded-md text-sm p-2 m-2"
+        className="flex items-center justify-center rounded-md text-sm p-1 sm:m-2 "
         onClick={handleToggle}
       >
         {buttonLabel}
@@ -51,12 +51,12 @@ export function DropdownMenu({
         </span>
       </button>
       {open && (
-        <div className="absolute left-1/2 -translate-x-1/2 top-10">
+        <div className="absolute left-1/2 -translate-x-1/2 sm:top-10 top-7">
           <ul className="w-40 h-auto shadow-md rounded-md p-1 border bg-white">
             {items.map((item, index) => (
               <li
                 key={index}
-                className={`relative flex items-center gap-2 px-4 py-2 text-sm hover:bg-gray-100 rounded-md`}
+                className={`relative flex items-center gap-1 px-4 py-1 text-sm hover:bg-gray-100 rounded-md`}
               >
                 {item.icon && <span>{item.icon}</span>}
                 {item.url ? (

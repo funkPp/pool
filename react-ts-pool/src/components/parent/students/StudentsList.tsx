@@ -10,7 +10,7 @@ export function StudentsList() {
   const parent = useAppSelector((x) => x.auth.value.id);
 
   const headTable = [
-    { label: "id", field: "id", sort: 0 },
+    // { label: "id", field: "id", sort: 0 },
     { label: "Имя", field: "firstName", sort: 1 },
     { label: "Фамилия", field: "lastName", sort: 2 },
     { label: "Возраст", field: "age", sort: 3 },
@@ -38,7 +38,7 @@ export function StudentsList() {
     mutationDelete.mutate(id);
   };
   return (
-    <div className="p-2 m-2">
+    <div className="sm:p-2 sm:m-2">
       <div>
         {(isLoading || mutationDelete.isPending) && <Loader />}
         <h1 className="p-1 font-semibold text-cyan-600 text-center">

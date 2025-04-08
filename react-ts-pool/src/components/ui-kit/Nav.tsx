@@ -44,12 +44,15 @@ export function Nav({ auth, logout }: INavProps) {
           ]}
         />
       ) : null}
-      <NavLink to="/" className="p-2 m-2  hover:text-cyan-800">
+      <NavLink
+        to="/"
+        className="p-1 sm:m-2  hover:text-cyan-800 border leading-6"
+      >
         Контакты
       </NavLink>
 
-      <div className="p-2  ml-auto  hover:text-cyan-800">
-        <button onClick={logout} className="p-2 mr-3">
+      <div className="p-1  sm:ml-auto sm:m-2  hover:text-cyan-800 border">
+        <button onClick={logout} className="mr-1 align-middle leading-6">
           Выйти
         </button>
       </div>
