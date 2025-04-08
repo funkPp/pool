@@ -39,7 +39,7 @@ export function DropdownMenu({
   }, [open]);
 
   return (
-    <div className="relative self-center border" ref={menuRef}>
+    <div className="relative self-center " ref={menuRef}>
       <button
         type="button"
         className="flex items-center justify-center rounded-md text-sm p-1 sm:m-2 "
